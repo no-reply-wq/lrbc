@@ -20,7 +20,7 @@ import { Badge } from "@/components/ui/badge";
 
 export default function OverviewPage() {
   return (
-    <section className="flex h-full flex-col overflow-hidden">
+    <section className="flex h-full flex-col">
 
       {/* Sticky Header */}
 
@@ -29,7 +29,7 @@ export default function OverviewPage() {
 
       
 
-        <div className="space-y-6 p-6">
+        <div className="space-y-6">
 
           {/* KPI Cards */}
 

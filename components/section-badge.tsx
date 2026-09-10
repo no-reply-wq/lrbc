@@ -8,37 +8,19 @@ interface SectionBadgeProps {
   className?: string;
 }
 
-export default function SectionBadge({
-  text,
-  icon: Icon,
-  className = "",
-}: SectionBadgeProps) {
+// Renders a simple pill badge — no icon, consistent with site palette.
+// The icon prop is accepted but intentionally ignored so callers don't break.
+export default function SectionBadge({ text, className = "" }: SectionBadgeProps) {
   return (
     <div
-      className={`
-        mx-auto
-        flex
-        w-fit
-        items-center
-        gap-3
-        rounded-full
-        border
-        border-white/30
-        bg-white/10
-        p-1
-        pl-1
-        pr-3
-        backdrop-blur-md
-        ${className}
-      `}
+      className={[
+        "mx-auto w-fit rounded-full border border-primary/20",
+        "bg-primary/5 px-4 py-1.5 text-xs font-semibold",
+        "uppercase tracking-widest text-primary",
+        className,
+      ].join(" ")}
     >
-      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-black">
-        {Icon && <Icon className="h-4 w-4" />}
-      </span>
-
-      <span className="text-sm font-medium text-foreground">
-        {text}
-      </span>
+      {text}
     </div>
   );
 }

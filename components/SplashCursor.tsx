@@ -1240,6 +1240,10 @@ export default function SplashCursor({
     document.body.addEventListener('mousemove', handleFirstMouseMove);
 
     window.addEventListener('mousemove', e => {
+      // Pause effect when hovering over interactive elements
+      const target = e.target as HTMLElement;
+      const isInteractive = target.closest('button, a, [role="button"], input, textarea, select, label');
+      if (isInteractive) return;
       const pointer = pointers[0];
       const posX = scaleByPixelRatio(e.clientX);
       const posY = scaleByPixelRatio(e.clientY);
@@ -1315,7 +1319,7 @@ export default function SplashCursor({
   ]);
 
   return (
-    <div className="fixed top-0 left-0 z-50 pointer-events-none w-full h-full">
+    <div className="fixed top-0 left-0 z-50 pointer-events-none w-full h-full" style={{ opacity: 0.65 }}>
       <canvas ref={canvasRef} id="fluid" className="w-screen h-screen block"></canvas>
     </div>
   );

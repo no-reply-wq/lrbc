@@ -10,7 +10,9 @@ import { HeroHeader } from "@/components/header";
 import ProductSection from "@/components/products";
 import ContactSection2 from "@/components/ContactSection2";
 import NewHeroSection from "@/components/new-components/new-hero";
-import { HomeIcon } from "lucide-react";
+import EngagementProcess from "@/components/engagement-process";
+import CoreSolutions from "@/components/core-solutions";
+import WhyLRBC from "@/components/why-lrbc";
 
 export default function LandingPage() {
   return (
@@ -28,14 +30,19 @@ export default function LandingPage() {
         buttonText="Request a demo"
         buttonHref="/contact"
         badgeText="Lean Resource Business Consulting Private Limited"
-        badgeIcon={HomeIcon}
       />
 
       <ContentSection />
 
       <FeaturesSection />
 
+      <EngagementProcess />
+
+      <CoreSolutions />
+
       <TestimonialsSection />
+
+      <WhyLRBC />
 
       <ProductSection />
 

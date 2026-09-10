@@ -217,7 +217,7 @@ export function ContactForm() {
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
-    <Card className="rounded-[28px] border-border/60 bg-background/80 p-8 shadow-xl backdrop-blur flex flex-col justify-center transition-shadow duration-500 ease-out hover:shadow-[0_10px_40px_-10px_rgba(139,92,246,0.15)]">
+    <Card className="rounded-[28px] border-border/60 bg-background/80 p-5 sm:p-8 shadow-xl backdrop-blur flex flex-col justify-center transition-shadow duration-500 ease-out hover:shadow-[0_10px_40px_-10px_rgba(139,92,246,0.15)]">
       {status === "success" ? (
         <div className="flex flex-col items-center justify-center space-y-4 text-center py-10">
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-500">
@@ -229,7 +229,7 @@ export function ContactForm() {
           </p>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5" noValidate>
 
           {/* Company Name */}
           <div className="space-y-2">

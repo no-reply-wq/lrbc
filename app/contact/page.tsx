@@ -56,7 +56,7 @@ function ContactPageContent() {
             {/* Close Button */}
             <button 
               onClick={handleClose}
-              className="absolute right-6 top-6 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-background/50 hover:bg-background transition-colors"
+              className="absolute right-4 top-4 sm:right-6 sm:top-6 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-background/50 hover:bg-background transition-colors"
               aria-label="Close form"
             >
               <X className="h-5 w-5" />

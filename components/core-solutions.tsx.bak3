@@ -1,0 +1,195 @@
+"use client";
+
+import { useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
+import { useGSAP } from "@gsap/react";
+import { Workflow, BarChart3, Building2, CheckCircle2, TrendingUp } from "lucide-react";
+
+gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
+
+const SOLUTIONS = [
+  {
+    eyebrow: "Custom Flow Management Systems",
+    title: "End-to-end operational digitization",
+    body: "We map your actual physical process — order intake, production, dispatch, approvals — and turn it into a single digital flow. No more chasing paper, WhatsApp updates, or verbal handoffs. Every step is tracked, time-stamped, and visible, so work moves forward even when key people are unavailable.",
+    highlights: [
+      "Every step tracked and time-stamped",
+      "Work moves forward without key individuals",
+      "No paper, no WhatsApp, no verbal handoffs",
+    ],
+    icon: Workflow,
+    image: "/analytics-dashboard-with-charts-graphs-and-data-vi.jpg",
+    imageAlt: "Flow management dashboard",
+    accent: "from-violet-500/10 via-transparent to-transparent",
+    iconColor: "text-violet-500",
+    iconBg: "bg-violet-500/10",
+    flip: false,
+  },
+  {
+    eyebrow: "Internal SaaS & Accountability Engines",
+    title: "Data-driven dashboards and performance tracking",
+    body: "We build role-based internal platforms that turn raw operational activity into real-time accountability. Every team member sees exactly what's expected of them; every manager sees exactly what's happening, without asking. Performance becomes measurable, bottlenecks become visible, and decisions get made on data — not assumptions.",
+    highlights: [
+      "Role-based visibility for every level",
+      "Real-time bottleneck detection",
+      "Decisions on data, not assumptions",
+    ],
+    icon: BarChart3,
+    image: "/data-visualization-dashboard-with-interactive-char.jpg",
+    imageAlt: "Accountability dashboard",
+    accent: "from-blue-500/10 via-transparent to-transparent",
+    iconColor: "text-blue-500",
+    iconBg: "bg-blue-500/10",
+    flip: true,
+  },
+  {
+    eyebrow: "Enterprise ERP Architecture",
+    title: "Scalable infrastructure built around your processes",
+    body: "Rather than forcing your business into a generic template, we design ERP architecture that mirrors how you already operate — then scales with you as volume, teams, and complexity grow. The result is infrastructure that fits from day one and does not need to be replaced as you expand.",
+    highlights: [
+      "Mirrors your existing operations",
+      "Scales with volume, teams, and complexity",
+      "No rip-and-replace as you grow",
+    ],
+    icon: Building2,
+    image: "/modern-dashboard-interface-for-schedule-planning-w.jpg",
+    imageAlt: "ERP architecture",
+    accent: "from-emerald-500/10 via-transparent to-transparent",
+    iconColor: "text-emerald-500",
+    iconBg: "bg-emerald-500/10",
+    flip: false,
+  },
+];
+
+function SolutionPanel({ s, index }: { s: typeof SOLUTIONS[0]; index: number }) {
+  const panelRef = useRef<HTMLDivElement>(null);
+  const textRef  = useRef<HTMLDivElement>(null);
+  const imgRef   = useRef<HTMLDivElement>(null);
+  const Icon = s.icon;
+
+  useGSAP(() => {
+    const fromLeft  = { x: -60, opacity: 0, filter: "blur(8px)" };
+    const fromRight = { x:  60, opacity: 0, filter: "blur(8px)" };
+    const toProps   = { x: 0,   opacity: 1, filter: "blur(0px)", duration: 0.9, ease: "power3.out" };
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: panelRef.current,
+        start: "top 70%",
+        toggleActions: "play none none reverse",
+      },
+    });
+
+    tl.fromTo(textRef.current, s.flip ? fromRight : fromLeft, toProps)
+      .fromTo(imgRef.current,  s.flip ? fromLeft  : fromRight, toProps, "-=0.6");
+
+    const items = panelRef.current?.querySelectorAll(".cs-highlight");
+    if (items && items.length) {
+      tl.from(items, { x: -20, opacity: 0, duration: 0.4, stagger: 0.1, ease: "power2.out" }, "-=0.4");
+    }
+  }, { scope: panelRef });
+
+  return (
+    <div ref={panelRef} className="relative">
+      <div className={"absolute inset-0 rounded-[2rem] bg-gradient-to-br pointer-events-none " + s.accent} />
+
+      <div className={"relative grid gap-10 lg:grid-cols-2 lg:gap-16 items-center py-16 md:py-20 " + (s.flip ? "lg:[&>*:first-child]:order-2" : "")}>
+
+        <div ref={textRef} className="flex flex-col gap-6">
+          <div className="flex items-center gap-3">
+            <div className={"flex h-10 w-10 items-center justify-center rounded-xl " + s.iconBg}>
+              <Icon className={"h-5 w-5 " + s.iconColor} />
+            </div>
+            <span className={"text-xs font-semibold uppercase tracking-widest " + s.iconColor}>
+              {s.eyebrow}
+            </span>
+          </div>
+
+          <h3 className="text-3xl font-semibold leading-tight lg:text-4xl">{s.title}</h3>
+          <p className="text-muted-foreground leading-7 text-base">{s.body}</p>
+
+          <ul className="flex flex-col gap-3 mt-2">
+            {s.highlights.map((h, j) => (
+              <li key={j} className="cs-highlight flex items-start gap-3">
+                <CheckCircle2 className={"h-5 w-5 shrink-0 mt-0.5 " + s.iconColor} />
+                <span className="text-sm text-foreground/80">{h}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div ref={imgRef} className="relative">
+          <div className="relative overflow-hidden rounded-2xl border border-border/50 shadow-xl shadow-black/10">
+            <div className="absolute inset-0 z-10 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none" />
+            <img
+              src={s.image}
+              alt={s.imageAlt}
+              className="w-full h-64 sm:h-80 object-cover"
+            />
+            <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2 rounded-2xl border border-border bg-background/90 px-4 py-2.5 backdrop-blur-md shadow-sm">
+              <TrendingUp className={"h-4 w-4 " + s.iconColor} />
+              <span className="text-xs font-medium text-foreground">Live operational data</span>
+            </div>
+          </div>
+          <div className={"absolute -top-3 -right-3 h-6 w-6 rounded-full border-2 border-background " + s.iconBg} />
+        </div>
+      </div>
+
+      {index < SOLUTIONS.length - 1 && (
+        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent my-2" />
+      )}
+    </div>
+  );
+}
+
+export default function CoreSolutions() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const subRef     = useRef<HTMLParagraphElement>(null);
+
+  useGSAP(() => {
+    const heading = SplitText.create(headingRef.current, { type: "lines", mask: "lines" });
+    const sub     = SplitText.create(subRef.current,     { type: "lines", mask: "lines" });
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 75%",
+        toggleActions: "play none none reverse",
+      },
+    });
+
+    tl.from(heading.lines, { yPercent: 100, duration: 0.8, ease: "power3.out", stagger: 0.1 })
+      .from(sub.lines,     { yPercent: 100, opacity: 0, duration: 0.6, ease: "power3.out", stagger: 0.08 }, "-=0.3");
+
+  }, { scope: sectionRef });
+
+  return (
+    <section ref={sectionRef} className="py-16 md:py-24">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+
+        <div className="text-center mb-20">
+          <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">Core Solutions</p>
+          <div className="overflow-hidden">
+            <h2 ref={headingRef} className="text-4xl font-semibold tracking-tight lg:text-5xl xl:text-6xl">
+              Three systems. Every business need.
+            </h2>
+          </div>
+          <div className="overflow-hidden mt-5">
+            <p ref={subRef} className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
+              Mutually exclusive by function, collectively exhaustive of what a business needs to become fully system-driven.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col">
+          {SOLUTIONS.map((s, i) => (
+            <SolutionPanel key={i} s={s} index={i} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

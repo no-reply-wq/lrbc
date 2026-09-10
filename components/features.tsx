@@ -21,7 +21,9 @@ export default function FeaturesSection() {
     const imageRef = useRef<HTMLDivElement>(null);
     useGSAP(
         () => {
-            const features = gsap.utils.toArray("li");
+            if (!imageRef.current || !sectionRef.current) return;
+
+            const features = gsap.utils.toArray<HTMLElement>("li", sectionRef.current);
 
             gsap.set(features, {
                 opacity: 0,
@@ -47,14 +49,14 @@ export default function FeaturesSection() {
                 },
             });
 
-            tl.from(".text-caption", {
+            tl.from(sectionRef.current.querySelector(".text-caption") ?? [], {
                 opacity: 0,
                 y: 25,
                 duration: 0.5,
             })
 
                 .from(
-                    "h2",
+                    gsap.utils.toArray("h2", sectionRef.current),
                     {
                         opacity: 0,
                         y: 40,
@@ -64,7 +66,7 @@ export default function FeaturesSection() {
                 )
 
                 .from(
-                    "p",
+                    gsap.utils.toArray("p", sectionRef.current),
                     {
                         opacity: 0,
                         y: 25,
@@ -117,7 +119,7 @@ export default function FeaturesSection() {
             className="py-8 md:py-8 mt-8"
 
         >
-            <div className="mx-auto max-w-6xl px-6 pt-10 flex flex-col items-center justify-center">
+            <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-10 flex flex-col items-center justify-center">
                
  
                 <div

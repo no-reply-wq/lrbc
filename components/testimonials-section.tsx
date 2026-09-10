@@ -84,10 +84,15 @@ export default function TestimonialsSection() {
   const companyRef = useRef<HTMLDivElement>(null);
   useGSAP(
     () => {
+      if (
+        !headingRef.current || !subtitleRef.current ||
+        !imageRef.current  || !quoteRef.current ||
+        !nameRef.current   || !companyRef.current
+      ) return;
 
       const heading = SplitText.create(headingRef.current, {
-        type: "chars",
-        charsClass: "char",
+        type: "lines",
+        mask: "lines",
       });
 
       const subtitle = SplitText.create(subtitleRef.current, {
@@ -108,13 +113,12 @@ export default function TestimonialsSection() {
       });
 
       tl.from(
-        heading.chars,
+        heading.lines,
         {
-          yPercent: 110,
-          opacity: 0,
+          yPercent: 100,
           duration: 0.8,
-          ease: "power4.out",
-          stagger: 0.03,
+          ease: "power3.out",
+          stagger: 0.1,
         }
       )
 
@@ -193,7 +197,7 @@ export default function TestimonialsSection() {
   );
 
   return (
-    <div ref={sectionRef} className="mx-auto w-full flex flex-col justify-center items-center max-w-6xl px-10">
+    <div ref={sectionRef} className="mx-auto w-full flex flex-col justify-center items-center max-w-6xl px-4 sm:px-6 lg:px-10">
       
       {/* Header Section */}
       <div className="mx-auto max-w-2xl space-y-6 text-center mt-10">

@@ -13,10 +13,10 @@ import { ContactForm } from "@/components/ContactForm";
 export default function ContactSection2() {
   return (
     <section className="relative py-15 lg:py-15">
-      <div className="mx-auto max-w-5xl px-6">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6">
         
 
-        <div className="grid items-start gap-20 lg:grid-cols-2">
+        <div className="grid items-start gap-10 lg:gap-20 lg:grid-cols-2">
           {/* LEFT */}
           <div className="max-w-md">
             <h2 className="text-5xl font-semibold tracking-tight">

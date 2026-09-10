@@ -64,8 +64,8 @@ export default function ProductsSection() {
 
     useGSAP(() => {
         const heading = SplitText.create(headingRef.current, {
-            type: "chars",
-            mask: "chars",
+            type: "lines",
+            mask: "lines",
         });
 
         const subtitle = SplitText.create(subtitleRef.current, {
@@ -97,10 +97,11 @@ export default function ProductsSection() {
 
         })
 
-        textl.from(heading.chars, {
-            yPercent: 120,
-            stagger: .03,
-            duration: .8,
+        textl.from(heading.lines, {
+            yPercent: 100,
+            stagger: 0.1,
+            duration: 0.8,
+            ease: "power3.out",
         });
 
         textl.from(
@@ -138,7 +139,7 @@ export default function ProductsSection() {
             ref={sectionRef}
             className="relative bg-background py-10"
         >
-            <div className="mx-auto max-w-6xl px-6">
+            <div className="mx-auto max-w-6xl px-4 sm:px-6">
                 
 
                

@@ -24,10 +24,8 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "LRBC - Creating systems to scale your business.",
-  description:
-    "Streamline your billing process with seamless automation for every custom contract, tailored by Brillance.",
-  generator: "v0.app",
+  title: "Custom ERP & Business Automation Consulting | LRBC",
+  description: "LRBC builds custom ERP & automation systems that turn chaotic, person-dependent businesses into scalable profit centers — with hands-on implementation support.",
 };
 
 export default function RootLayout({

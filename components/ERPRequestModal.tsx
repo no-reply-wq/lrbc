@@ -102,7 +102,7 @@ export function ERPRequestModal({
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-1 pr-6">
-                <h3 className="text-xl font-bold tracking-tight">Book a Demo</h3>
+                <h3 className="text-xl font-bold inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors h-9 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer-tight">Book a Demo</h3>
                 <p className="text-muted-foreground text-sm">
                   Fill in your details and we'll get back to you to schedule a demo.
                 </p>

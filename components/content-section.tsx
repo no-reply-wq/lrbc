@@ -43,7 +43,7 @@ export default function ContentSection() {
     }
     useGSAP(
         () => {
-            if (!headingRef.current) return;
+            if (!headingRef.current || !imageRef.current || !featuresRef.current) return;
 
             const split = SplitText.create(headingRef.current, {
                 type: "words",
@@ -133,7 +133,7 @@ export default function ContentSection() {
 
 
             <div className="relative pt-24 md:pt-12">
-                <div className="mx-auto max-w-5xl space-y-8 px-6 md:space-y-12 ">
+                <div className="mx-auto max-w-5xl space-y-8 px-4 sm:px-6 md:space-y-12 ">
                     
                     <div className="mx-auto max-w-4xl space-y-6 text-center md:space-y-12">
                         <h2 className="cta-title text-balance text-4xl font-semibold lg:text-5xl overflow-hidden">
@@ -142,18 +142,19 @@ export default function ContentSection() {
                         </h2>
                     </div>
 
-                    <div className="mx-auto max-w-4xl space-y-6 text-center md:space-y-12">
+                    <div className="mx-auto max-w-4xl space-y-6 text-center md:space-y-12 ">
                         <p
                             ref={headingRef}
                             className=" text-2xl font-semibold"
                         >
-                            <span className=" text-3xl font-bold ">One ERP. Every Process. Zero Bottlenecks .</span>  One platform for everything your business needs. Our Google Workspace-powered ERP solutions keep your operations connected, simple, and efficient.
+                            <span className=" text-3xl font-bold">One System | Every Process |  Zero Bottlenecks </span>
+                            
+                             <p className="mt-4">A single platform built around how your business actually operates - connecting every team, workflow, and decision so nothing depends on one person to keep running.</p> 
                         </p>
                         <p
                             ref={paragraphRef}>
 
-                            One ERP. Every Process. Zero Bottlenecks, meshed up data, dependency on an individual's.
-
+                            No more scattered data. No more processes that live in one person's head. Just one connected system your whole business runs on.
                         </p>
                     </div>
 
@@ -217,10 +218,9 @@ export default function ContentSection() {
                         },
                         ...transitionVariants,
                     }}>
-                    <div className="mask-b-from-55% relative -mr-56 mt-8 overflow-hidden px-2 sm:mr-0 sm:mt-12 md:mt-20 mb-20">
-                        <div className="inset-shadow-2xs ring-background dark:inset-shadow-white/20 bg-background relative mx-auto max-w-6xl overflow-hidden rounded-2xl border shadow-lg shadow-zinc-950/15 ring-1">
+                    <div className="mask-b-from-55% relative mt-8 overflow-hidden px-2 sm:mt-12 md:mt-20 mb-20">
+                        <div className="relative mx-auto max-w-6xl">
                             <Dashboard />
-
                         </div>
                     </div>
                 </AnimatedGroup>

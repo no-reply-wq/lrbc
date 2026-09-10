@@ -33,8 +33,8 @@ export default function LekhaSetuHero() {
     () => {
 
       const heading = SplitText.create(headingRef.current, {
-        type: "chars",
-        charsClass: "char",
+        type: "lines",
+        mask: "lines",
       });
 
       const subtitle = SplitText.create(subtitleRef.current, {
@@ -63,13 +63,12 @@ export default function LekhaSetuHero() {
       });
 
       tl.from(
-        heading.chars,
+        heading.lines,
         {
-          yPercent: 110,
-          opacity: 0,
+          yPercent: 100,
           duration: 0.8,
-          ease: "power4.out",
-          stagger: 0.03,
+          ease: "power3.out",
+          stagger: 0.1,
         }
       )
 

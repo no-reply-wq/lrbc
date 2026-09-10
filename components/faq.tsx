@@ -1,12 +1,14 @@
 'use client'
 
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { Section, TableOfContents } from 'lucide-react'
+import { useState } from 'react'
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from '@/components/ui/accordion'
 import { DynamicIcon, type IconName } from 'lucide-react/dynamic'
 import Link from 'next/link'
-import SectionBadge from './section-badge'
-
-
 
 type FAQItem = {
     id: string
@@ -15,39 +17,65 @@ type FAQItem = {
     answer: string
 }
 
+const ALL_FAQ_ITEMS: FAQItem[] = [
+    {
+        id: 'item-1',
+        icon: 'cpu',
+        question: 'What is a custom ERP system, and how is it different from off-the-shelf software?',
+        answer:
+            "A custom ERP system is built around your business's existing physical processes, rather than forcing your operations to conform to a generic template. Off-the-shelf software offers standardised modules that often require you to change how your teams actually work; LRBC instead maps your real workflow first, then architects the system around it.",
+    },
+    {
+        id: 'item-2',
+        icon: 'user-minus',
+        question: 'How do I make my business less dependent on key employees?',
+        answer:
+            'You reduce person-dependency by converting workflows, approvals, and institutional knowledge into a documented, digital system that anyone can follow. LRBC builds Flow Management Systems and accountability dashboards specifically to capture this tribal knowledge, so operations continue smoothly even if a key employee is unavailable or leaves.',
+    },
+    {
+        id: 'item-3',
+        icon: 'building-2',
+        question: 'Is LRBC only for large enterprises, or can growing businesses afford this too?',
+        answer:
+            "LRBC works with both growing businesses and large-scale enterprises, with architecture and pricing calibrated to the client's budget and stage of growth. Our discovery process starts by understanding your budget constraints before scoping a solution, rather than selling a fixed-price package regardless of company size.",
+    },
+    {
+        id: 'item-4',
+        icon: 'handshake',
+        question: 'What makes LRBC different from a typical software vendor?',
+        answer:
+            'LRBC provides hands-on, on-the-ground implementation and training, not just a software license. We stay engaged after deployment — training your workforce directly on the floor — until the system is fully adopted and running on autopilot, which is where most off-the-shelf software implementations fail.',
+    },
+    {
+        id: 'item-5',
+        icon: 'timer',
+        question: 'How long does it take to implement a custom business system?',
+        answer:
+            'Implementation timelines depend on the complexity of the processes being digitized and the scale of the business, and are scoped individually during the Requirement & Budget Discovery phase. Because LRBC builds around your existing workflows rather than forcing adoption of a fixed template, timelines are typically faster to real-world adoption than generic software rollouts.',
+    },
+    {
+        id: 'item-6',
+        icon: 'git-branch',
+        question: 'Does LRBC only build software, or do you also help with process design?',
+        answer:
+            "LRBC's engagement begins with studying your actual operational process before any system is built, and includes redesigning inefficient workflows where needed. The goal is not just digitization, but converting your operations into a structured, system-driven process — software is the outcome, not the starting point.",
+    },
+    {
+        id: 'item-7',
+        icon: 'factory',
+        question: 'What industries does LRBC work with?',
+        answer:
+            'LRBC works with manufacturing and service businesses across industries, including sectors like OEM manufacturer, steel manufacturing, chemicals, interiors, and industrial production. Our approach is process-first and tech-agnostic, so it adapts to the physical and operational realities of different industries rather than applying a one-size-fits-all vertical solution.',
+    },
+]
+
+const INITIAL_VISIBLE = 5
+
 export default function FAQs() {
-    const faqItems: FAQItem[] = [
-        {
-            id: 'item-1',
-            icon: 'clock',
-            question: 'What are your business hours?',
-            answer: 'Our customer service team is available Monday through Friday from 9:00 AM to 8:00 PM EST, and weekends from 10:00 AM to 6:00 PM EST. During holidays, hours may vary and will be posted on our website.',
-        },
-        {
-            id: 'item-2',
-            icon: 'credit-card',
-            question: 'How do subscription payments work?',
-            answer: 'Subscription payments are automatically charged to your default payment method on the same day each month or year, depending on your billing cycle. You can update your payment information and view billing history in your account dashboard.',
-        },
-        {
-            id: 'item-3',
-            icon: 'truck',
-            question: 'Can I expedite my shipping?',
-            answer: 'Yes, we offer several expedited shipping options at checkout. Next-day and 2-day shipping are available for most U.S. addresses if orders are placed before 2:00 PM EST. International expedited shipping options vary by destination.',
-        },
-        {
-            id: 'item-4',
-            icon: 'globe',
-            question: 'Do you offer localized support?',
-            answer: 'We offer multilingual support in English, Spanish, French, German, and Japanese. Our support team can assist customers in these languages via email, chat, and phone during standard business hours for each respective region.',
-        },
-        {
-            id: 'item-5',
-            icon: 'package',
-            question: 'How do I track my order?',
-            answer: 'Once your order ships, you\'ll receive a confirmation email with a tracking number. You can use this number on our website or the carrier\'s website to track your package. You can also view order status and tracking information in your account dashboard under "Order History".',
-        },
-    ]
+    const [showAll, setShowAll] = useState(false)
+
+    const visibleItems = showAll ? ALL_FAQ_ITEMS : ALL_FAQ_ITEMS.slice(0, INITIAL_VISIBLE)
+    const hiddenCount = ALL_FAQ_ITEMS.length - INITIAL_VISIBLE
 
     return (
         <section className="bg-muted dark:bg-background py-20 mt-70 md:mt-10">
@@ -57,7 +85,7 @@ export default function FAQs() {
                         <div className="sticky top-20">
                             <h2 className="mt-4 text-3xl font-bold">Frequently Asked Questions</h2>
                             <p className="text-muted-foreground mt-4">
-                                Can't find what you're looking for? Contact our{' '}
+                                {"Can't find what you're looking for? Contact our "}
                                 <Link
                                     href="#"
                                     className="text-primary font-medium hover:underline">
@@ -66,12 +94,13 @@ export default function FAQs() {
                             </p>
                         </div>
                     </div>
+
                     <div className="md:w-2/3">
                         <Accordion
                             type="single"
                             collapsible
                             className="w-full space-y-2">
-                            {faqItems.map((item) => (
+                            {visibleItems.map((item) => (
                                 <AccordionItem
                                     key={item.id}
                                     value={item.id}
@@ -95,6 +124,26 @@ export default function FAQs() {
                                 </AccordionItem>
                             ))}
                         </Accordion>
+
+                        {!showAll && (
+                            <div className="mt-4 flex justify-center">
+                                <button
+                                    onClick={() => setShowAll(true)}
+                                    className="text-primary text-sm font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md px-2 py-1 transition-colors">
+                                    See more 
+                                </button>
+                            </div>
+                        )}
+
+                        {showAll && (
+                            <div className="mt-4 flex justify-center">
+                                <button
+                                    onClick={() => setShowAll(false)}
+                                    className="text-muted-foreground text-sm font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md px-2 py-1 transition-colors">
+                                    Show less
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

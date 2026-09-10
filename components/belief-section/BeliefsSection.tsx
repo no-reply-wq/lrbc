@@ -26,8 +26,8 @@ export default function BeliefsSection() {
     useGSAP(
         () => {
             const heading = SplitText.create(headingRef.current, {
-                type: "chars",
-                charsClass: "char",
+                type: "lines",
+                mask: "lines",
             });
 
             const subtitle = SplitText.create(subtitleRef.current, {
@@ -35,12 +35,11 @@ export default function BeliefsSection() {
                 mask: "lines",
             });
 
-            gsap.from(heading.chars, {
-                yPercent: 110,
-                opacity: 0,
-                stagger: 0.03,
+            gsap.from(heading.lines, {
+                yPercent: 100,
+                stagger: 0.1,
                 duration: 0.8,
-                ease: "power4.out",
+                ease: "power3.out",
                 scrollTrigger: {
                     trigger: sectionRef.current,
                     start: "top 75%",
@@ -82,7 +81,7 @@ export default function BeliefsSection() {
             {/* Background Glow */}
             <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,theme(colors.primary/.08),transparent_60%)] dark:bg-[radial-gradient(circle_at_top,theme(colors.primary/.12),transparent_60%)]" />
 
-            <div className="mx-auto max-w-7xl px-6">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6">
 
                 {/* Badge */}
 
@@ -94,7 +93,7 @@ export default function BeliefsSection() {
                 <div className="mx-auto mt-8 max-w-5xl overflow-hidden">
                     <h2
                         ref={headingRef}
-                        className="text-center text-5xl font-semibold tracking-tight md:text-6xl xl:text-8xl"
+                        className="text-center text-3xl font-semibold tracking-tight sm:text-5xl md:text-6xl xl:text-8xl"
                     >
                         Before We Build,
                         <br />

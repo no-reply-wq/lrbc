@@ -19,7 +19,7 @@ const members = [
         objectPosition: 'center top',
     },
     {
-        name: 'Aniket Patanayak',
+        name: 'Aniket Pattsanayak',
         role: 'Principal System Architect',
         avatar: '/images/aniket.jpeg',
         link: 'https://www.linkedin.com/in/aniket-pattanayak/',
@@ -135,8 +135,8 @@ export default function TeamSection() {
             ref={sectionRef}
             className="bg-gray-50 py-12 dark:bg-transparent md:py-16"
         >
-            <div className="mx-auto max-w-5xl  px-15">
-                <span className="-ml-6 -mt-4 block w-max"><SectionBadge text="Team" /></span>
+            <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-15">
+                <span className="block w-max sm:-ml-6 sm:-mt-4"><SectionBadge text="Team" /></span>
                 <div
                     ref={headerRef}
                     className="mt-8 gap-4 sm:grid sm:grid-cols-2 md:mt-12"

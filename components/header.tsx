@@ -11,6 +11,7 @@ import { ERPRequestModal } from "@/components/ERPRequestModal"
 const menuItems = [
     { name: 'About', href: '/about' },
     { name: 'LekhaSetu', href: '/lekhasetu' },
+    { name: 'Testimonials', href: '/testimonials-case-studies' },
     { name: 'Contact', href: '/contact' },
 ]
 

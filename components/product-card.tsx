@@ -39,22 +39,22 @@ export function ProductCard({ product }: ProductCardProps) {
         backdrop-blur-xl
       "
     >
-      <CardContent className="grid h-full gap-12 p-10 lg:grid-cols-[420px_1fr] lg:p-14">
+      <CardContent className="grid h-full gap-8 p-6 sm:gap-12 sm:p-10 lg:grid-cols-[420px_1fr] lg:p-14">
         {/* Left */}
 
         <div className="flex flex-col justify-between">
           <div>
            
 
-            <h3 className="mt-6 text-5xl font-semibold tracking-tight">
+            <h3 className="mt-4 text-4xl sm:mt-6 sm:text-5xl font-semibold tracking-tight">
               {product.title}
             </h3>
 
-            <p className="text-muted-foreground mt-6 text-lg leading-8">
+            <p className="text-muted-foreground mt-4 text-base leading-7 sm:mt-6 sm:text-lg sm:leading-8">
               {product.description}
             </p>
 
-            <div className="mt-10 flex flex-wrap gap-3">
+            <div className="mt-6 flex flex-wrap gap-2.5 sm:mt-10 sm:gap-3">
               {product.features.map((feature) => (
                 <div
                   key={feature}
@@ -81,7 +81,7 @@ export function ProductCard({ product }: ProductCardProps) {
           <Button
             asChild
             size="lg"
-            className="group mt-12 w-fit overflow-hidden rounded-full px-8"
+            className="group mt-8 sm:mt-12 w-fit overflow-hidden rounded-full px-8"
           >
             <Link
               href={product.href}

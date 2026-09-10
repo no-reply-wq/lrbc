@@ -17,7 +17,7 @@ const Logos = () => {
       {logos.map((logo, index) => (
         <div
           key={index}
-          className="relative flex h-30 w-[100px] shrink-0 items-center justify-center"
+          className="relative flex h-20 w-[90px] sm:h-30 sm:w-[100px] shrink-0 items-center justify-center"
         >
           <Image
             src={logo}
@@ -35,15 +35,15 @@ const Logos = () => {
 export function LogoCloud() {
   return (
     <section className="bg-background py-8">
-      <div className="relative m-auto max-w-7xl px-6">
-        <div className="relative flex gap-6 max-lg:flex-col lg:items-center lg:gap-12">
-          <p className="text-muted-foreground shrink-0 lg:border-r lg:pr-12 lg:text-end">
+      <div className="relative m-auto max-w-7xl px-4 sm:px-6">
+        <div className="relative flex flex-col items-center gap-6 lg:flex-row lg:items-center lg:gap-12">
+          <p className="text-muted-foreground shrink-0 text-center lg:border-r lg:pr-12 lg:text-end">
             Our <br className="max-lg:hidden" /> Clients
           </p>
 
           <InfiniteSlider
             gap={56}
-            className="mask-x-from-85% mask-x-to-99%"
+            className="mask-x-from-85% mask-x-to-99% w-full"
           >
             <Logos />
           </InfiniteSlider>
