@@ -10,7 +10,10 @@ import ContactSection2 from "@/components/ContactSection2";
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col bg-background text-foreground">
-      <NewHero />
+      <NewHero 
+        title="Lalit Raj Business Consulting"
+        subtitle="Empowering businesses with intelligent automation, ERP solutions, and strategic advisory."
+      />
       <CoreSolutions />
       <WhyLrbc />
       <LekhaSetuHero />
