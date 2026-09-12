@@ -1,44 +1,23 @@
-"use client";
-
-import ContentSection from "@/components/content-section";
-import TestimonialsSection from "../components/testimonials-section";
-import FAQs from "@/components/faq";
-import TeamSection from "@/components/team";
-import FooterSection from "@/components/footer-section";
-import { HeroHeader } from "@/components/header";
-import ProductSection from "@/components/products";
+import NewHero from "@/components/new-components/new-hero";
+import CoreSolutions from "@/components/core-solutions";
+import WhyLrbc from "@/components/why-lrbc";
+import NumbersThatSpeak from "@/components/numbers-that-speak";
+import LekhaSetuHero from "@/components/LekhaSetuHero";
+import TestimonialsSection from "@/components/testimonials-section";
+import FAQ from "@/components/faq";
 import ContactSection2 from "@/components/ContactSection2";
-import NewHeroSection from "@/components/new-components/new-hero";
 
-export default function LandingPage() {
+export default function Home() {
   return (
-    <div className="mx-auto min-w-full max-w-full overflow-x-hidden">
-      <HeroHeader />
-
-      <NewHeroSection
-        title={
-          <h1 className="mx-auto max-w-5xl flex flex-col text-center text-4xl max-md:font-bold md:text-5xl xl:text-[5.25rem]">
-            <span className="overflow-hidden">Better Tools.</span>
-            <span className="overflow-hidden">Better Business.</span>
-          </h1>
-        }
-        subtitle="The right technology doesn't complicate your business. It helps it flow."
-        buttonText="Request a demo"
-        buttonHref="/contact"
-        badgeText="Lean Resource Business Consulting Private Limited"
-      />
-
-      <ContentSection />
-
+    <main className="min-h-screen flex flex-col bg-background text-foreground">
+      <NewHero />
+      <CoreSolutions />
+      <WhyLrbc />
+      <LekhaSetuHero />
+      <NumbersThatSpeak />
       <TestimonialsSection />
-
-      <ProductSection />
-
-      <FAQs />
-
+      <FAQ />
       <ContactSection2 />
-
-      <FooterSection />
-    </div>
+    </main>
   );
 }
