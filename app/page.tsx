@@ -1,7 +1,6 @@
 "use client";
 
 import ContentSection from "@/components/content-section";
-import FeaturesSection from "@/components/features";
 import TestimonialsSection from "../components/testimonials-section";
 import FAQs from "@/components/faq";
 import TeamSection from "@/components/team";
@@ -10,9 +9,6 @@ import { HeroHeader } from "@/components/header";
 import ProductSection from "@/components/products";
 import ContactSection2 from "@/components/ContactSection2";
 import NewHeroSection from "@/components/new-components/new-hero";
-import EngagementProcess from "@/components/engagement-process";
-import CoreSolutions from "@/components/core-solutions";
-import WhyLRBC from "@/components/why-lrbc";
 
 export default function LandingPage() {
   return (
@@ -34,15 +30,7 @@ export default function LandingPage() {
 
       <ContentSection />
 
-      <FeaturesSection />
-
-      <EngagementProcess />
-
-      <CoreSolutions />
-
       <TestimonialsSection />
-
-      <WhyLRBC />
 
       <ProductSection />
 

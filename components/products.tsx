@@ -28,7 +28,6 @@ const products = [
             "Real-time cloud sync",
             "Multi-company management",
             "Inventory insights",
-            "Google Sheets reports",
         ],
     },
 
@@ -137,7 +136,7 @@ export default function ProductsSection() {
     return (
         <section
             ref={sectionRef}
-            className="relative bg-background py-10"
+            className="relative bg-background py-8 md:py-10 overflow-x-hidden"
         >
             <div className="mx-auto max-w-6xl px-4 sm:px-6">
                 

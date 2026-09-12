@@ -33,7 +33,7 @@ const SEED_CONTENT = [
     heading: 'Products',
     lekhasetu_title: 'LekhaSetu',
     lekhasetu_desc: 'Forget manual exports and outdated reports. LekhaSetu continuously syncs your Account data with the cloud so every dashboard, report and insight is always current.',
-    lekhasetu_features: ['Real-time cloud sync', 'Multi-company management', 'Inventory insights', 'Google Sheets reports'],
+    lekhasetu_features: ['Real-time cloud sync', 'Multi-company management', 'Inventory insights'],
     workpilot_title: 'WorkPilot',
     workpilot_desc: 'WorkPilot simplifies workforce management by bringing attendance, task allocation, and work tracking into one centralized platform.',
     workpilot_features: ['Attendance', 'Task assignment', 'Activity history', 'Performance tracking'],

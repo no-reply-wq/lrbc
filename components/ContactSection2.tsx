@@ -12,7 +12,7 @@ import { ContactForm } from "@/components/ContactForm";
 
 export default function ContactSection2() {
   return (
-    <section className="relative py-15 lg:py-15">
+    <section className="relative py-10 lg:py-16">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         
 
@@ -104,7 +104,7 @@ export default function ContactSection2() {
           </div>
 
           {/* RIGHT / FORM */}
-          <div>
+          <div className="max-h-[60vh] overflow-y-auto pr-1 lg:sticky lg:top-24 lg:max-h-[70vh] [scrollbar-width:thin] [scrollbar-color:oklch(var(--primary)/0.35)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-primary/35">
             <ContactForm />
           </div>
         </div>

@@ -154,7 +154,7 @@ const products = [
         href: "/lekhasetu",
         description: "Forget manual exports and outdated reports. LekhaSetu continuously syncs your Account data with the cloud so every dashboard, report and insight is always current.",
         image: "/images/payments.png",
-        features: ["Real-time cloud sync", "Multi-company management", "Inventory insights", "Google Sheets reports"],
+        features: ["Real-time cloud sync", "Multi-company management", "Inventory insights"],
     },
     {
         id: "workpilot",

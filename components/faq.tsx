@@ -78,7 +78,7 @@ export default function FAQs() {
     const hiddenCount = ALL_FAQ_ITEMS.length - INITIAL_VISIBLE
 
     return (
-        <section className="bg-muted dark:bg-background py-20 mt-70 md:mt-10">
+        <section className="bg-muted dark:bg-background py-10 md:py-20 mt-8 md:mt-10">
             <div className="mx-auto max-w-5xl px-4 md:px-6">
                 <div className="flex flex-col gap-10 md:flex-row md:gap-16">
                     <div className="md:w-1/3">
@@ -129,8 +129,8 @@ export default function FAQs() {
                             <div className="mt-4 flex justify-center">
                                 <button
                                     onClick={() => setShowAll(true)}
-                                    className="text-primary text-sm font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md px-2 py-1 transition-colors">
-                                    See more 
+                                    className="text-primary text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md px-2 py-1 transition-colors">
+                                    See more ↓
                                 </button>
                             </div>
                         )}
@@ -139,8 +139,8 @@ export default function FAQs() {
                             <div className="mt-4 flex justify-center">
                                 <button
                                     onClick={() => setShowAll(false)}
-                                    className="text-muted-foreground text-sm font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md px-2 py-1 transition-colors">
-                                    Show less
+                                    className="text-muted-foreground text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md px-2 py-1 transition-colors">
+                                    See less ↑
                                 </button>
                             </div>
                         )}

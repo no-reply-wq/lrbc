@@ -142,19 +142,18 @@ export default function ContentSection() {
                         </h2>
                     </div>
 
-                    <div className="mx-auto max-w-4xl space-y-6 text-center md:space-y-12 ">
+                    <div className="mx-auto max-w-4xl space-y-6 text-center md:space-y-12">
                         <p
                             ref={headingRef}
                             className=" text-2xl font-semibold"
                         >
-                            <span className=" text-3xl font-bold">One System | Every Process |  Zero Bottlenecks </span>
-                            
-                             <p className="mt-4">A single platform built around how your business actually operates - connecting every team, workflow, and decision so nothing depends on one person to keep running.</p> 
+                            <span className=" text-3xl font-bold ">One ERP. Every Process. Zero Bottlenecks .</span>  One platform for everything your business needs. Our Google Workspace-powered ERP solutions keep your operations connected, simple, and efficient.
                         </p>
                         <p
                             ref={paragraphRef}>
 
-                            No more scattered data. No more processes that live in one person's head. Just one connected system your whole business runs on.
+                            One ERP. Every Process. Zero Bottlenecks, meshed up data, dependency on an individual's.
+
                         </p>
                     </div>
 
@@ -185,10 +184,10 @@ export default function ContentSection() {
                             },
                         },
                     }}
-                    className="mask-y-from-35% mask-y-to-90% absolute inset-0 top-56 lg:top-12">
+                    className="mask-y-from-35% mask-y-to-65% absolute inset-0 top-56 lg:top-12">
                     
                      <video
-                                className="hidden h-full w-full object-cover dark:block"
+                                className="block h-full w-full object-cover"
                                 src="/videos/hero-vid.mp4"
                                 autoPlay
                                 muted
@@ -218,7 +217,7 @@ export default function ContentSection() {
                         },
                         ...transitionVariants,
                     }}>
-                    <div className="mask-b-from-55% relative mt-8 overflow-hidden px-2 sm:mt-12 md:mt-20 mb-20">
+                    <div className="relative mt-8 overflow-hidden px-2 sm:mt-12 md:mt-20 mb-20">
                         <div className="relative mx-auto max-w-6xl">
                             <Dashboard />
                         </div>

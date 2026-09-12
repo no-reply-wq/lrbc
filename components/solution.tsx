@@ -1,7 +1,4 @@
-
-import { Button } from '@/components/ui/button'
-import { ArrowLeftRight, Cog, Compass, Goal, Repeat, ZodiacGemini } from 'lucide-react';
-import Link from 'next/link'
+import ReceivablesAgingChart from '@/components/dashboar-view/components/receivables-aging-chart';
 
 export function SolutionSection() {
     return (
@@ -23,55 +20,10 @@ export function SolutionSection() {
                     </div>
 
                     <div className="mask-radial-at-top-left mask-radial-from-65% mask-radial-[100%_80%] -mx-6 px-6 sm:mx-auto sm:max-w-md md:-mx-6 md:ml-auto md:mr-0">
-                        <div className="bg-card rounded-2xl border p-3 shadow-lg md:pb-12">
-                            <div className="grid grid-cols-2 gap-2">
-                                <Integration
-                                    icon={<ZodiacGemini />}
-                                    name="Gemini"
-                                    description="The AI model that powers Google's search engine."
-                                />
-                                <Integration
-                                    icon={<Repeat />}
-                                    name="Replit"
-                                    description="The AI model that powers Google's search engine."
-                                />
-                                <Integration
-                                    icon={<Goal />}
-                                    name="GooglePaLM"
-                                    description="The AI model that powers Google's search engine."
-                                />
-                                <Integration
-                                    icon={<Compass />}
-                                    name="MagicUI"
-                                    description="The AI model that powers Google's search engine."
-                                />
-                                <Integration
-                                    icon={<Cog />}
-                                    name="VSCodium"
-                                    description="The AI model that powers Google's search engine."
-                                />
-                                <Integration
-                                    icon={<ArrowLeftRight />}
-                                    name="MediaWiki"
-                                    description="The AI model that powers Google's search engine."
-                                />
-                            </div>
-                        </div>
+                        <ReceivablesAgingChart />
                     </div>
                 </div>
             </div>
         </section>
-    )
-}
-
-const Integration = ({ icon, name, description }: { icon: React.ReactNode; name: string; description: string }) => {
-    return (
-        <div className="hover:bg-foreground/5 cursor-pointer space-y-4 rounded-lg border p-4 transition-colors">
-            <div className="flex size-fit items-center justify-center">{icon}</div>
-            <div className="space-y-1">
-                <h3 className="text-sm font-medium">{name}</h3>
-                <p className="text-muted-foreground line-clamp-1 text-sm md:line-clamp-2">{description}</p>
-            </div>
-        </div>
     )
 }

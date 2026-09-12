@@ -1,5 +1,6 @@
 import type React from "react";
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 
@@ -7,6 +8,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import FooterSection from "@/components/footer-section";
 import SplashCursor from "@/components/SplashCursor";
+import WhatsAppFloat from "@/components/whatsapp-float";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -35,6 +37,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-HC5EJ4P8W5"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-HC5EJ4P8W5');
+          `}
+        </Script>
+      </head>
       <body className="font-sans antialiased">
 
         <ThemeProvider
@@ -45,17 +61,19 @@ export default function RootLayout({
         >
           {/* Global Splash Cursor */}
           <SplashCursor
-            DENSITY_DISSIPATION={5}
-            VELOCITY_DISSIPATION={4}
-            PRESSURE={0.1}
-            CURL={3}
-            SPLAT_RADIUS={0.12}
-            SPLAT_FORCE={2500}
-            COLOR_UPDATE_SPEED={5}
+            DENSITY_DISSIPATION={3.5}
+            VELOCITY_DISSIPATION={2.5}
+            PRESSURE={0.15}
+            CURL={5}
+            SPLAT_RADIUS={0.22}
+            SPLAT_FORCE={5000}
+            COLOR_UPDATE_SPEED={8}
             SHADING
             RAINBOW_MODE={false}
             COLOR="#5B21B6"
           />
+
+          <WhatsAppFloat />
 
           <TooltipProvider>
             {children}

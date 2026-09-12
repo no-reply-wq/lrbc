@@ -34,10 +34,10 @@ const Logos = () => {
 
 export function LogoCloud() {
   return (
-    <section className="bg-background py-8">
+    <section className="bg-background py-6 md:py-8">
       <div className="relative m-auto max-w-7xl px-4 sm:px-6">
         <div className="relative flex flex-col items-center gap-6 lg:flex-row lg:items-center lg:gap-12">
-          <p className="text-muted-foreground shrink-0 text-center lg:border-r lg:pr-12 lg:text-end">
+          <p className="text-muted-foreground shrink-0 text-left text-sm font-medium lg:border-r lg:pr-12 lg:text-end">
             Our <br className="max-lg:hidden" /> Clients
           </p>
 

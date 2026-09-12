@@ -28,6 +28,14 @@ const testimonials = [
     designation: "Executive Director",
     image: "/images/Kanul.jpeg",
   },
+ // {
+ //   quote:
+ //     "When hiring someone to build business systems, you need a partner who understands your requirements and seamlessly translates ideas into practical solutions. Working with Lalit at LRBC was exactly that experience. He is incredibly patient, approachable, and highly prompt in his responses. Lalit stays updated with the latest technologies and genuinely cares about helping your business grow. He made our entire system-building process smooth and completely hassle-free. If you are looking for a technology partner who truly listens and delivers, I confidently recommend LRBC. Highly recommended for anyone wanting to create robust systems to scale their business!",
+ //   name: "Ekta V Vohra",
+ //   company: "Wedding Alliance",
+ //   designation: "Founder",
+ //   image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face",
+  //},
 ];
 
 // Auto-slide delay: 8 000 ms — long enough to read both testimonials comfortably

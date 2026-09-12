@@ -1,41 +1,26 @@
 "use client"
-import { ArrowRight, Cpu, Lock, Sparkles, Zap } from 'lucide-react'
+import { Mail, Zap, Activity, DraftingCompass, Quote } from 'lucide-react'
 import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
-import { TextEffect } from './ui/text-effect';
-import { AnimatedGroup } from './ui/animated-group';
 import SectionBadge from './section-badge';
-
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText);
 
+const WHY_ERP_FEATURES = [
+    { icon: Mail, text: "Built around your unique workflows" },
+    { icon: Zap, text: "Easy for every team to learn and use" },
+    { icon: Activity, text: "Real-time dashboards for complete operational visibility" },
+    { icon: DraftingCompass, text: "Scales as your business grows" },
+];
+
 export default function AboutUsContent() {
     const sectionRef = useRef<HTMLElement>(null);
-    const headingRef = useRef<HTMLHeadingElement>(null);
-    const imageRef = useRef<HTMLImageElement>(null);
-    const featuresRef = useRef<HTMLDivElement>(null);
-    const transitionVariants = {
-        item: {
-            hidden: {
-                opacity: 0,
-                filter: 'blur(12px)',
-                y: 12,
-            },
-            visible: {
-                opacity: 1,
-                filter: 'blur(0px)',
-                y: 0,
-                transition: {
-                    type: 'spring',
-                    bounce: 0.3,
-                    duration: 1.5,
-                },
-            },
-        },
-    }
+    const headingRef = useRef<HTMLParagraphElement>(null);
+    const featuresRef = useRef<HTMLUListElement>(null);
+
     useGSAP(
         () => {
             if (!headingRef.current) return;
@@ -54,82 +39,84 @@ export default function AboutUsContent() {
                 stagger: 0.15,
                 scrollTrigger: {
                     trigger: headingRef.current,
-                    start: "top 70%",
+                    start: "top 80%",
                     end: "+=500",
                     scrub: true,
                 },
             });
-            const cards = gsap.utils.toArray(
-                featuresRef.current?.children || []
-            );
 
-            gsap.set(cards, {
-                y: 80,
-                opacity: 0,
-            });
+            const items = featuresRef.current?.querySelectorAll("li") ?? [];
+            gsap.set(items, { opacity: 0, y: 30 });
 
-            const tl = gsap.timeline({
+            gsap.to(items, {
+                opacity: 1,
+                y: 0,
+                stagger: 0.12,
+                duration: 0.5,
+                ease: "power3.out",
                 scrollTrigger: {
-                    trigger: imageRef.current,
-                    start: "top 70%",
-                    end: "bottom 55%",
-                    scrub: 1,
+                    trigger: featuresRef.current,
+                    start: "top 85%",
+                    toggleActions: "play none none reverse",
                 },
             });
 
-            tl.to(imageRef.current, {
-                scale: 0.9,
-                y: -60,
-                filter: "brightness(0.8)",
-                ease: "none",
-            })
-
-                .to(
-                    cards,
-                    {
-                        y: 0,
-                        delay: 0.5,
-                        opacity: 1,
-                        stagger: 0.15,
-                        ease: "power2.out",
-                    },
-                    0.15
-                );
-
             return () => {
                 split.revert();
-                ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
             };
         },
         { scope: sectionRef }
     );
-    return (
-        <section ref={sectionRef} className="py-16 md:py-32">
-            <div className="mx-auto max-w-5xl space-y-8 px-6 md:space-y-12">
-                <SectionBadge text='Our Story' />
-                <img
-                    ref={imageRef}
-                    className="rounded-(--radius)"
-                    src="https://images.unsplash.com/photo-1530099486328-e021101a494a?q=80&w=2747&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    alt="team image"
-                    loading="lazy"
-                />
-                {/* 1. Add the gradient, padding, rounding, and hover classes to this wrapper div */}
-<div className="relative mx-auto max-w-5xl space-y-6 text-center md:space-y-12 bg-gradient-to-b from-white/[0.03] via-transparent to-transparent rounded-[2rem] px-6 py-12 transition-all duration-700 ease-out hover:from-white/[0.06]">
-    <p
-        ref={headingRef}
-        className="text-4xl font-semibold lg:text-5xl leading-wide"
-    >
-        Our journey began with a simple observation. While working closely with businesses across industries, our founder saw organizations struggling with paperwork, disconnected systems, and software that was often too complicated for everyday users
-    </p>
-    
-    {/* 2. Add the text-muted-foreground and text-lg classes to this paragraph */}
-    <p className="text-muted-foreground text-lg">
-        Rather than asking businesses to adapt to technology,<br/> we chose to build technology that adapts to them.
-    </p>
-</div>
-                
 
+    return (
+        <section ref={sectionRef} className="py-8 md:py-20">
+            <div className="mx-auto max-w-5xl space-y-8 px-4 sm:px-6 md:space-y-12">
+                <SectionBadge text='Our Story' />
+            </div>
+
+            {/* ── Why Businesses Choose Our ERP  |  Our Story quote ── */}
+            <div className="mx-auto max-w-6xl px-4 sm:px-6 mt-16 md:mt-24">
+                <div className="grid gap-12 md:grid-cols-2 md:gap-16 items-start">
+
+                    {/* Left: Why Businesses Choose Our ERP */}
+                    <div>
+                        <h2 className="text-3xl font-semibold sm:text-4xl lg:text-5xl">
+                            Why Businesses Choose Our ERP
+                        </h2>
+                        <p className="mt-5 text-muted-foreground text-base sm:text-lg">
+                            One ERP. Every Process. Zero Bottlenecks, meshed up data, dependency on an individual's
+                        </p>
+
+                        <ul ref={featuresRef} className="mt-8 divide-y border-y">
+                            {WHY_ERP_FEATURES.map((f, i) => {
+                                const Icon = f.icon;
+                                return (
+                                    <li key={i} className="flex items-center gap-3 py-3.5">
+                                        <Icon className="size-5 shrink-0 text-primary" />
+                                        <span className="text-sm sm:text-base">{f.text}</span>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+
+                    {/* Right: Our Story — modern quote treatment */}
+                    <div className="relative pl-8 sm:pl-10">
+                        <Quote className="absolute -top-2 left-0 h-10 w-10 sm:h-12 sm:w-12 text-primary/20" />
+                        <blockquote className="pl-6 sm:pl-8">
+                            <p
+                                ref={headingRef}
+                                className="text-xl sm:text-2xl lg:text-3xl font-semibold leading-snug sm:leading-relaxed"
+                            >
+                                "Our journey began with a simple observation. While working closely with businesses across industries, our founder saw organizations struggling with paperwork, disconnected systems, and software that was often too complicated for everyday users."
+                            </p>
+                            <footer className="mt-6 text-muted-foreground text-sm sm:text-base leading-relaxed">
+                                Rather than asking businesses to adapt to technology, we chose to build technology that adapts to them.
+                            </footer>
+                        </blockquote>
+                    </div>
+
+                </div>
             </div>
         </section>
     )

@@ -29,7 +29,7 @@ const NARRATIVE = [
     label: "Resolution",
     labelColor: "text-emerald-500",
     dotColor: "bg-emerald-500",
-    text: "LRBC does not sell software. We architect systems around your existing physical and operational reality — then get on the ground to make sure your workforce actually adopts them. Every dashboard, workflow, and accountability engine we build is designed to convert institutional knowledge into institutional infrastructure — so the business runs on process, not on any one person.",
+    text: "We does not sell software. We architect systems around your existing physical and operational reality — then get on the ground to make sure your workforce actually adopts them. Every dashboard, workflow, and accountability engine we build is designed to convert institutional knowledge into institutional infrastructure — so the business runs on process, not on any one person.",
   },
 ];
 
@@ -101,7 +101,7 @@ export default function WhyLRBC() {
   }, { scope: sectionRef });
 
   return (
-    <section ref={sectionRef} className="py-24 md:py-36 relative overflow-hidden">
+    <section ref={sectionRef} className="py-10 md:py-24 relative overflow-hidden">
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
         <div className="absolute right-1/4 bottom-1/4 h-64 w-64 rounded-full bg-violet-500/5 blur-3xl" />
@@ -141,7 +141,7 @@ export default function WhyLRBC() {
 
         <div className="mt-20 md:mt-28 relative">
           <Quote className="why-quote-mark absolute -top-4 -left-2 h-12 w-12 text-primary/20" />
-          <blockquote className="pl-8 border-l-2 border-primary/30">
+          <blockquote className="pl-8">
             <p className="text-xl md:text-2xl font-medium text-foreground leading-relaxed max-w-3xl">
               A company that scales predictably, protects its margins, and does not depend on any single individual to function.
             </p>

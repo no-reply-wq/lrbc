@@ -101,7 +101,7 @@ export default function EngagementProcess() {
   }, { scope: sectionRef });
 
   return (
-    <section ref={sectionRef} className="py-24 md:py-32 overflow-hidden">
+    <section ref={sectionRef} className="py-10 md:py-24 overflow-hidden">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
 
         <div className="text-center mb-16 md:mb-20">

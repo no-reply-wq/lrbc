@@ -197,7 +197,7 @@ export default function TestimonialsSection() {
   );
 
   return (
-    <div ref={sectionRef} className="mx-auto w-full flex flex-col justify-center items-center max-w-6xl px-4 sm:px-6 lg:px-10">
+    <div ref={sectionRef} className="mx-auto w-full flex flex-col justify-center items-center max-w-6xl px-4 sm:px-6 lg:px-10 py-10 md:py-0">
       
       {/* Header Section */}
       <div className="mx-auto max-w-2xl space-y-6 text-center mt-10">

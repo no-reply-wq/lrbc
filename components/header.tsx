@@ -1,17 +1,30 @@
 'use client'
 import Link from 'next/link'
 import { Logo } from '@/components/logo'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import React from 'react'
 import { cn } from '@/lib/utils'
 import { ModeToggle } from './mode-toggle'
 import { ERPRequestModal } from "@/components/ERPRequestModal"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 
-const menuItems = [
+const menuItems: { name: string; href: string; children?: { name: string; href: string }[] }[] = [
     { name: 'About', href: '/about' },
-    { name: 'LekhaSetu', href: '/lekhasetu' },
-    { name: 'Testimonials', href: '/testimonials-case-studies' },
+    { name: 'Why LRBC', href: '/why-lrbc' },
+    {
+        name: 'Products',
+        href: '/lekhasetu',
+        children: [
+            { name: 'LekhaSetu', href: '/lekhasetu' },
+        ],
+    },
+    { name: 'Case Studies', href: '/testimonials-case-studies' },
     { name: 'Contact', href: '/contact' },
 ]
 
@@ -51,14 +64,30 @@ export const HeroHeader = () => {
                         </div>
 
                         <div className="absolute inset-0 m-auto hidden size-fit lg:block">
-                            <ul className="flex gap-8 text-sm">
+                            <ul className="flex gap-5 text-sm">
                                 {menuItems.map((item, index) => (
                                     <li key={index}>
-                                        <Link
-                                            href={item.href}
-                                            className="text-muted-foreground hover:text-accent-foreground block duration-150">
-                                            <span>{item.name}</span>
-                                        </Link>
+                                        {item.children ? (
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger className="text-muted-foreground hover:text-accent-foreground flex items-center gap-1 duration-150 outline-none cursor-pointer">
+                                                    <span>{item.name}</span>
+                                                    <ChevronDown className="size-3.5" />
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="start">
+                                                    {item.children.map((child, ci) => (
+                                                        <DropdownMenuItem key={ci} asChild>
+                                                            <Link href={child.href}>{child.name}</Link>
+                                                        </DropdownMenuItem>
+                                                    ))}
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        ) : (
+                                            <Link
+                                                href={item.href}
+                                                className="text-muted-foreground hover:text-accent-foreground block duration-150">
+                                                <span>{item.name}</span>
+                                            </Link>
+                                        )}
                                     </li>
                                 ))}
                             </ul>
@@ -74,6 +103,19 @@ export const HeroHeader = () => {
                                                 className="text-muted-foreground hover:text-accent-foreground block duration-150">
                                                 <span>{item.name}</span>
                                             </Link>
+                                            {item.children && (
+                                                <ul className="mt-3 ml-4 space-y-3 border-l pl-4">
+                                                    {item.children.map((child, ci) => (
+                                                        <li key={ci}>
+                                                            <Link
+                                                                href={child.href}
+                                                                className="text-muted-foreground hover:text-accent-foreground block text-sm duration-150">
+                                                                <span>{child.name}</span>
+                                                            </Link>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
                                         </li>
                                     ))}
                                 </ul>

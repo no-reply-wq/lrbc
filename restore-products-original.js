@@ -214,7 +214,7 @@ const products = [
             "Real-time cloud sync",
             "Multi-company management",
             "Inventory insights",
-            "Google Sheets reports",
+            
         ],
     },
 

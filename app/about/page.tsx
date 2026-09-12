@@ -1,7 +1,6 @@
 "use client";
 
 import AboutUsContent from "@/components/about-content";
-import ContactSection2 from "@/components/ContactSection2";
 import FAQs from "@/components/faq";
 import FooterSection from "@/components/footer-section";
 import { HeroHeader } from "@/components/header";
@@ -38,8 +37,7 @@ export default function LandingPage() {
       <TeamSection />
     
       <FAQs />
-      <ContactSection2 />
-      
+
       <FooterSection />
    
   </div>

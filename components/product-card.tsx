@@ -10,7 +10,8 @@ import {
   Card,
   CardContent,
 } from "@/components/ui/card";
-import TeamPerformanceCard from "./dashboar-view/components/team-performance-card";
+import ReceivablesAgingChart from "./dashboar-view/components/receivables-aging-chart";
+import WorkPilotMini from "./workpilot-mini";
 
 interface ProductCardProps {
   product: {
@@ -39,7 +40,7 @@ export function ProductCard({ product }: ProductCardProps) {
         backdrop-blur-xl
       "
     >
-      <CardContent className="grid h-full gap-8 p-6 sm:gap-12 sm:p-10 lg:grid-cols-[420px_1fr] lg:p-14">
+      <CardContent className="grid gap-8 p-6 sm:gap-12 sm:p-10 lg:grid-cols-[420px_1fr] lg:p-14">
         {/* Left */}
 
         <div className="flex flex-col justify-between">
@@ -122,35 +123,12 @@ export function ProductCard({ product }: ProductCardProps) {
           </Button>
         </div>
 
-        {/* Right */}
-
-        <div className="relative flex items-center justify-center">
-          {/* Background glow */}
-
+        {/* Right — chart visible on all screen sizes */}
+        <div className="relative flex items-center justify-center h-[340px] sm:h-[420px] lg:h-full">
           <div className="absolute inset-0 rounded-[32px] bg-gradient-to-br from-primary/20 via-primary/5 to-transparent blur-3xl" />
-
-          {/* Window */}
-
-          <div
-            className="
-              relative
-              h-full
-              w-full
-              overflow-hidden
-              rounded-[28px]
-              border
-              border-white/10
-              bg-[#171717]
-              shadow-2xl
-            "
-          >
-            
-
-            {/* Image */}
-
-            <div className="relative h-full">
-              <TeamPerformanceCard />
-           
+          <div className="relative h-full w-full overflow-hidden rounded-[28px] border border-border/60 bg-background shadow-2xl">
+            <div className="relative h-full p-2">
+              {product.id === "workpilot" ? <WorkPilotMini /> : <ReceivablesAgingChart />}
             </div>
           </div>
         </div>

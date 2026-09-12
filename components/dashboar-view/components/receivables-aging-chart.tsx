@@ -19,31 +19,19 @@ import {
 } from "@/components/ui/card";
 
 const data = [
-  {
-    bucket: "<30",
-    value: 25,
-    color: "hsl(var(--chart-2))",
-  },
-  {
-    bucket: "30-60",
-    value: 12,
-    color: "hsl(var(--chart-3))",
-  },
-  {
-    bucket: "60-90",
-    value: 6,
-    color: "hsl(var(--destructive))",
-  },
-  {
-    bucket: ">90",
-    value: 2,
-    color: "hsl(var(--chart-5))",
-  },
-  {
-    bucket: "Disp",
-    value: 1,
-    color: "hsl(var(--muted-foreground))",
-  },
+  { bucket: "<30", value: 25, color: "#22c55e" },   // Healthy - green
+  { bucket: "30-60", value: 12, color: "#eab308" }, // Watch - yellow
+  { bucket: "60-90", value: 6, color: "#f97316" },  // High Risk - orange
+  { bucket: ">90", value: 2, color: "#ef4444" },    // Critical - red
+  { bucket: "Disp", value: 1, color: "#9ca3af" },   // Disputed - gray
+];
+
+const LEGEND = [
+  { label: "Healthy", color: "bg-green-500" },
+  { label: "Watch", color: "bg-yellow-500" },
+  { label: "High Risk", color: "bg-orange-500" },
+  { label: "Critical", color: "bg-red-500" },
+  { label: "Disputed", color: "bg-gray-400" },
 ];
 
 export default function ReceivablesAgingChart() {
@@ -116,42 +104,14 @@ export default function ReceivablesAgingChart() {
         {/* Legend */}
 
         <div className="mt-6 flex flex-wrap justify-center gap-5 text-sm">
-
-          <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded-full bg-[hsl(var(--chart-2))]" />
-            <span className="text-muted-foreground">
-              Healthy
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded-full bg-[hsl(var(--chart-3))]" />
-            <span className="text-muted-foreground">
-              Watch
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded-full bg-destructive" />
-            <span className="text-muted-foreground">
-              High Risk
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded-full bg-[hsl(var(--chart-5))]" />
-            <span className="text-muted-foreground">
-              Critical
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded-full bg-muted-foreground" />
-            <span className="text-muted-foreground">
-              Disputed
-            </span>
-          </div>
-
+          {LEGEND.map((item) => (
+            <div key={item.label} className="flex items-center gap-2">
+              <div className={`h-3 w-3 rounded-full ${item.color}`} />
+              <span className="text-muted-foreground">
+                {item.label}
+              </span>
+            </div>
+          ))}
         </div>
       </CardContent>
     </Card>

@@ -22,9 +22,9 @@ const SOLUTIONS = [
     icon: Workflow,
     image: "/analytics-dashboard-with-charts-graphs-and-data-vi.jpg",
     imageAlt: "Flow management dashboard",
-    accent: "from-violet-500/10 via-transparent to-transparent",
-    iconColor: "text-violet-500",
-    iconBg: "bg-violet-500/10",
+    accent: "from-primary/10 via-transparent to-transparent",
+    iconColor: "text-primary",
+    iconBg: "bg-primary/10",
     flip: false,
   },
   {
@@ -39,9 +39,9 @@ const SOLUTIONS = [
     icon: BarChart3,
     image: "/data-visualization-dashboard-with-interactive-char.jpg",
     imageAlt: "Accountability dashboard",
-    accent: "from-blue-500/10 via-transparent to-transparent",
-    iconColor: "text-blue-500",
-    iconBg: "bg-blue-500/10",
+    accent: "from-primary/10 via-transparent to-transparent",
+    iconColor: "text-primary",
+    iconBg: "bg-primary/10",
     flip: true,
   },
   {
@@ -56,9 +56,9 @@ const SOLUTIONS = [
     icon: Building2,
     image: "/modern-dashboard-interface-for-schedule-planning-w.jpg",
     imageAlt: "ERP architecture",
-    accent: "from-emerald-500/10 via-transparent to-transparent",
-    iconColor: "text-emerald-500",
-    iconBg: "bg-emerald-500/10",
+    accent: "from-primary/10 via-transparent to-transparent",
+    iconColor: "text-primary",
+    iconBg: "bg-primary/10",
     flip: false,
   },
 ];
@@ -95,7 +95,7 @@ function SolutionPanel({ s, index }: { s: typeof SOLUTIONS[0]; index: number }) 
     <div ref={panelRef} className="relative">
       <div className={"absolute inset-0 rounded-[2rem] bg-gradient-to-br pointer-events-none " + s.accent} />
 
-      <div className={"relative grid gap-10 lg:grid-cols-2 lg:gap-16 items-center py-16 md:py-20 " + (s.flip ? "lg:[&>*:first-child]:order-2" : "")}>
+      <div className={"relative grid gap-8 lg:grid-cols-2 lg:gap-12 items-center px-5 py-10 sm:px-8 md:px-10 md:py-14 " + (s.flip ? "lg:[&>*:first-child]:order-2" : "")}>
 
         <div ref={textRef} className="flex flex-col gap-6">
           <div className="flex items-center gap-3">
@@ -107,8 +107,8 @@ function SolutionPanel({ s, index }: { s: typeof SOLUTIONS[0]; index: number }) 
             </span>
           </div>
 
-          <h3 className="text-2xl font-semibold leading-tight sm:text-3xl lg:text-4xl">{s.title}</h3>
-          <p className="text-muted-foreground leading-6 text-sm sm:leading-7 sm:text-base">{s.body}</p>
+          <h3 className="text-xl font-semibold leading-tight sm:text-2xl lg:text-3xl">{s.title}</h3>
+          <p className="text-muted-foreground leading-6 text-sm">{s.body}</p>
 
           <ul className="flex flex-col gap-3 mt-2">
             {s.highlights.map((h, j) => (
@@ -120,13 +120,13 @@ function SolutionPanel({ s, index }: { s: typeof SOLUTIONS[0]; index: number }) 
           </ul>
         </div>
 
-        <div ref={imgRef} className="relative">
+        <div ref={imgRef} className="relative max-w-md mx-auto lg:max-w-full">
           <div className="relative overflow-hidden rounded-2xl border border-border/50 shadow-xl shadow-black/10">
             <div className="absolute inset-0 z-10 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none" />
             <img
               src={s.image}
               alt={s.imageAlt}
-              className="w-full h-64 sm:h-80 object-cover"
+              className="w-full h-44 sm:h-56 lg:h-64 object-cover"
             />
             <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2 rounded-2xl border border-border bg-background/90 px-4 py-2.5 backdrop-blur-md shadow-sm">
               <TrendingUp className={"h-4 w-4 " + s.iconColor} />
@@ -167,7 +167,7 @@ export default function CoreSolutions() {
   }, { scope: sectionRef });
 
   return (
-    <section ref={sectionRef} className="py-16 md:py-24">
+    <section ref={sectionRef} className="py-8 md:py-20">
       <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
 
         <div className="text-center mb-20">

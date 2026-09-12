@@ -43,14 +43,22 @@ export default function FooterSection() {
           BACKGROUND IMAGE
           ========================================================= */}
 
-      <div className="absolute inset-x-0 top-0 h-[620px] overflow-hidden">
-        <img
-          src="/herobg-footerbg.avif"
-          alt=""
-          className="absolute inset-0 hidden h-full w-full object-cover dark:block"
+      <div className="absolute inset-x-0 top-0 h-[620px] overflow-hidden" style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '620px', overflow: 'hidden' }}>
+        {/* Video only in dark mode */}
+        <video
+          src="/videos/hero-vid.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="hidden dark:block"
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
         />
+        {/* Light mode: clean white-to-muted gradient */}
+        <div className="absolute inset-0 dark:hidden bg-gradient-to-b from-background via-background to-background" />
 
-        {/* Gradient / fade */}
+        {/* Gradient / fade over video in dark */}
         <div
           className="
             absolute inset-0

@@ -1,0 +1,43 @@
+"use client";
+
+import { HeroHeader } from "@/components/header";
+import NewHeroSection from "@/components/new-components/new-hero";
+import EngagementProcess from "@/components/engagement-process";
+import CoreSolutions from "@/components/core-solutions";
+import WhyLRBC from "@/components/why-lrbc";
+import FooterSection from "@/components/footer-section";
+
+export default function WhyLRBCPage() {
+  return (
+    <div className="mx-auto min-w-full max-w-full overflow-x-hidden">
+      <HeroHeader />
+
+      <NewHeroSection
+        title={
+          <h1 className="mx-auto max-w-5xl flex flex-col text-center text-4xl max-md:font-bold md:text-5xl xl:text-[5.25rem]">
+            <span className="overflow-hidden">Why Businesses</span>
+            <span className="overflow-hidden">Choose LRBC.</span>
+          </h1>
+        }
+        subtitle={
+          <p className="mx-auto max-w-2xl text-center text-lg">
+            How we work, what we build, and why it holds up as you scale.
+          </p>
+        }
+        buttonText="Request a demo"
+        buttonHref="/contact"
+        badgeText="Why LRBC"
+      />
+
+      <EngagementProcess />
+
+      <CoreSolutions />
+
+      <WhyLRBC />
+
+      <ContactSection2 />
+
+      <FooterSection />
+    </div>
+  );
+}
