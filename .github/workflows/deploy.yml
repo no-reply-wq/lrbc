@@ -50,8 +50,21 @@ jobs:
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
 
+      - name: Temporarily isolate server-only API routes for static export
+        run: |
+          if [ -d "app/api" ]; then
+            mv app/api ./_temp_api_backup
+          fi
+
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
+
+      - name: Restore API folder
+        if: always()
+        run: |
+          if [ -d "./_temp_api_backup" ]; then
+            mv ./_temp_api_backup app/api
+          fi
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
