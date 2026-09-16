@@ -234,25 +234,25 @@ export function ContactForm() {
           {/* Company Name */}
           <div className="space-y-2">
             <Label htmlFor="companyName">Company Name *</Label>
-            <Input id="companyName" name="companyName" placeholder="e.g. ACD Pvt. Ltd." className="h-12 rounded-xl" required />
+            <Input id="companyName" name="companyName" placeholder="ACD .com" className="h-12 rounded-xl" required />
           </div>
 
           {/* Contact Person & Designation */}
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="contactPerson">Contact Person *</Label>
-              <Input id="contactPerson" name="contactPerson" placeholder="e.g. Laksh Gupta" className="h-12 rounded-xl" required />
+              <Input id="contactPerson" name="contactPerson" placeholder="Laksh Gupta" className="h-12 rounded-xl" required />
             </div>
             <div className="space-y-2">
               <Label htmlFor="designation">Designation *</Label>
-              <Input id="designation" name="designation" placeholder="e.g. Manager" className="h-12 rounded-xl" required />
+              <Input id="designation" name="designation" placeholder="Manager" className="h-12 rounded-xl" required />
             </div>
           </div>
 
           {/* Business Email */}
           <div className="space-y-2">
             <Label htmlFor="businessEmail">Business Email *</Label>
-            <Input id="businessEmail" name="businessEmail" type="email" placeholder="e.g. laksh@gmail.com" className="h-12 rounded-xl" required />
+            <Input id="businessEmail" name="businessEmail" type="email" placeholder="Laksh@gmail.com" className="h-12 rounded-xl" required />
           </div>
 
           {/* Phone — fused dial-code + number row */}
@@ -376,7 +376,7 @@ export function ContactForm() {
                   name="city"
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  placeholder="e.g. Hyderabad"
+                  placeholder="Hyderabad"
                   className="h-12 rounded-xl"
                 />
               </div>
@@ -391,7 +391,7 @@ export function ContactForm() {
                   maxLength={10}
                   value={pincode}
                   onChange={handlePincodeChange}
-                  placeholder="e.g. 500084"
+                  placeholder="500084"
                   className="h-12 rounded-xl"
                 />
               </div>
@@ -403,7 +403,7 @@ export function ContactForm() {
               <Input
                 id="loc-street"
                 name="streetAddress"
-                placeholder="e.g. 7th Floor, Pranava Business Park…"
+                placeholder="7th Floor, Pranava Business Park…"
                 className="h-12 rounded-xl"
               />
             </div>
@@ -447,7 +447,7 @@ export function ContactForm() {
           {/* Business Goals */}
           <div className="space-y-2">
             <Label htmlFor="goals">Business Goals / What do you want to achieve? *</Label>
-            <Input id="goals" name="goals" placeholder="e.g. Streamline our operations…" className="h-12 rounded-xl" required />
+            <Input id="goals" name="goals" placeholder="Streamline our operations…" className="h-12 rounded-xl" required />
           </div>
 
           {status === "error" && (

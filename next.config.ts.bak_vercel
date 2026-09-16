@@ -1,9 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // output: "export" REMOVED — caused build crash on dynamic API routes.
-  // Vercel supports server-side rendering natively; no static export needed.
-
+  output: "export",
+  trailingSlash: true,
   typescript: {
     ignoreBuildErrors: true,
   },
