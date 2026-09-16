@@ -1,0 +1,170 @@
+"use client";
+
+import { useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
+import { useGSAP } from "@gsap/react";
+import { ArrowRight, Quote } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+
+
+gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
+
+const NARRATIVE = [
+  {
+    label: "Situation",
+    labelColor: "text-amber-500",
+    dotColor: "bg-amber-500",
+    text: "Every growing business eventually runs on the same fuel: a handful of key people who hold the process in their heads. Founders, floor managers, and senior staff become the system — tracking orders on WhatsApp, chasing approvals over phone calls, and reconciling numbers in scattered spreadsheets. It works, until it doesn't.",
+  },
+  {
+    label: "Complication",
+    labelColor: "text-red-500",
+    dotColor: "bg-red-500",
+    text: "As the business scales, this person-dependency becomes the ceiling on growth. One employee leaves, and a process disappears with them. Off-the-shelf software promises a fix — but it forces your business to bend around its workflow, not the other way around. Expensive licenses sit half-used because they were never built for how your floor, your vendors, or your teams actually operate.",
+  },
+  {
+    label: "Resolution",
+    labelColor: "text-emerald-500",
+    dotColor: "bg-emerald-500",
+    text: "We does not sell software. We architect systems around your existing physical and operational reality — then get on the ground to make sure your workforce actually adopts them. Every dashboard, workflow, and accountability engine we build is designed to convert institutional knowledge into institutional infrastructure — so the business runs on process, not on any one person.",
+  },
+];
+
+export default function WhyLRBC() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const taglineRef = useRef<HTMLHeadingElement>(null);
+
+  useGSAP(() => {
+    const tagline = SplitText.create(taglineRef.current, { type: "words" });
+    gsap.set(tagline.words, { opacity: 0.15 });
+    gsap.to(tagline.words, {
+      opacity: 1,
+      ease: "none",
+      stagger: 0.2,
+      scrollTrigger: {
+        trigger: taglineRef.current,
+        start: "top 70%",
+        end: "+=500",
+        scrub: 1.5,
+      },
+    });
+
+    const blocks = gsap.utils.toArray<HTMLElement>(".why-block");
+    blocks.forEach((block, i) => {
+      gsap.fromTo(block,
+        { y: 60, opacity: 0, filter: "blur(6px)" },
+        {
+          y: 0, opacity: 1, filter: "blur(0px)",
+          duration: 0.8, ease: "power3.out",
+          delay: i * 0.1,
+          scrollTrigger: {
+            trigger: block,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+
+      const para = block.querySelector(".why-para");
+      if (para) {
+        const words = SplitText.create(para, { type: "words" });
+        gsap.set(words.words, { opacity: 0.3 });
+        gsap.to(words.words, {
+          opacity: 1,
+          ease: "none",
+          stagger: 0.08,
+          scrollTrigger: {
+            trigger: para,
+            start: "top 80%",
+            end: "+=400",
+            scrub: 1,
+          },
+        });
+      }
+    });
+
+    gsap.fromTo(".why-quote-mark",
+      { scale: 0.3, opacity: 0, rotate: -20 },
+      {
+        scale: 1, opacity: 1, rotate: 0,
+        duration: 1, ease: "elastic.out(1, 0.6)",
+        scrollTrigger: {
+          trigger: ".why-quote-mark",
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+      }
+    );
+  }, { scope: sectionRef });
+
+  return (
+    <section ref={sectionRef} className="py-24 md:py-36 relative overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
+        <div className="absolute right-1/4 bottom-1/4 h-64 w-64 rounded-full bg-violet-500/5 blur-3xl" />
+      </div>
+
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+
+        <div className="text-center mb-12">
+          <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">Why LRBC</p>
+        </div>
+
+        <div className="text-center mb-20 md:mb-28">
+          <h2
+            ref={taglineRef}
+            className="text-4xl font-bold tracking-tight text-foreground leading-tight md:text-6xl lg:text-7xl xl:text-8xl"
+          >
+            Systems Create Organizations.
+          </h2>
+        </div>
+
+        <div className="grid gap-0 lg:grid-cols-3 lg:gap-px lg:divide-x divide-border">
+          {NARRATIVE.map((n, i) => (
+            <div
+              key={i}
+              className={"why-block flex flex-col gap-5 px-0 py-10 lg:px-10 " + (i > 0 ? "border-t border-border lg:border-t-0" : "")}
+            >
+              <div className="flex items-center gap-3">
+                <div className={"h-2 w-2 rounded-full " + n.dotColor} />
+                <span className={"text-xs font-semibold uppercase tracking-widest " + n.labelColor}>
+                  {n.label}
+                </span>
+              </div>
+              <p className="why-para text-base text-foreground/80 leading-7">{n.text}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-20 md:mt-28 relative">
+          <Quote className="why-quote-mark absolute -top-4 -left-2 h-12 w-12 text-primary/20" />
+          <blockquote className="pl-8 border-l-2 border-primary/30">
+            <p className="text-xl md:text-2xl font-medium text-foreground leading-relaxed max-w-3xl">
+              A company that scales predictably, protects its margins, and does not depend on any single individual to function.
+            </p>
+            <footer className="mt-4 text-sm text-muted-foreground">
+              That is what "Systems Create Organizations" means in practice.
+            </footer>
+          </blockquote>
+        </div>
+
+        <div className="mt-16 flex flex-col sm:flex-row items-center gap-4 justify-center">
+          <Button asChild size="lg" className="rounded-full px-8">
+            <Link href="/contact?openForm=true">
+              Start with a discovery call
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+          <Button asChild variant="ghost" size="lg" className="rounded-full px-8">
+            <Link href="/testimonials-case-studies">
+              See real results
+            </Link>
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}

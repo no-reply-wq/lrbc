@@ -1,0 +1,156 @@
+"use client";
+
+import { useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
+import { useGSAP } from "@gsap/react";
+import { ProductCard } from "./product-card";
+
+gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
+
+const products = [
+  {
+    id: "lekhasetu",
+    title: "LekhaSetu",
+    href: "/lekhasetu",
+    description:
+      "Forget manual exports and outdated reports. LekhaSetu continuously syncs your Account data with the cloud so every dashboard, report and insight is always current.",
+    image: "/images/payments.png",
+    features: ["Real-time cloud sync", "Multi-company management", "Inventory insights"],
+  },
+  {
+    id: "workpilot",
+    title: "WorkPilot",
+    href: "#",
+    description:
+      "WorkPilot simplifies workforce management by bringing attendance, task allocation, and work tracking into one centralized platform. With a quick overview of your team's progress and day-to-day activities, you can spend less time following up and more time helping your business move forward.",
+    image: "/images/workpilot.png",
+    features: ["Attendance", "Task assignment", "Activity history", "Performance tracking"],
+  },
+];
+
+// How tall the scroll tunnel is for EACH card (vh units).
+// While scrolling through this distance the card stays stuck at the top.
+const SCROLL_DISTANCE = 100; // = one full viewport per card
+
+export default function ProductsSection() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const cardRefs   = useRef<(HTMLDivElement | null)[]>([]);
+
+  useGSAP(() => {
+    // ── Heading reveal ──────────────────────────────────────────────────────
+    const heading = SplitText.create(headingRef.current, {
+      type: "lines",
+      mask: "lines",
+    });
+    gsap.from(heading.lines, {
+      yPercent: 100,
+      stagger: 0.1,
+      duration: 0.8,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: headingRef.current,
+        start: "top 85%",
+        toggleActions: "play none none none",
+      },
+    });
+
+    // ── Scale + dim the card BELOW as the next one scrolls over it ──────────
+    // This uses the scroll tunnel div as the trigger — not the card itself —
+    // so there are zero conflicts with sticky positioning.
+    const tunnels = gsap.utils.toArray<HTMLElement>(".prod-tunnel");
+    tunnels.forEach((tunnel, i) => {
+      const card = cardRefs.current[i];
+      if (!card) return;
+      gsap.fromTo(
+        card,
+        { scale: 1, filter: "brightness(1)" },
+        {
+          scale: 0.92,
+          filter: "brightness(0.6)",
+          ease: "none",
+          scrollTrigger: {
+            trigger: tunnel,
+            // Start dimming when 60 % of the tunnel has been scrolled
+            start: "60% top",
+            end: "bottom top",
+            scrub: 1,
+            invalidateOnRefresh: true,
+          },
+        }
+      );
+    });
+
+    window.addEventListener("load", () => ScrollTrigger.refresh());
+  }, { scope: sectionRef });
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative bg-background"
+    >
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-16 md:pt-24">
+        {/* Heading */}
+        <div className="mx-auto max-w-4xl text-center mb-16 md:mb-24">
+          <h2
+            ref={headingRef}
+            className="text-5xl font-semibold tracking-tight lg:text-7xl"
+          >
+            Products
+          </h2>
+        </div>
+      </div>
+
+      {/*
+        HOW THE STICKY STACK WORKS
+        ─────────────────────────────
+        Each product has two elements:
+          1. .prod-tunnel  — a tall div (SCROLL_DISTANCE vh).
+                             Acts as the scroll space for this card.
+          2. .prod-sticky  — positioned sticky at top:80px inside the tunnel.
+                             It stays locked to the top while the tunnel scrolls.
+
+        When the tunnel's scroll space is exhausted, the sticky naturally
+        releases and the next tunnel (with its own sticky card) takes over.
+        After all tunnels finish, normal scroll resumes — FAQ, Contact etc.
+        all scroll in naturally with zero overlap.
+
+        No GSAP pin, no pinSpacing, no conflicts.
+      */}
+      {products.map((product, index) => {
+        const isLast = index === products.length - 1;
+        return (
+          <div
+            key={product.id}
+            className="prod-tunnel relative"
+            style={{
+              // Tunnel height = scroll distance this card "holds" the viewport.
+              // Last card is shorter — just enough to show it fully, then release.
+              height: isLast ? "auto" : `${SCROLL_DISTANCE}vh`,
+              // Extra bottom padding on last card so FAQ doesn't start immediately
+              paddingBottom: isLast ? "120px" : 0,
+            }}
+          >
+            <div
+              className="prod-sticky"
+              style={{
+                position: isLast ? "relative" : "sticky",
+                top: isLast ? "auto" : "80px",
+                // Stack later cards visually on top
+                zIndex: index + 1,
+                transformOrigin: "top center",
+              }}
+              ref={(el) => { cardRefs.current[index] = el; }}
+            >
+              <div className="mx-auto max-w-6xl px-4 sm:px-6">
+                <ProductCard product={product} />
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </section>
+  );
+}

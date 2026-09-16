@@ -1,0 +1,87 @@
+import type React from "react";
+import type { Metadata } from "next";
+import Script from "next/script";
+import { Inter, Instrument_Serif } from "next/font/google";
+import "./globals.css";
+
+import { ThemeProvider } from "@/components/theme-provider";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import FooterSection from "@/components/footer-section";
+import SplashCursor from "@/components/SplashCursor";
+import WhatsAppFloat from "@/components/whatsapp-float";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+  preload: true,
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  variable: "--font-instrument-serif",
+  weight: ["400"],
+  display: "swap",
+  preload: true,
+});
+
+export const metadata: Metadata = {
+  title: "Custom ERP & Business Automation Consulting | LRBC",
+  description: "LRBC builds custom ERP & automation systems that turn chaotic, person-dependent businesses into scalable profit centers — with hands-on implementation support.",
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-HC5EJ4P8W5"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-HC5EJ4P8W5');
+          `}
+        </Script>
+      </head>
+      <body className="font-sans antialiased">
+
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {/* Global Splash Cursor */}
+          <SplashCursor
+            DENSITY_DISSIPATION={3.5}
+            VELOCITY_DISSIPATION={2.5}
+            PRESSURE={0.15}
+            CURL={5}
+            SPLAT_RADIUS={0.22}
+            SPLAT_FORCE={5000}
+            COLOR_UPDATE_SPEED={8}
+            SHADING
+            RAINBOW_MODE={false}
+            COLOR="#5B21B6"
+          />
+
+          <WhatsAppFloat />
+
+          <TooltipProvider>
+            {children}
+          </TooltipProvider>
+
+        </ThemeProvider>
+
+      </body>
+    </html>
+  );
+}

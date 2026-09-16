@@ -1,0 +1,236 @@
+/**
+ * fix-logocloud-products-animation.js
+ * Run from project root:  node fix-logocloud-products-animation.js
+ *
+ * Fixes:
+ *  1. "Our Clients" label — left-aligned on mobile (currently breaks to new row & centers)
+ *  2. LekhaSetu / WorkPilot stacking animation — smooth overlap on both desktop & mobile:
+ *     - Uses CSS sticky instead of GSAP pin (avoids pinSpacing bugs on mobile)
+ *     - Card scale + opacity scrub so the top card pushes under the next one
+ *     - Works correctly from the Products heading all the way to Get In Touch
+ */
+
+const fs   = require('fs');
+const path = require('path');
+const root = process.cwd();
+
+if (!fs.existsSync(path.join(root, 'package.json'))) {
+  console.error('❌  Run from project root'); process.exit(1);
+}
+
+// ── 1. Logo Cloud — "Our Clients" left-aligned on mobile ─────────────────────
+const logoPath = path.join(root, 'components/logo-cloud-4.tsx');
+fs.copyFileSync(logoPath, logoPath + '.bak_fix');
+
+fs.writeFileSync(logoPath, `import Image from "next/image";
+import { InfiniteSlider } from "@/components/ui/motion-primitives/infinite-slider";
+
+const logos = [
+  "/images/c1.png",
+  "/images/c2.png",
+  "/images/c3.png",
+  "/images/c4.png",
+  "/images/c5.png",
+  "/images/c6.png",
+  "/images/c7.png",
+];
+
+const Logos = () => (
+  <>
+    {logos.map((logo, index) => (
+      <div
+        key={index}
+        className="relative flex h-20 w-[90px] sm:h-30 sm:w-[100px] shrink-0 items-center justify-center"
+      >
+        <Image
+          src={logo}
+          alt={\`Client logo \${index + 1}\`}
+          width={110}
+          height={58}
+          className="h-auto max-h-10 w-auto max-w-full object-contain"
+        />
+      </div>
+    ))}
+  </>
+);
+
+export function LogoCloud() {
+  return (
+    <section className="bg-background py-6 md:py-8">
+      <div className="relative m-auto max-w-7xl px-4 sm:px-6">
+        <div className="relative flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-12">
+
+          {/* Label — always left-aligned, sits above slider on mobile */}
+          <p className="shrink-0 text-left text-sm font-medium text-muted-foreground
+                        lg:border-r lg:pr-12 lg:text-end">
+            Our<br className="hidden lg:block" /> Clients
+          </p>
+
+          <div className="w-full overflow-hidden">
+            <InfiniteSlider gap={56} className="mask-x-from-85% mask-x-to-99% w-full">
+              <Logos />
+            </InfiniteSlider>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+`);
+console.log('✅  Fixed: components/logo-cloud-4.tsx');
+
+// ── 2. Products — smooth stacking animation (CSS sticky + GSAP scrub) ─────────
+const prodPath = path.join(root, 'components/products.tsx');
+fs.copyFileSync(prodPath, prodPath + '.bak_fix');
+
+fs.writeFileSync(prodPath, `"use client";
+
+import { useRef, useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
+import { useGSAP } from "@gsap/react";
+import { ProductCard } from "./product-card";
+
+gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
+
+const products = [
+  {
+    id: "lekhasetu",
+    title: "LekhaSetu",
+    href: "/lekhasetu",
+    description:
+      "Forget manual exports and outdated reports. LekhaSetu continuously syncs your Account data with the cloud so every dashboard, report and insight is always current.",
+    image: "/images/payments.png",
+    features: ["Real-time cloud sync", "Multi-company management", "Inventory insights"],
+  },
+  {
+    id: "workpilot",
+    title: "WorkPilot",
+    href: "#",
+    description:
+      "WorkPilot simplifies workforce management by bringing attendance, task allocation, and work tracking into one centralized platform. With a quick overview of your team's progress and day-to-day activities, you can spend less time following up and more time helping your business move forward.",
+    image: "/images/workpilot.png",
+    features: ["Attendance", "Task assignment", "Activity history", "Performance tracking"],
+  },
+];
+
+// Gap between stacked cards (px). Increase for more visual breathing room.
+const STACK_OFFSET = 24;
+
+export default function ProductsSection() {
+  const sectionRef  = useRef<HTMLDivElement>(null);
+  const headingRef  = useRef<HTMLHeadingElement>(null);
+  const wrapperRef  = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    // ── Heading animation ──────────────────────────────────────────────────
+    const heading = SplitText.create(headingRef.current, {
+      type: "lines",
+      mask: "lines",
+    });
+
+    gsap.from(heading.lines, {
+      yPercent: 100,
+      stagger: 0.12,
+      duration: 0.85,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: headingRef.current,
+        start: "top 85%",
+        toggleActions: "play none none none",
+      },
+    });
+
+    // ── Stacking scroll animation ──────────────────────────────────────────
+    // All cards except the last one scale + fade as the next scrolls over them.
+    const cards = gsap.utils.toArray<HTMLElement>(".prod-card");
+
+    cards.forEach((card, i) => {
+      if (i === cards.length - 1) return; // last card never scales out
+
+      // How far the wrapper scrolls while this card is pinned
+      ScrollTrigger.create({
+        trigger: card,
+        start: "top top",
+        end: () => {
+          // End when the bottom of the wrapper reaches this card's top
+          const wrapperBottom = wrapperRef.current
+            ? wrapperRef.current.getBoundingClientRect().bottom + window.scrollY
+            : 0;
+          const cardTop =
+            card.getBoundingClientRect().top + window.scrollY;
+          return \`+= \${wrapperBottom - cardTop - window.innerHeight}\`;
+        },
+        scrub: 0.6,
+        onUpdate(self) {
+          // Scale down and fade ever so slightly as the next card approaches
+          const p = self.progress;
+          gsap.set(card, {
+            scale: 1 - p * 0.04,
+            filter: \`brightness(\${1 - p * 0.18})\`,
+            transformOrigin: "top center",
+          });
+        },
+      });
+    });
+
+    return () => ScrollTrigger.getAll().forEach(t => t.kill());
+  }, { scope: sectionRef });
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative bg-background py-8 md:py-10 overflow-x-hidden"
+    >
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+
+        {/* Heading */}
+        <div className="mx-auto mt-5 max-w-4xl text-center">
+          <h2
+            ref={headingRef}
+            className="text-5xl font-semibold tracking-tight lg:text-7xl"
+          >
+            Products
+          </h2>
+        </div>
+
+        {/* Stacked cards — CSS sticky handles pinning; GSAP adds scale scrub */}
+        <div ref={wrapperRef} className="relative mt-20 sm:mt-28">
+          {products.map((product, index) => {
+            const isLast = index === products.length - 1;
+            const topOffset = \`\${60 + index * STACK_OFFSET}px\`;
+
+            return (
+              <div
+                key={product.id}
+                className="prod-card"
+                style={{
+                  // CSS sticky so each card pins itself at the top while the
+                  // next one scrolls over it — works on every screen size.
+                  position: "sticky",
+                  top: topOffset,
+                  // Space below each card (except the last) so the next card
+                  // has room to travel before it stacks on top.
+                  marginBottom: isLast ? 0 : "100vh",
+                  // Lift later cards so they visually appear on top.
+                  zIndex: index + 1,
+                  willChange: "transform, filter",
+                }}
+              >
+                <ProductCard product={product} />
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Spacer so the page doesn't end abruptly after the last sticky card */}
+        <div style={{ height: "8vh" }} />
+      </div>
+    </section>
+  );
+}
+`);
+console.log('✅  Fixed: components/products.tsx');
+
+console.log('\n🎉  Done! Restart dev server:  npm run dev');
