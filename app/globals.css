@@ -392,3 +392,67 @@ input::placeholder,
 textarea::placeholder {
   transition: opacity 0.2s ease;
 }
+
+
+/* ═══════════════════════════════════════
+   LRBC_MOBILE_FINAL — clean patch
+   Replaces all previous LRBC patches
+   ═══════════════════════════════════════ */
+
+/* ── Global resets ── */
+html, body { overflow-x: hidden; max-width: 100vw; }
+img { max-width: 100%; height: auto; }
+
+/* ── iOS input zoom fix ── */
+@media (max-width: 767px) {
+  input, select, textarea { font-size: 16px !important; }
+}
+
+/* ── ERP section title ── */
+@media (max-width: 767px) {
+  .cta-title {
+    white-space: normal !important;
+    overflow: visible !important;
+    font-size: 1.5rem !important;
+    line-height: 1.3 !important;
+  }
+}
+
+/* ── Mobile section spacing — ONLY targeted classes, NOT section{} globally ──
+   Do NOT use section { padding !important } — it creates blank gap boxes       */
+@media (max-width: 767px) {
+  .py-24  { padding-top: 2.5rem !important; padding-bottom: 2.5rem !important; }
+  .py-28  { padding-top: 2.5rem !important; padding-bottom: 2.5rem !important; }
+  .py-32  { padding-top: 2.5rem !important; padding-bottom: 2.5rem !important; }
+  .py-36  { padding-top: 2.5rem !important; padding-bottom: 2.5rem !important; }
+
+  /* Tap improvements */
+  a, button { -webkit-tap-highlight-color: transparent; }
+  button:active { opacity: 0.85; }
+
+  /* Button hover on touch */
+  .lrbc-btn:active { transform: scale(0.97); opacity: 0.88; }
+
+  /* Card hover on touch */
+  .lrbc-card-hover:active { transform: translateY(-1px); }
+}
+
+/* ── Smooth button hover on desktop only ── */
+@media (hover: hover) {
+  .lrbc-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+}
+
+/* ─────────────────────────────────────────────
+   LRBC Section entrance animations
+   .lrbc-anim    — base fade-up (set by useFadeUp hook)
+   The hook handles opacity/transform via JS.
+   These rules only ensure no flash before JS runs.
+   ───────────────────────────────────────────── */
+.lrbc-anim {
+  will-change: opacity, transform;
+}
+
+/* Smooth paragraph text on load */
+p, h1, h2, h3, h4, blockquote {
+  text-rendering: optimizeLegibility;
+}

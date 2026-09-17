@@ -69,18 +69,18 @@ export default function AboutUsContent() {
     );
 
     return (
-        <section ref={sectionRef} className="py-8 md:py-20">
+        <section ref={sectionRef} className="py-6 md:py-14">
             <div className="mx-auto max-w-5xl space-y-8 px-4 sm:px-6 md:space-y-12">
                 <SectionBadge text='Our Story' />
             </div>
 
             {/* ── Why Businesses Choose Our ERP  |  Our Story quote ── */}
-            <div className="mx-auto max-w-6xl px-4 sm:px-6 mt-16 md:mt-24">
+            <div className="mx-auto max-w-6xl px-4 sm:px-6 mt-8 md:py-16">
                 <div className="grid gap-12 md:grid-cols-2 md:gap-16 items-start">
 
                     {/* Left: Why Businesses Choose Our ERP */}
                     <div>
-                        <h2 className="text-3xl font-semibold sm:text-4xl lg:text-5xl">
+                        <h2 className="text-2xl font-semibold sm:text-3xl lg:text-5xl">
                             Why Businesses Choose Our ERP
                         </h2>
                         <p className="mt-5 text-muted-foreground text-base sm:text-lg">

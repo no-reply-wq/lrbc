@@ -32,7 +32,6 @@ const members = [
         link: 'https://www.linkedin.com/in/bhavyamuthyala/',
         objectPosition: 'center top',
     },
-   
 ]
 
 export default function TeamSection() {
@@ -45,19 +44,11 @@ export default function TeamSection() {
             const cards = gsap.utils.toArray<HTMLElement>(".team-card");
             const images = gsap.utils.toArray<HTMLElement>(".team-image");
 
-            gsap.set(cards, {
-                y: 80,
-                opacity: 0,
-            });
-
-            gsap.set(images, {
-                scale: 1.15,
-            });
+            gsap.set(cards, { y: 80, opacity: 0 });
+            gsap.set(images, { scale: 1.15 });
 
             const tl = gsap.timeline({
-                defaults: {
-                    ease: "power3.out",
-                },
+                defaults: { ease: "power3.out" },
                 scrollTrigger: {
                     trigger: sectionRef.current,
                     start: "top 70%",
@@ -66,55 +57,15 @@ export default function TeamSection() {
                 },
             });
 
-            tl.from(".text-caption", {
-                y: 25,
-                opacity: 0,
-                duration: 0.5,
-            })
-
-                .from(
-                    "h2",
-                    {
-                        x: -60,
-                        opacity: 0,
-                        duration: 0.8,
-                    },
-                    "-=0.2"
-                )
-
-                .from(
-                    "p",
-                    {
-                        x: 60,
-                        opacity: 0,
-                        duration: 0.8,
-                    },
-                    "-=0.6"
-                )
-
-                .to(
-                    cards,
-                    {
-                        opacity: 1,
-                        y: 0,
-                        stagger: {
-                            each: 0.15,
-                            from: "start",
-                        },
-                        duration: 0.6,
-                    },
-                    "-=0.3"
-                )
-
-                .to(
-                    images,
-                    {
-                        scale: 1,
-                        stagger: 0.15,
-                        duration: 0.8,
-                    },
-                    "<"
-                );
+            tl.from(".text-caption", { y: 25, opacity: 0, duration: 0.5 })
+              .from("h2", { x: -60, opacity: 0, duration: 0.8 }, "-=0.2")
+              .from("p",  { x: 60,  opacity: 0, duration: 0.8 }, "-=0.6")
+              .to(cards, {
+                  opacity: 1, y: 0,
+                  stagger: { each: 0.15, from: "start" },
+                  duration: 0.6,
+              }, "-=0.3")
+              .to(images, { scale: 1, stagger: 0.15, duration: 0.8 }, "<");
 
             gsap.to(gridRef.current, {
                 yPercent: -6,
@@ -131,16 +82,12 @@ export default function TeamSection() {
     );
 
     return (
-        <section
-            ref={sectionRef}
-            className="bg-gray-50 py-20 dark:bg-transparent md:py-28"
-        >
+        <section ref={sectionRef} className="bg-gray-50 py-20 dark:bg-transparent md:py-28">
             <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-15">
-                <span className="block w-max sm:-ml-6 sm:-mt-4"><SectionBadge text="Team" /></span>
-                <div
-                    ref={headerRef}
-                    className="mt-8 gap-4 sm:grid sm:grid-cols-2 md:mt-12"
-                >
+                <span className="block w-max sm:-ml-6 sm:-mt-4">
+                    <SectionBadge text="Team" />
+                </span>
+                <div ref={headerRef} className="mt-8 gap-4 sm:grid sm:grid-cols-2 md:mt-12">
                     <div className="sm:w-2/5">
                         <h2 className="text-3xl font-bold sm:text-4xl">Meet the team</h2>
                     </div>
@@ -148,46 +95,84 @@ export default function TeamSection() {
                         <p>During the working process, we perform regular fitting with the client because he is the only person who can feel whether a new suit fits or not.</p>
                     </div>
                 </div>
+
                 <div className="mt-8 md:mt-12">
-                    <div
-                        ref={gridRef}
-                        className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3"
-                    >
+                    <div ref={gridRef} className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
                         {members.map((member, index) => (
-    <div
-        key={index}
-        className="team-card group overflow-hidden">
-        <div className="relative h-96 w-full overflow-hidden rounded-md transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:h-[22.5rem] group-hover:rounded-xl">
-            <Image
-                fill
-                className="team-image object-cover grayscale transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-[1.03] origin-center group-hover:grayscale-0"
-                style={{ objectPosition: member.objectPosition }}
-                src={member.avatar}
-                alt={member.name}
-                sizes="(max-width: 768px) 100vw, 280px"
-            />
-        </div>
-        <div className="px-2 pt-2 sm:pb-0 sm:pt-4">
-            <div className="flex justify-between">
-                <h3 className="text-base font-medium transition-all duration-500 group-hover:tracking-wider">{member.name}</h3>
-            </div>
-            <div className="mt-1 flex items-center justify-between">
-                <span className="text-muted-foreground inline-block translate-y-6 text-sm opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">{member.role}</span>
-                <Link
-                    href={member.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group-hover:text-primary-600 dark:group-hover:text-primary-400 inline-block translate-y-8 text-sm tracking-wide opacity-0 transition-all duration-500 no-underline hover:no-underline group-hover:translate-y-0 group-hover:opacity-100">
-                    {' '}
-                    LinkedIn
-                </Link>
-            </div>
-        </div>
-    </div>
-))}
+                            <div key={index} className="team-card group overflow-hidden">
+
+                                {/* Image — original desktop behaviour preserved exactly */}
+                                {/* Mobile: full colour. Desktop: grayscale → colour on hover */}
+                                <div className="relative h-96 w-full overflow-hidden rounded-md transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:h-[22.5rem] group-hover:rounded-xl">
+                                    <Image
+                                        fill
+                                        className={[
+                                            "team-image object-cover origin-center",
+                                            "transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]",
+                                            "group-hover:scale-[1.03]",
+                                            /* Desktop: start grey, colour on hover */
+                                            "sm:grayscale sm:group-hover:grayscale-0",
+                                            /* Mobile (<sm): always colour — no grayscale applied */
+                                        ].join(" ")}
+                                        style={{ objectPosition: member.objectPosition }}
+                                        src={member.avatar}
+                                        alt={member.name}
+                                        sizes="(max-width: 768px) 100vw, 280px"
+                                    />
+                                </div>
+
+                                {/* Text info */}
+                                <div className="px-2 pt-2 sm:pb-0 sm:pt-4">
+                                    <div className="flex justify-between">
+                                        <h3 className="text-base font-medium transition-all duration-500 group-hover:tracking-wider">
+                                            {member.name}
+                                        </h3>
+                                    </div>
+                                    <div className="mt-1 flex items-center justify-between">
+
+                                        {/* Role:
+                                            Mobile  — always visible (opacity-100, no translate)
+                                            Desktop — hidden until hover (original behaviour) */}
+                                        <span className={[
+                                            "text-muted-foreground text-sm",
+                                            "transition duration-300",
+                                            /* Mobile: always shown */
+                                            "opacity-100 translate-y-0",
+                                            /* Desktop override: hidden, slides up on hover */
+                                            "sm:opacity-0 sm:translate-y-6 sm:inline-block",
+                                            "sm:group-hover:translate-y-0 sm:group-hover:opacity-100",
+                                        ].join(" ")}>
+                                            {member.role}
+                                        </span>
+
+                                        {/* LinkedIn:
+                                            Mobile  — always visible (original plain text style)
+                                            Desktop — hidden until hover (original behaviour) */}
+                                        <Link
+                                            href={member.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className={[
+                                                "text-sm tracking-wide no-underline hover:no-underline",
+                                                "transition-all duration-500",
+                                                /* Mobile: always shown */
+                                                "opacity-100 translate-y-0",
+                                                /* Desktop override: hidden, slides up on hover */
+                                                "sm:opacity-0 sm:translate-y-8 sm:inline-block",
+                                                "sm:group-hover:translate-y-0 sm:group-hover:opacity-100",
+                                                "sm:group-hover:text-primary-600 sm:dark:group-hover:text-primary-400",
+                                            ].join(" ")}
+                                        >
+                                            {' '}LinkedIn
+                                        </Link>
+                                    </div>
+                                </div>
+
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
         </section>
-    )
+    );
 }

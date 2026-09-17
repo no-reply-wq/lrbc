@@ -19,7 +19,7 @@ export default function LekhaSetu() {
     <HeroHeader />
       <LekhaSetuHero />
       <SolutionSection />
-      <IntegrationsSection/>
+      <div className="hidden md:block"><IntegrationsSection/></div>
       <FeaturesSethu />
       <CallToAction />
       <FooterSection />

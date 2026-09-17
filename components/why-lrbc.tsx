@@ -113,10 +113,10 @@ export default function WhyLRBC() {
           <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">Why LRBC</p>
         </div>
 
-        <div className="text-center mb-20 md:mb-28">
+        <div className="text-center mb-8 md:mb-20">
           <h2
             ref={taglineRef}
-            className="text-4xl font-bold tracking-tight text-foreground leading-tight md:text-6xl lg:text-7xl xl:text-8xl"
+            className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground leading-tight md:text-6xl lg:text-7xl"
           >
             Systems Create Organizations.
           </h2>
@@ -139,7 +139,7 @@ export default function WhyLRBC() {
           ))}
         </div>
 
-        <div className="mt-20 md:mt-28 relative">
+        <div className="mt-10 md:mt-20 relative">
           <Quote className="why-quote-mark absolute -top-4 -left-2 h-12 w-12 text-primary/20" />
           <blockquote className="pl-8">
             <p className="text-xl md:text-2xl font-medium text-foreground leading-relaxed max-w-3xl">
@@ -151,14 +151,14 @@ export default function WhyLRBC() {
           </blockquote>
         </div>
 
-        <div className="mt-16 flex flex-col sm:flex-row items-center gap-4 justify-center">
-          <Button asChild size="lg" className="rounded-full px-8">
+        <div className="mt-8 flex flex-col sm:flex-row items-center gap-3 justify-center">
+          <Button asChild size="lg" className="rounded-full px-6 w-full sm:w-auto">
             <Link href="/contact?openForm=true">
               Start with a discovery call
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
-          <Button asChild variant="ghost" size="lg" className="rounded-full px-8">
+          <Button asChild variant="ghost" size="lg" className="rounded-full px-6 w-full sm:w-auto">
             <Link href="/testimonials-case-studies">
               See real results
             </Link>

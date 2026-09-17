@@ -57,7 +57,7 @@ const FALLBACK_COUNTRIES: CountryOption[] = [
 
 // Shared select className
 const SELECT_CLS =
-  "h-12 w-full appearance-none rounded-xl border border-input bg-background px-3 pr-9 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:border-purple-400 disabled:opacity-60 cursor-pointer";
+  "h-12 w-full appearance-none rounded-xl border border-input bg-background px-3 pr-9 text-base sm:text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:border-purple-400 disabled:opacity-60 cursor-pointer";
 
 export function ContactForm() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
@@ -217,7 +217,7 @@ export function ContactForm() {
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
-    <Card className="rounded-[28px] border-border/60 bg-background/80 p-5 sm:p-8 shadow-xl backdrop-blur flex flex-col justify-center transition-shadow duration-500 ease-out hover:shadow-[0_10px_40px_-10px_rgba(139,92,246,0.15)]">
+    <Card className="rounded-[20px] sm:rounded-[28px] border-border/60 bg-background/80 p-4 sm:p-6 md:p-8 shadow-xl backdrop-blur flex flex-col justify-center transition-shadow duration-500 ease-out hover:shadow-[0_10px_40px_-10px_rgba(139,92,246,0.15)]">
       {status === "success" ? (
         <div className="flex flex-col items-center justify-center space-y-4 text-center py-10">
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-500">
@@ -298,7 +298,7 @@ export function ContactForm() {
           </div>
 
           {/* ── Location Details ──────────────────────────────────────────── */}
-          <div className="space-y-4 rounded-2xl border border-border/50 bg-muted/20 p-4">
+          <div className="space-y-3 rounded-xl sm:rounded-2xl border border-border/50 bg-muted/20 p-3 sm:p-4">
             <h3 className="text-sm font-semibold text-foreground/80">Location Details</h3>
 
             {/* Country */}
@@ -459,7 +459,7 @@ export function ContactForm() {
           <button
             type="submit"
             disabled={status === "submitting"}
-            className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-semibold transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+            className="lrbc-btn w-full h-12 sm:h-14 rounded-xl bg-primary text-primary-foreground font-semibold transition-all duration-150 disabled:opacity-50 flex items-center justify-center gap-2 active:scale-[0.98]"
           >
             {status === "submitting" ? (
               <><Loader2 className="h-4 w-4 animate-spin" /> Sending…</>

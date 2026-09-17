@@ -1,4 +1,5 @@
 "use client";
+import { useFadeUp } from '@/components/ui/use-scroll-animation';
 
 // =============================================================================
 // CASE STUDIES PAGE — FULLY DYNAMIC
@@ -432,7 +433,7 @@ function ImageCarousel({ images }: { images: string[] }) {
 function CaseStudyCard({ cs, index }: { cs: typeof CASE_STUDIES[0]; index: number }) {
   const imageRight = index % 2 === 0;
   return (
-    <div className="relative rounded-3xl border border-border bg-card/60 shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md hover:border-primary/30">
+    <div className="lrbc-anim relative rounded-3xl border border-border bg-card/60 shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md hover:border-primary/30">
       <div className="h-1 w-full bg-gradient-to-r from-primary via-purple-400 to-pink-400" />
       <div className="p-4 sm:p-7 lg:p-9 flex flex-col gap-4 sm:gap-6">
 
@@ -449,12 +450,12 @@ function CaseStudyCard({ cs, index }: { cs: typeof CASE_STUDIES[0]; index: numbe
                 </span>
               )}
             </div>
-            <h3 className="text-2xl font-semibold">{cs.client}</h3>
+            <h3 className="text-xl sm:text-2xl font-semibold">{cs.client}</h3>
           </div>
           {cs.metrics.length > 0 && (
             <div className="flex flex-wrap gap-2 justify-start sm:justify-end">
               {cs.metrics.map((m, i) => (
-                <div key={i} className="flex flex-col items-center gap-0.5 rounded-xl border border-primary/20 bg-primary/5 px-4 py-2 text-center min-w-[80px]">
+                <div key={i} className="flex flex-col items-center gap-0.5 rounded-xl border border-primary/20 bg-primary/5 px-3 py-2 text-center min-w-[72px]">
                   <span className="text-sm font-bold text-primary leading-tight">{m.value}</span>
                   <span className="text-[10px] text-muted-foreground leading-tight">{m.label}</span>
                 </div>
@@ -463,46 +464,52 @@ function CaseStudyCard({ cs, index }: { cs: typeof CASE_STUDIES[0]; index: numbe
           )}
         </div>
 
-        {/* 2×2 grid — alternates image position */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {imageRight ? (
-            <>
-              <div className="rounded-2xl bg-muted/40 p-5">
+        {/*
+           * MOBILE  (<md): fixed order — Problem → Solution → Result → Images
+           * DESKTOP (md+): alternating 2x2 grid controlled by imageRight
+           *
+           * How it works:
+           * - On mobile: flex-col + CSS order classes force the fixed order
+           * - On desktop: we switch to grid and reset order so imageRight controls layout
+            */}
+        {imageRight ? (
+            <div className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-4">
+              <div className="order-1 md:order-1 rounded-2xl bg-muted/40 p-4 sm:p-5">
                 <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-red-500">Problem</p>
                 <p className="text-sm text-foreground/80 leading-6">{cs.problem}</p>
               </div>
-              <div className="rounded-2xl bg-muted/40 p-5">
+              <div className="order-3 md:order-2 rounded-2xl bg-muted/40 p-4 sm:p-5">
                 <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-green-500">Result</p>
                 <p className="text-sm text-foreground/80 leading-6">{cs.result}</p>
               </div>
-              <div className="rounded-2xl bg-muted/40 p-5">
+              <div className="order-2 md:order-3 rounded-2xl bg-muted/40 p-4 sm:p-5">
                 <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-blue-500">Solution</p>
                 <p className="text-sm text-foreground/80 leading-6">{cs.solution}</p>
               </div>
-              <div className="rounded-2xl overflow-hidden min-h-[200px] sm:min-h-[260px]">
+              <div className="order-4 md:order-4 rounded-2xl overflow-hidden min-h-[200px] sm:min-h-[240px]">
                 <ImageCarousel images={cs.images} />
               </div>
-            </>
+            </div>
           ) : (
-            <>
-              <div className="rounded-2xl bg-muted/40 p-5">
-                <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-green-500">Result</p>
-                <p className="text-sm text-foreground/80 leading-6">{cs.result}</p>
-              </div>
-              <div className="rounded-2xl bg-muted/40 p-5">
+            <div className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-4">
+              <div className="order-1 md:order-2 rounded-2xl bg-muted/40 p-4 sm:p-5">
                 <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-red-500">Problem</p>
                 <p className="text-sm text-foreground/80 leading-6">{cs.problem}</p>
               </div>
-              <div className="rounded-2xl overflow-hidden min-h-[200px] sm:min-h-[260px]">
-                <ImageCarousel images={cs.images} />
+              <div className="order-3 md:order-1 rounded-2xl bg-muted/40 p-4 sm:p-5">
+                <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-green-500">Result</p>
+                <p className="text-sm text-foreground/80 leading-6">{cs.result}</p>
               </div>
-              <div className="rounded-2xl bg-muted/40 p-5">
+              <div className="order-2 md:order-4 rounded-2xl bg-muted/40 p-4 sm:p-5">
                 <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-blue-500">Solution</p>
                 <p className="text-sm text-foreground/80 leading-6">{cs.solution}</p>
               </div>
-            </>
-          )}
-        </div>
+              <div className="order-4 md:order-3 rounded-2xl overflow-hidden min-h-[200px] sm:min-h-[240px]">
+                <ImageCarousel images={cs.images} />
+              </div>
+            </div>
+          )
+        }
       </div>
     </div>
   );
@@ -510,6 +517,7 @@ function CaseStudyCard({ cs, index }: { cs: typeof CASE_STUDIES[0]; index: numbe
 
 
 export default function CaseStudiesPage() {
+  const sectionRef = useFadeUp();
   const [csVisible, setCsVisible] = useState(CS_PAGE);
 
   const shownCs = CASE_STUDIES.slice(0, csVisible);
@@ -533,10 +541,10 @@ export default function CaseStudiesPage() {
       />
 
       {/* ── Case Studies ─────────────────────────────────────────────── */}
-      <section className="mx-auto max-w-6xl px-4 sm:px-6 py-10 md:py-20">
+      <section ref={sectionRef} className="mx-auto max-w-6xl px-4 sm:px-6 py-10 md:py-20">
         <div className="text-center mb-14">
           <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">Deep Dives</p>
-          <h2 className="text-3xl sm:text-4xl font-semibold">The Work, In Detail</h2>
+          <h2 className="lrbc-anim text-3xl sm:text-4xl font-semibold">The Work, In Detail</h2>
           <p className="mt-4 text-muted-foreground max-w-xl mx-auto text-sm sm:text-base">
             Each case study shows the specific problem, the system we built, and the measurable outcome.
           </p>
@@ -568,53 +576,6 @@ export default function CaseStudiesPage() {
           </div>
         )}
       </section>
-
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-      </div>
-
-
-      {/* ── Client Reviews ────────────────────────────────────────────── */}
-      <section className="mx-auto max-w-6xl px-4 sm:px-6 py-10 md:py-20">
-        <div className="text-center mb-14">
-          <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">Client Reviews</p>
-          <h2 className="text-3xl sm:text-4xl font-semibold">What Our Clients Say</h2>
-          <p className="mt-4 text-muted-foreground max-w-xl mx-auto text-sm sm:text-base">
-            Real feedback from the businesses we have partnered with.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {REVIEWS.map((r, i) => (
-            <div
-              key={i}
-              className="relative rounded-3xl border border-border bg-card/60 p-7 shadow-sm flex flex-col gap-5 transition-all duration-300 hover:shadow-md hover:border-primary/30"
-            >
-              <div className="h-1 w-full absolute top-0 left-0 rounded-t-3xl bg-gradient-to-r from-primary via-purple-400 to-pink-400" />
-              <Quote className="h-8 w-8 text-primary opacity-80" />
-              <p className="text-sm sm:text-base text-foreground/80 leading-7 flex-1">{r.quote}</p>
-              <div className="flex gap-1 mt-1">
-                {Array.from({ length: r.rating }).map((_, s) => (
-                  <Star key={s} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              <div className="flex items-center gap-3 pt-2 border-t border-border/60">
-                <div className="overflow-hidden rounded-full shrink-0" style={{width:44,height:44,minWidth:44}}>
-                  <Image src={r.image} alt={r.name} width={44} height={44} className="object-cover w-full h-full rounded-full" style={{objectFit:"cover"}} />
-                </div>
-                <div>
-                  <p className="font-semibold text-sm leading-tight">{r.name}</p>
-                  <p className="text-xs text-muted-foreground leading-tight mt-0.5">{r.designation} · {r.company}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-      </div>
 
       {/* ── CTA ──────────────────────────────────────────────────────── */}
       <section className="mx-auto max-w-4xl px-4 sm:px-6 py-10 md:py-16">

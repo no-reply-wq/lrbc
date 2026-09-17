@@ -43,7 +43,7 @@ export default function FooterSection() {
           BACKGROUND IMAGE
           ========================================================= */}
 
-      <div className="absolute inset-x-0 top-0 h-[620px] overflow-hidden" style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '620px', overflow: 'hidden' }}>
+      <div className="absolute inset-x-0 top-0 h-[620px] overflow-hidden" style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '400px', overflow: 'hidden' }}>
         {/* Video only in dark mode */}
         <video
           src="/videos/hero-vid.mp4"
@@ -152,7 +152,7 @@ export default function FooterSection() {
               className="
                 grid
                 grid-cols-2
-                gap-x-8
+                gap-x-4 sm:gap-x-8
                 gap-y-10
                 sm:grid-cols-4
                 md:col-span-4

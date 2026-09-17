@@ -128,24 +128,24 @@ export default function ContentSection() {
         { scope: sectionRef }
     );
     return (
-        <section ref={sectionRef} className="mt-0 py-20 md:py-28">
+        <section ref={sectionRef} className="mt-0 py-0 md:py-16">
 
 
 
-            <div className="relative pt-24 md:pt-12">
+            <div className="relative pt-8 md:pt-12">
                 <div className="mx-auto max-w-5xl space-y-8 px-4 sm:px-6 md:space-y-12 ">
                     
-                    <div className="mx-auto max-w-4xl space-y-6 text-center md:space-y-12">
-                        <h2 className="cta-title text-3xl font-semibold lg:text-4xl overflow-hidden whitespace-nowrap">
+                    <div className="mx-auto max-w-4xl space-y-4 text-center md:space-y-8">
+                        <h2 className="cta-title text-lg sm:text-2xl lg:text-4xl font-semibold overflow-hidden text-balance leading-snug">
                             One ERP | Every Process | Zero Bottleneck
 
                         </h2>
                     </div>
 
-                    <div className="mx-auto max-w-4xl space-y-6 text-center md:space-y-12">
+                    <div className="mx-auto max-w-4xl space-y-4 text-center md:space-y-8">
                         <p
                             ref={headingRef}
-                            className=" text-2xl font-semibold"
+                            className="text-lg sm:text-xl md:text-2xl font-semibold leading-relaxed"
                         >
                             A single platform built around how your business actually operates - connecting every team, workflow, and decision so nothing depends on one person to keep running.
                         </p>
@@ -217,8 +217,8 @@ export default function ContentSection() {
                         },
                         ...transitionVariants,
                     }}>
-                    <div className="relative mt-8 overflow-hidden px-2 sm:mt-12 md:mt-20 mb-20">
-                        <div className="relative mx-auto max-w-6xl">
+                    <div className="relative mt-4 px-2 sm:mt-8 md:mt-16 mb- 0 md:mb-8">
+                        <div className="relative mx-auto w-full md:max-w-6xl">
                             <Dashboard />
                         </div>
                     </div>

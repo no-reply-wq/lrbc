@@ -76,7 +76,7 @@ export default function NewHeroSection({
 
   return (
     <section
-      className={`relative isolate overflow-hidden ${className}`}
+      className={`relative isolate overflow-hidden pb-0 ${className}`}
       ref={sectionRef}
     >
       {/* Interactive background */}
@@ -94,7 +94,7 @@ export default function NewHeroSection({
       <div className="absolute bottom-0 left-0 right-0 z-10 h-40 bg-gradient-to-t from-background via-background/70 to-transparent pointer-events-none" />
 
       {/* Content */}
-      <div className="relative z-10 flex min-h-[85svh] items-center justify-center px-4 sm:px-6 pt-28 pb-12 sm:pt-32 sm:pb-16 pointer-events-none">
+      <div className="relative z-10 flex min-h-[80svh] items-center justify-center px-4 sm:px-6 pt-24 pb-8 sm:pt-28 sm:pb-12 pointer-events-none">
         <div className="mx-auto w-full max-w-5xl text-center">
 
           {/* Badge — Logo style matching header (no white background box) */}
@@ -114,7 +114,7 @@ export default function NewHeroSection({
               </span>
               <span
                 ref={badgeTextRef}
-                className="text-xs sm:text-sm font-medium text-foreground whitespace-nowrap"
+                className="text-[10px] sm:text-xs font-medium text-foreground"
               >
                 {badgeText}
               </span>

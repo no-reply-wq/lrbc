@@ -182,7 +182,7 @@ export default function LekhaSetuHero() {
                                 </div>
 
                                 <div className="overflow-hidden">
-                                    <h1 ref={headingRef} className="overflow-hidden mx-auto mt-8 max-w-5xl flex flex-col text-center text-4xl max-md:font-bold md:text-5xl lg:mt-16 xl:text-[5.25rem]">
+                                    <h1 ref={headingRef} className="overflow-hidden mx-auto mt-5 max-w-5xl flex flex-col text-center text-2xl font-bold sm:text-4xl md:text-5xl lg:mt-12 xl:text-[5.25rem]">
                                         <span className="overflow-hidden">Your Accounts.</span>
                                         <span className="overflow-hidden"> Always in Sync.</span>
                                         
@@ -190,7 +190,7 @@ export default function LekhaSetuHero() {
                                     </h1>
                                 </div>
                                 <div className="overflow-hidden">
-                                    <p className="mx-auto mt-8 max-w-2xl text-center text-lg overflow-hidden" ref={subtitleRef}>
+                                    <p className="mx-auto mt-5 max-w-2xl text-center text-base sm:text-lg overflow-hidden px-2" ref={subtitleRef}>
                                        Automatically sync your accounting software data to the cloud every few minutes. Access accurate, real-time business insights without changing the way you work.
 
                                     </p>
@@ -198,7 +198,7 @@ export default function LekhaSetuHero() {
                             <Button
             asChild
             size="lg"
-            className="group mt-12 w-fit overflow-hidden rounded-full px-8"
+            className="group mt-8 sm:mt-12 w-full sm:w-fit overflow-hidden rounded-full px-8"
           >
             <Link
               href="#"

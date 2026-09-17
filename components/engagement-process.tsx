@@ -104,12 +104,12 @@ export default function EngagementProcess() {
     <section ref={sectionRef} className="py-10 md:py-24 overflow-hidden">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
 
-        <div className="text-center mb-16 md:mb-20">
+        <div className="text-center mb-8 md:mb-16">
           <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">The Engagement Process</p>
           <div className="overflow-hidden">
             <h2
               ref={headingRef}
-              className="text-4xl font-semibold tracking-tight lg:text-5xl xl:text-6xl"
+              className="text-2xl sm:text-3xl font-semibold tracking-tight lg:text-5xl xl:text-6xl"
             >
               How we build with you
             </h2>
@@ -117,7 +117,7 @@ export default function EngagementProcess() {
           <div className="overflow-hidden mt-5">
             <p
               ref={subRef}
-              className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed"
+              className="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto leading-relaxed"
             >
               Three structured phases that take you from fragmented operations to a system-driven business — on your floor, at your pace.
             </p>
@@ -129,7 +129,7 @@ export default function EngagementProcess() {
             <div ref={lineRef} className="absolute inset-0 bg-gradient-to-r from-violet-500 via-blue-500 to-emerald-500 origin-left" />
           </div>
 
-          <div className="grid gap-6 sm:gap-8 lg:grid-cols-3">
+          <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
             {STEPS.map((step, i) => {
               const Icon = step.icon;
               return (

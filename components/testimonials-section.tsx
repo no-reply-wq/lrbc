@@ -197,10 +197,10 @@ export default function TestimonialsSection() {
   );
 
   return (
-    <div ref={sectionRef} className="mx-auto w-full flex flex-col justify-center items-center max-w-6xl px-4 sm:px-6 lg:px-10 py-10 md:py-0">
+    <div ref={sectionRef} className="mx-auto w-full flex flex-col justify-center items-center max-w-6xl px-4 sm:px-6 lg:px-10 py-6 md:py-10">
       
       {/* Header Section */}
-      <div className="mx-auto max-w-2xl space-y-6 text-center mt-10">
+      <div className="mx-auto max-w-2xl space-y-3 text-center mt-4 sm:mt-8">
          <SectionBadge
                                                          text="Testimonials"
                                                          icon={MessageSquareQuote }
@@ -209,7 +209,7 @@ export default function TestimonialsSection() {
         <div className="overflow-hidden">
           <h1
             ref={headingRef}
-            className="text-center text-4xl font-semibold lg:text-5xl"
+            className="text-center text-2xl sm:text-3xl md:text-4xl font-semibold lg:text-5xl"
           >
             What Our Clients Say
           </h1>
