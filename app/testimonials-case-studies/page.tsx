@@ -13,7 +13,7 @@ import { useFadeUp } from '@/components/ui/use-scroll-animation';
 //   solution  — how LRBC solved it
 //   result    — the outcome
 //   metrics   — array of { value, label } shown as top-right stat chips (max 3)
-//   images    — array of local paths like "/images/navtech/case1-1.jpeg"
+//   images    — array of local paths like "/images/casestudy/navtech-case1-1.jpeg"
 //               or Unsplash URLs — add as many as you want, carousel handles them
 //
 // To add a new case study, copy one entry, paste it below, change the values.
@@ -56,6 +56,8 @@ const CASE_STUDIES = [
       "/images/casestudy/navtech-case1-2.jpeg",
       "/images/casestudy/navtech-case1-3.jpeg",
       "/images/casestudy/navtech-case1-4.jpeg",
+      "/images/casestudy/navtech-case1-5.jpeg",
+      "/images/casestudy/navtech-case1-6.jpeg",
     ],
   },
   {
@@ -100,6 +102,8 @@ const CASE_STUDIES = [
     images: [
       "/images/casestudy/colorplas-case1-1.jpeg",
       "/images/casestudy/colorplas-case1-2.jpeg",
+      "/images/casestudy/colorplas-case1-3.jpeg",
+      "/images/casestudy/colorplas-case1-4.jpeg",
     ],
   },
   {
@@ -121,7 +125,6 @@ const CASE_STUDIES = [
     ],
     images: [
       "/images/casestudy/workdigitally-case1-1.jpeg",
-      "/images/casestudy/workdigitally-case1-2.jpeg",
     ],
   },
   {
@@ -166,6 +169,8 @@ const CASE_STUDIES = [
     images: [
       "/images/casestudy/workdigitally-case3-1.jpeg",
       "/images/casestudy/workdigitally-case3-2.jpeg",
+      "/images/casestudy/workdigitally-case3-3.jpeg",
+      "/images/casestudy/workdigitally-case3-4.jpeg",
     ],
   },
   {
@@ -187,7 +192,6 @@ const CASE_STUDIES = [
     ],
     images: [
       "/images/casestudy/workdigitally-case4-1.jpeg",
-      "/images/casestudy/workdigitally-case4-2.jpeg",
     ],
   },
   {
@@ -210,6 +214,7 @@ const CASE_STUDIES = [
     images: [
       "/images/casestudy/chefmate-case1-1.jpeg",
       "/images/casestudy/chefmate-case1-2.jpeg",
+      "/images/casestudy/chefmate-case1-3.jpeg",
     ],
   },
   {
@@ -254,6 +259,9 @@ const CASE_STUDIES = [
     images: [
       "/images/casestudy/arvcompanies-case2-1.jpeg",
       "/images/casestudy/arvcompanies-case2-2.jpeg",
+      "/images/casestudy/arvcompanies-case2-3.jpeg",
+      "/images/casestudy/arvcompanies-case2-4.jpeg",
+      "/images/casestudy/arvcompanies-case2-5.jpeg",
     ],
   },
   {
@@ -297,7 +305,6 @@ const CASE_STUDIES = [
     ],
     images: [
       "/images/casestudy/santwires-case1-1.jpeg",
-      "/images/casestudy/santwires-case1-2.jpeg",
     ],
   },
 
@@ -320,6 +327,7 @@ const CASE_STUDIES = [
     images: [
       "/images/casestudy/colorplas-case2-1.jpeg",
       "/images/casestudy/colorplas-case2-2.jpeg",
+      "/images/casestudy/colorplas-case2-3.jpeg",
     ],
   },
    {
@@ -340,6 +348,7 @@ const CASE_STUDIES = [
     images: [
       "/images/casestudy/weddingalliance-case1-1.jpeg",
       "/images/casestudy/weddingalliance-case1-2.jpeg",
+      "/images/casestudy/weddingalliance-case1-3.jpeg",
     ],
   },
   // ──────────────────────────────────────────────────────────────────────────
@@ -598,3 +607,4 @@ export default function CaseStudiesPage() {
     </div>
   );
 }
+ 

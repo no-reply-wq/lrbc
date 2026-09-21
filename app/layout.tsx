@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import FooterSection from "@/components/footer-section";
 import SplashCursor from "@/components/SplashCursor";
+import CursorTrail from "@/components/CursorTrail";
 import WhatsAppFloat from "@/components/whatsapp-float";
 
 const inter = Inter({
@@ -61,17 +62,18 @@ export default function RootLayout({
         >
           {/* Global Splash Cursor */}
           <SplashCursor
-            DENSITY_DISSIPATION={3.5}
-            VELOCITY_DISSIPATION={2.5}
-            PRESSURE={0.15}
-            CURL={5}
-            SPLAT_RADIUS={0.22}
-            SPLAT_FORCE={5000}
-            COLOR_UPDATE_SPEED={8}
+            DENSITY_DISSIPATION={2.8}
+            VELOCITY_DISSIPATION={1.8}
+            PRESSURE={0.25}
+            CURL={18}
+            SPLAT_RADIUS={0.18}
+            SPLAT_FORCE={8000}
+            COLOR_UPDATE_SPEED={15}
             SHADING
             RAINBOW_MODE={false}
-            COLOR="#5B21B6"
+            COLOR="#5028f0"
           />
+          <CursorTrail />
 
           <WhatsAppFloat />
 

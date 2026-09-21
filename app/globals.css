@@ -456,3 +456,8 @@ img { max-width: 100%; height: auto; }
 p, h1, h2, h3, h4, blockquote {
   text-rendering: optimizeLegibility;
 }
+
+/* ── Custom cursor — hide default on desktop ── */
+@media (pointer: fine) {
+  *, *::before, *::after { cursor: none !important; }
+}

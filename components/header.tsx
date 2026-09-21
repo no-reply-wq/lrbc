@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import React from 'react'
 import { cn } from '@/lib/utils'
 import { ModeToggle } from './mode-toggle'
+import MagneticButton from './MagneticButton'
 import { ERPRequestModal } from "@/components/ERPRequestModal"
 
 const menuItems = [
@@ -160,20 +161,24 @@ export const HeroHeader = () => {
 
                             {/* Desktop buttons — original scroll behaviour */}
                             <div className="hidden lg:flex lg:flex-row lg:items-center lg:gap-3">
-                                <Button
-                                    asChild
-                                    size="sm"
-                                    className={cn(isScrolled && 'lg:hidden')}>
-                                    <Link href="https://wa.me/919954953008" target="_blank" rel="noopener noreferrer">
-                                        <span>Whatsapp</span>
-                                    </Link>
-                                </Button>
+                                <MagneticButton strength={0.35} radius={70}>
+                                    <Button
+                                        asChild
+                                        size="sm"
+                                        className={cn(isScrolled && 'lg:hidden')}>
+                                        <Link href="https://wa.me/919954953008" target="_blank" rel="noopener noreferrer">
+                                            <span>Whatsapp</span>
+                                        </Link>
+                                    </Button>
+                                </MagneticButton>
 
                                 <div className={cn(isScrolled ? 'lg:inline-flex' : 'hidden')}>
-                                    <ERPRequestModal
-                                        buttonText="Book a Demo"
-                                        className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors h-9 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer"
-                                    />
+                                    <MagneticButton strength={0.4} radius={75}>
+                                        <ERPRequestModal
+                                            buttonText="Book a Demo"
+                                            className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors h-9 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer"
+                                        />
+                                    </MagneticButton>
                                 </div>
 
                                 <ModeToggle />

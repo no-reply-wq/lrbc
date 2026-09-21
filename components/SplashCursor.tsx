@@ -1153,20 +1153,26 @@ export default function SplashCursor({
       return { r: r * 0.15, g: g * 0.15, b: b * 0.15 };
     }
 
+    // Logo colors: blue #0f5dff and purple #a604ff
+    const LOGO_COLORS: ColorRGB[] = [
+      { r: 0.059, g: 0.365, b: 1.0   },  // #0f5dff — logo blue
+      { r: 0.651, g: 0.016, b: 1.0   },  // #a604ff — logo purple
+      { r: 0.2,   g: 0.4,  b: 1.0   },  // lighter blue blend
+      { r: 0.5,   g: 0.1,  b: 0.9   },  // blue-purple blend
+    ];
+    let colorIdx = 0;
+
     function generateColor(): ColorRGB {
-      if (!config.RAINBOW_MODE) {
-        const c = hexToRGB(config.COLOR!);
-        // Reduce brightness to 35% for a subtle, low-intensity effect
-        c.r *= 0.35;
-        c.g *= 0.35;
-        c.b *= 0.35;
-        return c;
-      }
-      const c = HSVtoRGB(Math.random(), 1.0, 1.0);
-      c.r *= 0.10;
-      c.g *= 0.10;
-      c.b *= 0.10;
-      return c;
+      // Cycle through logo colors on each splat
+      const base = LOGO_COLORS[colorIdx % LOGO_COLORS.length];
+      colorIdx++;
+      // Vary brightness slightly each time for depth
+      const brightness = 0.28 + Math.random() * 0.15;
+      return {
+        r: base.r * brightness,
+        g: base.g * brightness,
+        b: base.b * brightness,
+      };
     }
 
     function HSVtoRGB(h: number, s: number, v: number): ColorRGB {
