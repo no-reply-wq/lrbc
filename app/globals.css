@@ -623,15 +623,20 @@ html {
    Brand colours only — no external palette changes.
    ═══════════════════════════════════════════════════════ */
 
-/* The liquid blob is a ::before pseudo-element */
+/* ── Liquid fill button effect ── */
+/* overflow hidden ONLY on liquid buttons */
+.lrbc-liquid-btn {
+  overflow: hidden;
+}
+
+/* Liquid blob rises from bottom on hover */
 .lrbc-liquid-btn::before {
   content: '';
   position: absolute;
-  bottom: -60%;
+  bottom: -150%;
   left: 50%;
   transform: translateX(-50%) scaleX(0.8);
-  width: 130%;
-  /* Tall enough to overflow the button height */
+  width: 140%;
   height: 200%;
   border-radius: 40% 40% 0 0 / 30% 30% 0 0;
   transition:
@@ -642,31 +647,31 @@ html {
   z-index: 0;
 }
 
-/* All text/icon children sit above the liquid */
-.lrbc-liquid-btn > * {
+/* ALL children above the liquid — critical for text visibility */
+.lrbc-liquid-btn *,
+.lrbc-liquid-btn > *,
+.lrbc-liquid-btn span,
+.lrbc-liquid-btn svg,
+[data-slot="button"] > * {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
-/* On hover — liquid rises to fill the button */
+/* On hover — liquid rises */
 .lrbc-liquid-btn:hover::before {
-  bottom: -10%;
+  bottom: -15%;
   border-radius: 55% 45% 0 0 / 20% 20% 0 0;
   transform: translateX(-50%) scaleX(1);
 }
 
-/* Colour variants */
-/* Default (primary) — lighter shade of primary rises up */
+/* Default primary variant */
 .lrbc-liquid-light::before {
-  background: oklch(0.52 0.22 292.7);   /* slightly darker primary */
-}
-.lrbc-liquid-light:hover {
-  background: oklch(0.6056 0.2189 292.7172); /* keep base, liquid darkens it */
+  background: oklch(0.48 0.22 292.7);
 }
 
-/* Outline button — primary colour fills in */
+/* Outline variant */
 .lrbc-liquid-outline::before {
-  background: oklch(0.6056 0.2189 292.7172 / 0.12);
+  background: oklch(0.6056 0.2189 292.7172 / 0.15);
 }
 .lrbc-liquid-outline:hover {
   background: transparent;
@@ -674,14 +679,12 @@ html {
   border-color: oklch(0.6056 0.2189 292.7172);
 }
 
-/* Secondary button */
+/* Secondary variant */
 .lrbc-liquid-secondary::before {
   background: oklch(0.5 0.18 292.7);
 }
 
-/* ── Magnetic cursor pull — applied globally to .lrbc-magnetic ── */
-/* The actual JS movement is in MagneticButton.tsx               */
-/* This just adds the transition so it feels smooth               */
+/* Magnetic transition */
 .lrbc-magnetic {
   transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
   will-change: transform;
