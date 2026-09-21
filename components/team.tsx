@@ -13,7 +13,7 @@ import SectionBadge from "./section-badge";
 const members = [
     {
         name: 'Lalit Raj',
-        role: 'Director & CEO',
+        role: 'Founder',
         avatar: '/images/lalit.jpeg',
         link: 'https://www.linkedin.com/in/lalit-raj-%F0%9F%9A%80-500b7a124/',
         objectPosition: 'center top',

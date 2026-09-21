@@ -20,7 +20,7 @@ import { useFadeUp } from '@/components/ui/use-scroll-animation';
 // The layout (alternating image position, blur effect, load-more) is automatic.
 // =============================================================================
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { HeroHeader } from "@/components/header";
 import FooterSection from "@/components/footer-section";
 import NewHeroSection from "@/components/new-components/new-hero";
@@ -399,28 +399,28 @@ function ImageCarousel({ images }: { images: string[] }) {
   if (!images.length) return null;
 
   return (
-    <div className="relative h-full min-h-[240px] overflow-hidden rounded-2xl bg-muted select-none">
+    <div className="relative overflow-hidden rounded-2xl bg-muted/30 select-none">
+      {/* Image takes its natural width/height — container wraps around it */}
       <img
         src={images[idx]}
         alt="Project screenshot"
-        className="h-full w-full object-cover object-top transition-all duration-500"
+        className="w-full h-auto block transition-all duration-500"
         draggable={false}
         onContextMenu={e => e.preventDefault()}
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
 
       {images.length > 1 && (
         <>
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
             {images.map((_, i) => (
               <button key={i} onClick={() => setIdx(i)}
-                className={`h-1.5 rounded-full transition-all duration-300 ${i === idx ? "w-5 bg-white" : "w-1.5 bg-white/50"}`} />
+                className={`h-1.5 rounded-full transition-all duration-300 ${i === idx ? "w-5 bg-primary" : "w-1.5 bg-primary/30"}`} />
             ))}
           </div>
-          <button onClick={prev} className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 flex items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm hover:bg-black/60 transition z-10">
+          <button onClick={prev} className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 flex items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm hover:bg-black/50 transition z-10">
             <ChevronLeft className="h-4 w-4" />
           </button>
-          <button onClick={next} className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 flex items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm hover:bg-black/60 transition z-10">
+          <button onClick={next} className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 flex items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm hover:bg-black/50 transition z-10">
             <ChevronRight className="h-4 w-4" />
           </button>
         </>
@@ -486,7 +486,7 @@ function CaseStudyCard({ cs, index }: { cs: typeof CASE_STUDIES[0]; index: numbe
                 <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-blue-500">Solution</p>
                 <p className="text-sm text-foreground/80 leading-6">{cs.solution}</p>
               </div>
-              <div className="order-4 md:order-4 rounded-2xl overflow-hidden min-h-[200px] sm:min-h-[240px]">
+              <div className="order-4 md:order-4 rounded-2xl overflow-hidden">
                 <ImageCarousel images={cs.images} />
               </div>
             </div>
@@ -504,7 +504,7 @@ function CaseStudyCard({ cs, index }: { cs: typeof CASE_STUDIES[0]; index: numbe
                 <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-blue-500">Solution</p>
                 <p className="text-sm text-foreground/80 leading-6">{cs.solution}</p>
               </div>
-              <div className="order-4 md:order-3 rounded-2xl overflow-hidden min-h-[200px] sm:min-h-[240px]">
+              <div className="order-4 md:order-3 rounded-2xl overflow-hidden">
                 <ImageCarousel images={cs.images} />
               </div>
             </div>
@@ -520,7 +520,8 @@ export default function CaseStudiesPage() {
   const sectionRef = useFadeUp();
   const [csVisible, setCsVisible] = useState(CS_PAGE);
 
-  const shownCs = CASE_STUDIES.slice(0, csVisible);
+  const shuffled = useMemo(() => [...CASE_STUDIES].sort(() => Math.random() - 0.5), []);
+  const shownCs = shuffled.slice(0, csVisible);
   const moreCs  = CASE_STUDIES.length - csVisible;
 
   return (
