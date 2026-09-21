@@ -1,4 +1,5 @@
-"use client";
+"use client"
+import MagneticButton from '@/components/MagneticButton';
 
 import Link from "next/link";
 import { ArrowUpRight, CheckCircle2 } from "lucide-react";
@@ -47,6 +48,7 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
           </div>
 
+          <MagneticButton strength={0.3} radius={80} className="w-full sm:w-fit">
           <Button
             asChild
             size="lg"
@@ -62,6 +64,7 @@ export function ProductCard({ product }: ProductCardProps) {
               <ArrowUpRight className="h-4 w-4 transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-hover:rotate-45" />
             </Link>
           </Button>
+          </MagneticButton>
         </div>
 
         {/* ── RIGHT: live chart component ────────────────── */}

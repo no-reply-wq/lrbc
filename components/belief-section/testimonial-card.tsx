@@ -52,7 +52,8 @@ const SLIDE_DELAY = 8000;
 
 export default function TestimonialCard() {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(0);
+  // Random start index on every mount
+  const [active, setActive] = useState(() => Math.floor(Math.random() * testimonials.length));
   const [visible, setVisible] = useState(true);
 
   // Fade helper — used by both auto-slide and manual nav
@@ -69,7 +70,12 @@ export default function TestimonialCard() {
   }, [active, goTo]);
 
   const next = useCallback(() => {
-    goTo((active + 1) % testimonials.length);
+    // Pick a random index that is different from current
+    let nextIdx = Math.floor(Math.random() * testimonials.length);
+    if (testimonials.length > 1 && nextIdx === active) {
+      nextIdx = (nextIdx + 1) % testimonials.length;
+    }
+    goTo(nextIdx);
   }, [active, goTo]);
 
   // Auto-slide — resets whenever user manually navigates

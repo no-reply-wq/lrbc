@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import type React from "react"
 import { useRef } from "react";
 import gsap from "gsap";
@@ -34,7 +34,7 @@ export default function TestimonialsSection() {
   const [activeTestimonial, setActiveTestimonial] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
 
-  const testimonials = [
+  const RAW_TESTIMONIALS = [
     {
       quote:
         " The unique part about their  offerings is that they spends time in understanding your business and detail and offer products which have been made specifically for our needs rather than pushing any standard product. This helps in keeping the operation and learning simple and cost friendly.",
@@ -45,6 +45,12 @@ export default function TestimonialsSection() {
     },
    
   ]
+
+  const testimonials = useMemo(
+    () => [...RAW_TESTIMONIALS].sort(() => Math.random() - 0.5),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
 
   useEffect(() => {
     const interval = setInterval(() => {

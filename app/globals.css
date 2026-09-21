@@ -461,3 +461,228 @@ p, h1, h2, h3, h4, blockquote {
 @media (pointer: fine) {
   *, *::before, *::after { cursor: none !important; }
 }
+
+/* ── Liquid blob magnetic effect on social icons ── */
+.lrbc-social-blob {
+  position: relative;
+}
+
+.lrbc-blob-icon {
+  position: relative;
+  z-index: 1;
+}
+
+.lrbc-blob-icon::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: oklch(0.6056 0.2189 292.7172 / 0.12);
+  transform: scale(0);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+              border-radius 0.35s ease,
+              background 0.3s ease;
+  z-index: -1;
+}
+
+.lrbc-blob-icon:hover::before {
+  transform: scale(1.15);
+  border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
+  background: oklch(0.6056 0.2189 292.7172 / 0.18);
+  animation: lrbc-blob-morph 2s ease-in-out infinite;
+}
+
+@keyframes lrbc-blob-morph {
+  0%, 100% { border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%; }
+  25%       { border-radius: 62% 38% 37% 63% / 59% 56% 44% 41%; }
+  50%       { border-radius: 48% 52% 58% 42% / 55% 42% 58% 45%; }
+  75%       { border-radius: 52% 48% 42% 58% / 42% 58% 42% 58%; }
+}
+
+/* Scale up the icon itself on hover */
+.lrbc-blob-icon:hover svg {
+  transform: scale(1.15);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.lrbc-blob-icon svg {
+  transition: transform 0.3s ease;
+}
+
+/* ── Footer social icons — spotlight glow effect (like video reference) ── */
+/* ── Footer spotlight social icons ── */
+.lrbc-spotlight-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(160, 0, 240, 0.25);
+  color: rgba(200, 180, 255, 0.7);
+  background: rgba(255,255,255,0.03);
+  transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+  /* NO overflow:hidden — glow needs to be visible */
+}
+
+.lrbc-spotlight-icon:hover {
+  color: #ffffff;
+  border-color: rgba(var(--glow-color), 0.7);
+  background: rgba(var(--glow-color), 0.08);
+}
+
+/* Glow positioned OUTSIDE the circle via a pseudo overlay */
+.lrbc-spotlight-glow {
+  position: absolute;
+  inset: -8px;              /* extends outside the circle */
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    circle at 50% 100%,
+    rgba(var(--glow-color), 0.55) 0%,
+    rgba(var(--glow-color), 0.20) 35%,
+    transparent 65%
+  );
+  opacity: 0;
+  transform: scale(0.7) translateY(6px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  filter: blur(4px);
+}
+
+.lrbc-spotlight-icon:hover .lrbc-spotlight-glow {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+/* SVG stays above the glow */
+.lrbc-spotlight-icon svg {
+  position: relative;
+  z-index: 1;
+}
+
+/* Remove old blob styles */
+.lrbc-social-blob { all: unset; display: contents; }
+.lrbc-blob-icon { all: unset; }
+.lrbc-blob-icon::before { display: none; }
+
+
+/* ── WhatsApp float button ── */
+.whatsapp-float-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: #25D366;
+  color: white;
+  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.3s ease;
+}
+
+.whatsapp-float-btn:hover {
+  transform: scale(1.12);
+  box-shadow: 0 6px 28px rgba(37, 211, 102, 0.6);
+}
+
+.whatsapp-float-btn:active {
+  transform: scale(0.95);
+}
+
+.whatsapp-glow {
+  background: radial-gradient(circle at 50% 50%,
+    rgba(37, 211, 102, 0.5) 0%,
+    transparent 70%);
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.whatsapp-float-btn:hover .whatsapp-glow {
+  opacity: 1;
+  transform: scale(1.4);
+}
+
+/* ── Page scroll speed — smooth and controlled ── */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Dashboard inner scroll — slow it down */
+.overflow-y-auto {
+  scroll-behavior: smooth;
+}
+
+/* ═══════════════════════════════════════════════════════
+   LRBC Liquid Fill Button Effect
+   Inspired by: https://youtu.be/4soTHg4Ed70
+   A blob of liquid rises from the bottom on hover.
+   Brand colours only — no external palette changes.
+   ═══════════════════════════════════════════════════════ */
+
+/* The liquid blob is a ::before pseudo-element */
+.lrbc-liquid-btn::before {
+  content: '';
+  position: absolute;
+  bottom: -60%;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0.8);
+  width: 130%;
+  /* Tall enough to overflow the button height */
+  height: 200%;
+  border-radius: 40% 40% 0 0 / 30% 30% 0 0;
+  transition:
+    bottom 0.55s cubic-bezier(0.23, 1, 0.32, 1),
+    border-radius 0.55s cubic-bezier(0.23, 1, 0.32, 1),
+    transform 0.55s cubic-bezier(0.23, 1, 0.32, 1);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* All text/icon children sit above the liquid */
+.lrbc-liquid-btn > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* On hover — liquid rises to fill the button */
+.lrbc-liquid-btn:hover::before {
+  bottom: -10%;
+  border-radius: 55% 45% 0 0 / 20% 20% 0 0;
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* Colour variants */
+/* Default (primary) — lighter shade of primary rises up */
+.lrbc-liquid-light::before {
+  background: oklch(0.52 0.22 292.7);   /* slightly darker primary */
+}
+.lrbc-liquid-light:hover {
+  background: oklch(0.6056 0.2189 292.7172); /* keep base, liquid darkens it */
+}
+
+/* Outline button — primary colour fills in */
+.lrbc-liquid-outline::before {
+  background: oklch(0.6056 0.2189 292.7172 / 0.12);
+}
+.lrbc-liquid-outline:hover {
+  background: transparent;
+  color: oklch(0.6056 0.2189 292.7172);
+  border-color: oklch(0.6056 0.2189 292.7172);
+}
+
+/* Secondary button */
+.lrbc-liquid-secondary::before {
+  background: oklch(0.5 0.18 292.7);
+}
+
+/* ── Magnetic cursor pull — applied globally to .lrbc-magnetic ── */
+/* The actual JS movement is in MagneticButton.tsx               */
+/* This just adds the transition so it feels smooth               */
+.lrbc-magnetic {
+  transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+  will-change: transform;
+}

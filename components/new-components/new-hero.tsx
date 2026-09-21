@@ -1,4 +1,5 @@
-"use client";
+"use client"
+import MagneticButton from '@/components/MagneticButton';
 
 import React, { useRef } from "react";
 import Link from "next/link";
@@ -94,7 +95,7 @@ export default function NewHeroSection({
       <div className="absolute bottom-0 left-0 right-0 z-10 h-40 bg-gradient-to-t from-background via-background/70 to-transparent pointer-events-none" />
 
       {/* Content */}
-      <div className="relative z-10 flex min-h-[80svh] items-center justify-center px-4 sm:px-6 pt-24 pb-8 sm:pt-28 sm:pb-12 pointer-events-none">
+      <div className="relative z-10 flex min-h-[100svh] items-center justify-center px-4 sm:px-6 pt-28 pb-12 sm:pt-32 sm:pb-16 pointer-events-none">
         <div className="mx-auto w-full max-w-5xl text-center">
 
           {/* Badge — Logo style matching header (no white background box) */}
@@ -144,11 +145,13 @@ export default function NewHeroSection({
               className="mt-8 flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 pointer-events-auto"
             >
               <div className="rounded-[calc(var(--radius-xl)+0.125rem)] border bg-foreground/10 p-0.5">
-                <Button asChild size="lg" className="rounded-xl px-5 text-base w-full sm:w-auto">
-                  <Link href="/contact?openForm=true">
-                    <span className="text-nowrap">Contact our team</span>
-                  </Link>
-                </Button>
+                <MagneticButton strength={0.3} radius={80} className="w-full sm:w-auto">
+                  <Button asChild size="lg" className="rounded-xl px-5 text-base w-full sm:w-auto">
+                    <Link href="/contact?openForm=true">
+                      <span className="text-nowrap">Contact our team</span>
+                    </Link>
+                  </Button>
+                </MagneticButton>
               </div>
               <Button asChild size="lg" variant="ghost" className="rounded-xl px-5 w-full sm:w-auto">
                 <Link href={buttonHref}>
