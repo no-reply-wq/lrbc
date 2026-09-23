@@ -462,6 +462,15 @@ p, h1, h2, h3, h4, blockquote {
   *, *::before, *::after { cursor: none !important; }
 }
 
+/* Restore cursor inside modals — canvas sits above at z:99999 so ring still shows */
+[class*='fixed'][class*='inset-0'][class*='z-'] *,
+[class*='fixed'][class*='inset-0'][class*='z-'] { cursor: auto !important; }
+[class*='fixed'][class*='inset-0'][class*='z-'] input,
+[class*='fixed'][class*='inset-0'][class*='z-'] textarea { cursor: text !important; }
+[class*='fixed'][class*='inset-0'][class*='z-'] button,
+[class*='fixed'][class*='inset-0'][class*='z-'] a,
+[class*='fixed'][class*='inset-0'][class*='z-'] select { cursor: pointer !important; }
+
 /* ── Liquid blob magnetic effect on social icons ── */
 .lrbc-social-blob {
   position: relative;
@@ -688,4 +697,29 @@ html {
 .lrbc-magnetic {
   transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
   will-change: transform;
+}
+
+/* Exclude very small buttons from liquid fill (they clip text) */
+.lrbc-liquid-btn.text-xs,
+[class*="h-8"].lrbc-liquid-btn,
+[class*="h-7"].lrbc-liquid-btn {
+  overflow: visible !important;
+}
+[class*="h-8"].lrbc-liquid-btn::before,
+[class*="h-7"].lrbc-liquid-btn::before {
+  display: none !important;
+}
+
+/* Prevent liquid blob from overflowing on ERPRequestModal plain buttons */
+button.lrbc-liquid-btn:not([data-slot="button"]) {
+  overflow: hidden !important;
+}
+[class*="z-[9999]"] input,
+[class*="z-[9999]"] textarea,
+[class*="z-[9999]"] select {
+  cursor: text !important;
+}
+[class*="z-[9999]"] button,
+[class*="z-[9999]"] a {
+  cursor: pointer !important;
 }

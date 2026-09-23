@@ -14,6 +14,7 @@ const menuItems = [
     { name: 'About',        href: '/about',                     children: null },
     { name: 'Products',     href: '/lekhasetu',                 children: [
         { name: 'LekhaSetu', href: '/lekhasetu' },
+        { name: 'WorkPilot', href: '/workpilot' },
     ]},
     { name: 'Why LRBC',    href: '/why-lrbc',                  children: null },
     { name: 'Case Studies', href: '/testimonials-case-studies', children: null },

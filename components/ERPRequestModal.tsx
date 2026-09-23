@@ -5,18 +5,22 @@ import { createPortal } from "react-dom";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CheckCircle2, Loader2, X } from "lucide-react";
+import { CheckCircle2, Loader2, X, ArrowUpRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface ERPRequestModalProps {
   buttonText?: string;
   className?: string;
+  showArrow?: boolean;
 }
 
 export function ERPRequestModal({
   buttonText = "Book a Demo",
   className,
+  showArrow = false,
 }: ERPRequestModalProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [mounted, setMounted] = useState(false);
 
@@ -27,15 +31,18 @@ export function ERPRequestModal({
 
   const open = () => setIsOpen(true);
 
-  const close = () => {
+  const close = (redirectToContact = false) => {
     setIsOpen(false);
     setStatus("idle");
+    if (redirectToContact) {
+      router.push("/contact");
+    }
   };
 
   // Close on Escape key
   useEffect(() => {
     if (!isOpen) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") close(); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") close(false); };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [isOpen]);
@@ -67,7 +74,7 @@ export function ERPRequestModal({
       {/* Backdrop — click to close */}
       <div
         className="fixed inset-0 bg-black/70 backdrop-blur-sm"
-        onClick={close}
+        onClick={() => close(false)}
       />
 
       {/* Scrollable centering wrapper */}
@@ -76,7 +83,7 @@ export function ERPRequestModal({
           {/* Close button */}
           <button
             type="button"
-            onClick={close}
+            onClick={() => close(false)}
             className="absolute right-4 top-4 rounded-full p-2 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
           >
             <X className="h-5 w-5" />
@@ -93,8 +100,15 @@ export function ERPRequestModal({
               </p>
               <button
                 type="button"
-                onClick={close}
+                onClick={() => close(true)}
                 className="mt-2 h-11 px-6 rounded-xl bg-primary text-primary-foreground font-medium"
+              >
+                Go to Contact Page
+              </button>
+              <button
+                type="button"
+                onClick={() => close(false)}
+                className="mt-1 h-9 px-4 rounded-xl text-muted-foreground text-sm hover:underline"
               >
                 Close
               </button>
@@ -171,6 +185,7 @@ export function ERPRequestModal({
         }
       >
         {buttonText}
+        {showArrow && <ArrowUpRight className="h-4 w-4 shrink-0" />}
       </button>
 
       {/* Mount modal at document.body so it escapes all stacking contexts */}

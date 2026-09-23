@@ -22,7 +22,7 @@ const products = [
     {
         id: "workpilot",
         title: "WorkPilot",
-        href: "#",
+        href: "/workpilot",
         description:
             "WorkPilot simplifies workforce management by bringing attendance, task allocation, and work tracking into one centralized platform. With a quick overview of your team's progress and day-to-day activities, you can spend less time following up and more time helping your business move forward.",
         image: "/images/workpilot.png",

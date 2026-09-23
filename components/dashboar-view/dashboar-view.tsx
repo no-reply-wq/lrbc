@@ -6,6 +6,7 @@ import { Menu, X, LayoutDashboard, Target, Users, Truck, Receipt, Download } fro
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import ContactFormModal from "@/components/ContactFormModal";
 
 import DashboardSidebar from "./sidebar";
 import DashboardHeader from "./header";
@@ -36,7 +37,7 @@ export default function Dashboard() {
       title: "Business Overview",
       description: "Tracking 5 Critical Parameters to Double Profits (MCAP)",
       badge: <Badge variant="secondary">MCAP</Badge>,
-      action: <Button className="text-xs px-3 h-8">Contact Our Team</Button>,
+      action: <ContactFormModal buttonText="Contact Our Team" className="text-xs px-3 h-8 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 font-medium transition-colors cursor-pointer" />,
     },
     sales: {
       title: "Sales Auto-Pilot",
