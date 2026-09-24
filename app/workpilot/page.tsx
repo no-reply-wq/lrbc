@@ -4,6 +4,7 @@ import { HeroHeader } from "@/components/header";
 import FooterSection from "@/components/footer-section";
 import WorkPilotHero from "@/components/WorkPilotHero";
 import WorkPilotFeatures from "@/components/WorkPilotFeatures";
+import WorkPilotPricing from "@/components/WorkPilotPricing";
 import CallToAction from "@/components/cta-section";
 
 export default function WorkPilotPage() {
@@ -12,6 +13,7 @@ export default function WorkPilotPage() {
       <HeroHeader />
       <WorkPilotHero />
       <WorkPilotFeatures />
+      <WorkPilotPricing />
       <CallToAction />
       <FooterSection />
     </div>

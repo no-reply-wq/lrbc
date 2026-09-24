@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { useFadeUp } from "@/components/ui/use-scroll-animation";
+import React from "react";
 import {
   Clock, CheckSquare, BarChart3, History,
   Bell, Shield, Smartphone, Zap,
@@ -74,7 +75,7 @@ const METRICS = [
 ];
 
 export default function WorkPilotFeatures() {
-  const ref = useFadeUp();
+  const ref = useFadeUp() as React.RefObject<HTMLElement>;
 
   return (
     <section
