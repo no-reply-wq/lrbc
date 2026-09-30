@@ -235,8 +235,7 @@ export function ContactForm() {
                   value={selectedCountry?.code ?? ""}
                   onChange={handleCountryChange}
                   disabled={countriesLoading}
-                  className="h-full appearance-none bg-transparent pl-3 pr-7 text-sm font-medium focus:outline-none cursor-pointer"
-                  style={{ minWidth: "105px" }}
+                  className="h-full w-[96px] appearance-none bg-transparent pl-3 pr-7 text-base font-medium focus:outline-none cursor-pointer sm:w-[105px] sm:text-sm"
                 >
                   {countriesLoading ? (
                     <option>Loading…</option>
@@ -260,7 +259,7 @@ export function ContactForm() {
                 onChange={handlePhoneChange}
                 maxLength={activePhoneRule.max}
                 placeholder={`e.g. ${activePhoneRule.placeholder}`}
-                className="h-full flex-1 bg-transparent px-3 text-sm focus:outline-none"
+                className="h-full min-w-0 flex-1 bg-transparent px-3 text-base focus:outline-none sm:text-sm"
                 required
               />
             </div>
