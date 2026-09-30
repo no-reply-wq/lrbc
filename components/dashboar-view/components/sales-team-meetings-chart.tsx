@@ -84,12 +84,12 @@ export default function SalesTeamMeetingsChart() {
 
               <Tooltip
                 cursor={{
-                  fill: "hsl(var(--muted))",
+                  fill: "var(--muted)",
                   opacity: 0.15,
                 }}
                 contentStyle={{
-                  background: "hsl(var(--popover))",
-                  border: "1px solid hsl(var(--border))",
+                  background: "var(--popover)",
+                  border: "1px solid var(--border)",
                   borderRadius: 10,
                 }}
               />
@@ -100,14 +100,14 @@ export default function SalesTeamMeetingsChart() {
                 dataKey="actual"
                 name="Actual"
                 radius={[6, 6, 0, 0]}
-                fill="hsl(var(--primary))"
+                fill="var(--primary)"
               />
 
               <Bar
                 dataKey="target"
                 name="Target"
                 radius={[6, 6, 0, 0]}
-                fill="hsl(var(--muted-foreground))"
+                fill="var(--muted-foreground)"
                 opacity={0.35}
               />
             </BarChart>

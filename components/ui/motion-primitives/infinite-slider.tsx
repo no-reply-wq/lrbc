@@ -1,7 +1,7 @@
 'use client';
 import { cn } from '@/lib/utils';
 import { useMotionValue, animate, motion } from 'motion/react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import useMeasure from 'react-use-measure';
 
 export type InfiniteSliderProps = {
@@ -11,6 +11,7 @@ export type InfiniteSliderProps = {
   speedOnHover?: number;
   direction?: 'horizontal' | 'vertical';
   reverse?: boolean;
+  pauseOnHover?: boolean;
   className?: string;
 };
 
@@ -21,8 +22,11 @@ export function InfiniteSlider({
   speedOnHover,
   direction = 'horizontal',
   reverse = false,
+  pauseOnHover = false,
   className,
 }: InfiniteSliderProps) {
+  const controlsRef = useRef<{ pause: () => void; play: () => void } | null>(null);
+  const pausedRef = useRef(false);
   const [currentSpeed, setCurrentSpeed] = useState(speed);
   const [ref, { width, height }] = useMeasure();
   const translation = useMotionValue(0);
@@ -64,6 +68,9 @@ export function InfiniteSlider({
       });
     }
 
+    controlsRef.current = controls ?? null;
+    if (pausedRef.current) controls?.pause();
+
     return controls?.stop;
   }, [
     key,
@@ -91,7 +98,26 @@ export function InfiniteSlider({
     : {};
 
   return (
-    <div className={cn('overflow-hidden', className)}>
+    <div
+      className={cn('overflow-hidden', className)}
+      onPointerEnter={
+        pauseOnHover
+          ? (e) => {
+              if (e.pointerType !== 'mouse') return;
+              pausedRef.current = true;
+              controlsRef.current?.pause();
+            }
+          : undefined
+      }
+      onPointerLeave={
+        pauseOnHover
+          ? () => {
+              pausedRef.current = false;
+              controlsRef.current?.play();
+            }
+          : undefined
+      }
+    >
       <motion.div
         className='flex w-max'
         style={{

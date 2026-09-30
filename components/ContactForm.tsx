@@ -4,18 +4,13 @@ import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CheckCircle2, Loader2, ChevronDown } from "lucide-react";
+import { CheckCircle2, Loader2, ChevronDown, Building2, User, Mail, MapPin, Factory } from "lucide-react";
 
 interface CountryOption {
   name: string;
   code: string;
   dialCode: string;
   flag: string;
-}
-
-interface StateOption {
-  name: string;
-  code: string;
 }
 
 const DEFAULT_PHONE_RULE = { placeholder: "12345 67890", min: 7, max: 15 };
@@ -59,19 +54,27 @@ const FALLBACK_COUNTRIES: CountryOption[] = [
 const SELECT_CLS =
   "h-12 w-full appearance-none rounded-xl border border-input bg-background px-3 pr-9 text-base sm:text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:border-purple-400 disabled:opacity-60 cursor-pointer";
 
+const CITIES = [
+  "Hyderabad", "Bengaluru", "Mumbai", "Delhi NCR", "Chennai", "Pune", "Kolkata", "Ahmedabad",
+  "Surat", "Jaipur", "Lucknow", "Kanpur", "Nagpur", "Indore", "Bhopal", "Visakhapatnam",
+  "Vijayawada", "Coimbatore", "Kochi", "Thiruvananthapuram", "Chandigarh", "Ludhiana", "Guwahati",
+  "Patna", "Ranchi", "Bhubaneswar", "Raipur", "Vadodara", "Rajkot", "Nashik", "Mysuru", "Mangaluru",
+];
+const OTHER_CITY = "Other";
+
+type Errors = Partial<Record<"companyName" | "contactPerson" | "businessEmail" | "contactNumber" | "city" | "industry", string>>;
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
 export function ContactForm() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  const [phoneError, setPhoneError] = useState("");
+  const [errors, setErrors] = useState<Errors>({});
+  const [cityChoice, setCityChoice] = useState("");
 
-  // ── Countries ─────────────────────────────────────────────────────────────
+  // ── Countries (dial code list for the phone field) ─────────────────────────
   const [countries, setCountries] = useState<CountryOption[]>([]);
   const [countriesLoading, setCountriesLoading] = useState(true);
   const [selectedCountry, setSelectedCountry] = useState<CountryOption | null>(null);
-
-  // ── States / Provinces ────────────────────────────────────────────────────
-  const [states, setStates] = useState<StateOption[]>([]);
-  const [statesLoading, setStatesLoading] = useState(false);
-  const [selectedState, setSelectedState] = useState("");
 
   // ── Phone ─────────────────────────────────────────────────────────────────
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -79,12 +82,6 @@ export function ContactForm() {
     ? PHONE_RULES[selectedCountry.dialCode] || DEFAULT_PHONE_RULE
     : DEFAULT_PHONE_RULE;
 
-  // ── Location ──────────────────────────────────────────────────────────────
-  const [city, setCity] = useState("");
-  const [pincode, setPincode] = useState("");
-  const [isPincodeLoading, setIsPincodeLoading] = useState(false);
-
-  // ── 1. Load ALL countries on mount ────────────────────────────────────────
   useEffect(() => {
     const load = async () => {
       try {
@@ -94,12 +91,10 @@ export function ContactForm() {
         );
         if (!res.ok) throw new Error("fetch failed");
         const data: any[] = await res.json();
-
         const formatted: CountryOption[] = data
           .filter((c) => c.idd?.root)
           .map((c) => {
-            const suffix =
-              c.idd.suffixes?.length === 1 ? c.idd.suffixes[0] : "";
+            const suffix = c.idd.suffixes?.length === 1 ? c.idd.suffixes[0] : "";
             return {
               name: c.name.common,
               code: c.cca2,
@@ -108,10 +103,8 @@ export function ContactForm() {
             };
           })
           .sort((a, b) => a.name.localeCompare(b.name));
-
         setCountries(formatted);
-        const india = formatted.find((c) => c.code === "IN") ?? formatted[0];
-        setSelectedCountry(india);
+        setSelectedCountry(formatted.find((c) => c.code === "IN") ?? formatted[0]);
       } catch {
         setCountries(FALLBACK_COUNTRIES);
         setSelectedCountry(FALLBACK_COUNTRIES[0]);
@@ -122,68 +115,11 @@ export function ContactForm() {
     load();
   }, []);
 
-  // ── 2. Load states whenever country changes ───────────────────────────────
-  useEffect(() => {
-    if (!selectedCountry) return;
-    setSelectedState("");
-    setStates([]);
-    setCity("");
-    setPincode("");
-    setStatesLoading(true);
+  const clearError = (k: keyof Errors) =>
+    setErrors((prev) => (prev[k] ? { ...prev, [k]: undefined } : prev));
 
-    const load = async () => {
-      try {
-        const res = await fetch(
-          "https://countriesnow.space/api/v0.1/countries/states",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ country: selectedCountry.name }),
-          }
-        );
-        const data = await res.json();
-        if (!data.error && Array.isArray(data.data?.states)) {
-          setStates(
-            data.data.states.map((s: any) => ({
-              name: s.name,
-              code: s.state_code ?? s.name,
-            }))
-          );
-        }
-      } catch {
-        // silent — user can type manually
-      } finally {
-        setStatesLoading(false);
-      }
-    };
-    load();
-  }, [selectedCountry]);
-
-  // ── 3. Pincode autofill (India only) ─────────────────────────────────────
-  const handlePincodeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const code = e.target.value.replace(/\D/g, "");
-    setPincode(code);
-    if (code.length === 6 && selectedCountry?.code === "IN") {
-      setIsPincodeLoading(true);
-      try {
-        const res = await fetch(`https://api.postalpincode.in/pincode/${code}`);
-        const result = await res.json();
-        if (result?.[0]?.Status === "Success" && result[0].PostOffice?.length > 0) {
-          const po = result[0].PostOffice[0];
-          setCity(po.District || po.Block || "");
-          const match = states.find(
-            (s) => s.name.toLowerCase() === (po.State || "").toLowerCase()
-          );
-          setSelectedState(match ? match.name : po.State || "");
-        }
-      } catch { /* silent */ }
-      finally { setIsPincodeLoading(false); }
-    }
-  };
-
-  // ── Handlers ──────────────────────────────────────────────────────────────
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhoneError("");
+    clearError("contactNumber");
     setPhoneNumber(e.target.value.replace(/[^0-9]/g, ""));
   };
 
@@ -192,30 +128,57 @@ export function ContactForm() {
     if (found) {
       setSelectedCountry(found);
       setPhoneNumber("");
-      setPhoneError("");
+      clearError("contactNumber");
     }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (phoneNumber.length < activePhoneRule.min || phoneNumber.length > activePhoneRule.max) {
-      setPhoneError("Please enter a valid phone number.");
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    const val = (k: string) => String(fd.get(k) ?? "").trim();
+
+    // All six fields are mandatory
+    const next: Errors = {};
+    if (!val("companyName")) next.companyName = "Please enter your company name.";
+    if (!val("contactPerson")) next.contactPerson = "Please enter the contact person's name.";
+    if (!val("businessEmail")) next.businessEmail = "Please enter your email address.";
+    else if (!EMAIL_RE.test(val("businessEmail"))) next.businessEmail = "Please enter a valid email address.";
+    if (!phoneNumber) next.contactNumber = "Please enter your contact number.";
+    else if (phoneNumber.length < activePhoneRule.min || phoneNumber.length > activePhoneRule.max)
+      next.contactNumber = "Please enter a valid contact number.";
+    const cityValue = cityChoice === OTHER_CITY ? val("cityOther") : cityChoice;
+    if (!cityChoice) next.city = "Please select your city.";
+    else if (!cityValue) next.city = "Please type your city name.";
+    if (!val("industry")) next.industry = "Please enter your industry.";
+
+    setErrors(next);
+    if (Object.keys(next).length > 0) {
+      const first = Object.keys(next)[0];
+      form.querySelector<HTMLElement>(`[name="${first}"]`)?.focus();
       return;
     }
+
     setStatus("submitting");
-    const formData = new FormData(e.currentTarget);
+    const formData = new FormData();
     formData.append("access_key", "d7597fd4-4c3b-40d2-ad55-710160cd9abd");
-    formData.set("country", selectedCountry?.name ?? "");
-    formData.set("state", selectedState);
-    formData.set("city", city);
+    formData.set("companyName", val("companyName"));
+    formData.set("contactPerson", val("contactPerson"));
+    formData.set("businessEmail", val("businessEmail"));
     formData.set("fullContactNumber", `${selectedCountry?.dialCode ?? ""} ${phoneNumber}`);
+    formData.set("city", cityValue);
+    formData.set("industry", val("industry"));
     try {
       const res = await fetch("https://api.web3forms.com/submit", { method: "POST", body: formData });
       setStatus(res.ok ? "success" : "error");
     } catch { setStatus("error"); }
   };
 
-  // ── Render ────────────────────────────────────────────────────────────────
+  const fieldCls = (k: keyof Errors) =>
+    `h-12 rounded-xl pl-10 ${errors[k] ? "border-red-500 focus-visible:ring-red-500/30" : ""}`;
+  const ErrorMsg = ({ k }: { k: keyof Errors }) =>
+    errors[k] ? <p role="alert" className="text-xs text-red-500">{errors[k]}</p> : null;
+
   return (
     <Card className="rounded-[20px] sm:rounded-[28px] border-border/60 bg-background/80 p-4 sm:p-6 md:p-8 shadow-xl backdrop-blur flex flex-col justify-center transition-shadow duration-500 ease-out hover:shadow-[0_10px_40px_-10px_rgba(139,92,246,0.15)]">
       {status === "success" ? (
@@ -234,35 +197,41 @@ export function ContactForm() {
           {/* Company Name */}
           <div className="space-y-2">
             <Label htmlFor="companyName">Company Name *</Label>
-            <Input id="companyName" name="companyName" placeholder="e.g. ACD Pvt. Ltd." className="h-12 rounded-xl" required />
-          </div>
-
-          {/* Contact Person & Designation */}
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="contactPerson">Contact Person *</Label>
-              <Input id="contactPerson" name="contactPerson" placeholder="e.g. Laksh Gupta" className="h-12 rounded-xl" required />
+            <div className="relative">
+              <Building2 className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input id="companyName" name="companyName" autoComplete="organization" placeholder="e.g. ACD Pvt. Ltd." className={fieldCls("companyName")} onChange={() => clearError("companyName")} required />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="designation">Designation *</Label>
-              <Input id="designation" name="designation" placeholder="e.g. Manager" className="h-12 rounded-xl" required />
+            <ErrorMsg k="companyName" />
+          </div>
+
+          {/* Contact Name */}
+          <div className="space-y-2">
+            <Label htmlFor="contactPerson">Contact Name *</Label>
+            <div className="relative">
+              <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input id="contactPerson" name="contactPerson" autoComplete="name" placeholder="e.g. Laksh Gupta" className={fieldCls("contactPerson")} onChange={() => clearError("contactPerson")} required />
             </div>
+            <ErrorMsg k="contactPerson" />
           </div>
 
-          {/* Business Email */}
+          {/* Email */}
           <div className="space-y-2">
-            <Label htmlFor="businessEmail">Business Email *</Label>
-            <Input id="businessEmail" name="businessEmail" type="email" placeholder="e.g. laksh@gmail.com" className="h-12 rounded-xl" required />
+            <Label htmlFor="businessEmail">Email *</Label>
+            <div className="relative">
+              <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input id="businessEmail" name="businessEmail" type="email" autoComplete="email" placeholder="e.g. laksh@company.com" className={fieldCls("businessEmail")} onChange={() => clearError("businessEmail")} required />
+            </div>
+            <ErrorMsg k="businessEmail" />
           </div>
 
-          {/* Phone — fused dial-code + number row */}
+          {/* Contact No. — dial-code + number */}
           <div className="space-y-2">
-            <Label htmlFor="contactNumber">Contact Number *</Label>
-            <div className="flex h-12 w-full overflow-hidden rounded-xl border border-input bg-background shadow-sm focus-within:ring-2 focus-within:ring-purple-500/40 focus-within:border-purple-400 transition-all">
-              {/* Dial-code selector */}
+            <Label htmlFor="contactNumber">Contact No. *</Label>
+            <div className={`flex h-12 w-full overflow-hidden rounded-xl border bg-background shadow-sm focus-within:ring-2 focus-within:ring-purple-500/40 focus-within:border-purple-400 transition-all ${errors.contactNumber ? "border-red-500" : "border-input"}`}>
               <div className="relative flex shrink-0 items-center border-r border-input">
                 <select
                   name="countryCode"
+                  aria-label="Country dial code"
                   value={selectedCountry?.code ?? ""}
                   onChange={handleCountryChange}
                   disabled={countriesLoading}
@@ -281,173 +250,58 @@ export function ContactForm() {
                 </select>
                 <ChevronDown className="pointer-events-none absolute right-1.5 h-3.5 w-3.5 text-muted-foreground" />
               </div>
-              {/* Number field */}
               <input
                 id="contactNumber"
                 name="contactNumber"
                 type="tel"
+                inputMode="numeric"
+                autoComplete="tel-national"
                 value={phoneNumber}
                 onChange={handlePhoneChange}
                 maxLength={activePhoneRule.max}
-                placeholder={activePhoneRule.placeholder}
+                placeholder={`e.g. ${activePhoneRule.placeholder}`}
                 className="h-full flex-1 bg-transparent px-3 text-sm focus:outline-none"
                 required
               />
             </div>
-            {phoneError && <p className="text-xs text-red-500">{phoneError}</p>}
+            <ErrorMsg k="contactNumber" />
           </div>
 
-          {/* ── Location Details ──────────────────────────────────────────── */}
-          <div className="space-y-3 rounded-xl sm:rounded-2xl border border-border/50 bg-muted/20 p-3 sm:p-4">
-            <h3 className="text-sm font-semibold text-foreground/80">Location Details</h3>
-
-            {/* Country */}
-            <div className="space-y-2">
-              <Label htmlFor="loc-country">Country</Label>
-              <div className="relative">
-                <select
-                  id="loc-country"
-                  name="country"
-                  value={selectedCountry?.code ?? ""}
-                  onChange={handleCountryChange}
-                  disabled={countriesLoading}
-                  className={SELECT_CLS}
-                >
-                  {countriesLoading ? (
-                    <option>Loading countries…</option>
-                  ) : (
-                    countries.map((c) => (
-                      <option key={c.code} value={c.code}>
-                        {c.flag}  {c.name}
-                      </option>
-                    ))
-                  )}
-                </select>
-                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                {countriesLoading && (
-                  <Loader2 className="absolute right-8 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-muted-foreground" />
-                )}
-              </div>
-            </div>
-
-            {/* State / Province */}
-            <div className="space-y-2">
-              <Label htmlFor="loc-state">
-                State / Province
-                {statesLoading && (
-                  <Loader2 className="ml-1.5 inline h-3 w-3 animate-spin text-muted-foreground" />
-                )}
-              </Label>
-              {states.length > 0 ? (
-                <div className="relative">
-                  <select
-                    id="loc-state"
-                    name="state"
-                    value={selectedState}
-                    onChange={(e) => setSelectedState(e.target.value)}
-                    className={SELECT_CLS}
-                  >
-                    <option value="">Select state / province</option>
-                    {states.map((s) => (
-                      <option key={s.code} value={s.name}>{s.name}</option>
-                    ))}
-                  </select>
-                  <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                </div>
-              ) : (
-                <Input
-                  id="loc-state"
-                  name="state"
-                  value={selectedState}
-                  onChange={(e) => setSelectedState(e.target.value)}
-                  placeholder={statesLoading ? "Loading states…" : "Enter state / province"}
-                  disabled={statesLoading}
-                  className="h-12 rounded-xl"
-                />
-              )}
-            </div>
-
-            {/* City & Pincode */}
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="loc-city">City</Label>
-                <Input
-                  id="loc-city"
-                  name="city"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                  placeholder="e.g. Hyderabad"
-                  className="h-12 rounded-xl"
-                />
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="loc-pincode">Pincode / ZIP</Label>
-                  {isPincodeLoading && <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" />}
-                </div>
-                <Input
-                  id="loc-pincode"
-                  name="pincode"
-                  maxLength={10}
-                  value={pincode}
-                  onChange={handlePincodeChange}
-                  placeholder="e.g. 500084"
-                  className="h-12 rounded-xl"
-                />
-              </div>
-            </div>
-
-            {/* Street Address */}
-            <div className="space-y-2">
-              <Label htmlFor="loc-street">Street Address</Label>
-              <Input
-                id="loc-street"
-                name="streetAddress"
-                placeholder="e.g. 7th Floor, Pranava Business Park…"
-                className="h-12 rounded-xl"
-              />
-            </div>
-          </div>
-
-          {/* Employee Size & Annual Turnover */}
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="employeeSize">Employee Size</Label>
-              <div className="relative">
-                <select id="employeeSize" name="employeeSize" className={SELECT_CLS}>
-                  <option value="">Select range</option>
-                  <option>1–10</option>
-                  <option>11–50</option>
-                  <option>51–200</option>
-                  <option>201–500</option>
-                  <option>501–1000</option>
-                  <option>1000+</option>
-                </select>
-                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="annualTurnover">Annual Turnover</Label>
-              <div className="relative">
-                <select id="annualTurnover" name="annualTurnover" className={SELECT_CLS}>
-                  <option value="">Select range</option>
-                  <option>Up to ₹20 Lakhs</option>
-                  <option>₹20 Lakhs – ₹1 Crore</option>
-                  <option>₹1 Crore – ₹5 Crores</option>
-                  <option>₹5 Crores – ₹25 Crores</option>
-                  <option>₹25 Crores – ₹100 Crores</option>
-                  <option>₹100 Crores – ₹500 Crores</option>
-                  <option>Above ₹500 Crores</option>
-                </select>
-                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              </div>
-            </div>
-          </div>
-
-          {/* Business Goals */}
+          {/* City — dropdown */}
           <div className="space-y-2">
-            <Label htmlFor="goals">Business Goals / What do you want to achieve? *</Label>
-            <Input id="goals" name="goals" placeholder="e.g. Streamline our operations…" className="h-12 rounded-xl" required />
+            <Label htmlFor="city">City *</Label>
+            <div className="relative">
+              <MapPin className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <select
+                id="city"
+                name="city"
+                value={cityChoice}
+                onChange={(e) => { setCityChoice(e.target.value); clearError("city"); }}
+                className={`${SELECT_CLS} pl-10 ${errors.city ? "border-red-500" : ""} ${cityChoice ? "" : "text-muted-foreground"}`}
+                required
+              >
+                <option value="" disabled>Select your city</option>
+                {CITIES.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+                <option value={OTHER_CITY}>Other (type your city)</option>
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            </div>
+            {cityChoice === OTHER_CITY && (
+              <Input name="cityOther" placeholder="e.g. Nellore" className="h-12 rounded-xl" onChange={() => clearError("city")} />
+            )}
+            <ErrorMsg k="city" />
+          </div>
+
+          {/* Industry — free text */}
+          <div className="space-y-2">
+            <Label htmlFor="industry">Industry *</Label>
+            <div className="relative">
+              <Factory className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input id="industry" name="industry" placeholder="e.g. Manufacturing, Retail, Healthcare" className={fieldCls("industry")} onChange={() => clearError("industry")} required />
+            </div>
+            <ErrorMsg k="industry" />
           </div>
 
           {status === "error" && (

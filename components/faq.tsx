@@ -38,7 +38,7 @@ export default function FAQs() {
     const hiddenCount  = ALL_FAQ_ITEMS.length - INITIAL_VISIBLE
 
     return (
-        <section ref={sectionRef} className="bg-muted dark:bg-background py-10 md:py-16 lg:py-20">
+        <section ref={sectionRef} className="bg-muted dark:bg-background py-8 md:py-12">
             <div className="mx-auto max-w-5xl px-4 md:px-6">
                 <div className="flex flex-col gap-6 md:flex-row md:gap-16">
 

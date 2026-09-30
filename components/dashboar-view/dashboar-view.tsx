@@ -83,7 +83,7 @@ export default function Dashboard() {
   }
 
   return (
-    <SidebarProvider defaultOpen>
+    <SidebarProvider defaultOpen className="!min-h-0">
       <section className="mx-auto w-full bg-background">
 
         {/* ══════════ MOBILE — phone-style app frame ══════════ */}
@@ -143,7 +143,7 @@ export default function Dashboard() {
 
             {/* App screen — content scrolls inside like a phone */}
             <div
-              className="h-[62vh] min-h-[420px] max-h-[600px] overflow-y-auto overscroll-contain"
+              className="h-[var(--tf-screen-h,clamp(420px,62vh,600px))] overflow-y-auto"
               style={{ WebkitOverflowScrolling: "touch" }}
             >
               <div className="space-y-4 p-3">{renderPage()}</div>
@@ -153,7 +153,7 @@ export default function Dashboard() {
         </div>
 
         {/* ══════════ DESKTOP — unchanged ══════════ */}
-        <div className="mx-auto hidden h-[700px] max-w-[1500px] overflow-hidden rounded-2xl border bg-card shadow-2xl md:flex">
+        <div className="mx-auto hidden h-[var(--tf-card-h,700px)] max-w-[1500px] overflow-hidden rounded-2xl border bg-card shadow-2xl md:flex">
           <DashboardSidebar activePage={activePage} onChange={setActivePage} />
           <main className="flex min-w-0 flex-1 flex-col">
             <DashboardHeader

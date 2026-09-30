@@ -18,10 +18,8 @@ gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText);
 
 export default function ContentSection() {
     const sectionRef = useRef<HTMLElement>(null);
-    const headingRef = useRef<HTMLHeadingElement>(null);
     const imageRef = useRef<HTMLImageElement>(null);
     const featuresRef = useRef<HTMLDivElement>(null);
-    const paragraphRef = useRef<HTMLDivElement>(null);
     const transitionVariants = {
         item: {
             hidden: {
@@ -43,46 +41,8 @@ export default function ContentSection() {
     }
     useGSAP(
         () => {
-            if (!headingRef.current || !imageRef.current || !featuresRef.current) return;
+            if (!imageRef.current || !featuresRef.current) return;
 
-            const split = SplitText.create(headingRef.current, {
-                type: "words",
-            });
-            const split2 = SplitText.create(paragraphRef.current, {
-                type: "words",
-            });
-
-
-            gsap.set(split.words, {
-                opacity: 0.4,
-            });
-            gsap.set(split2.words, {
-                opacity: 0.4,
-            });
-
-            gsap.to(split.words, {
-                opacity: 1,
-                ease: "none",
-                stagger: 0.15,
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: "top bottom",
-                    end: "+=500",
-                    scrub: true,
-                },
-            });
-
-            gsap.to(split2.words, {
-                opacity: 1,
-                ease: "none",
-                stagger: 0.15,
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: "30% bottom",
-                    end: "+=500",
-                    scrub: true,
-                },
-            });
             const cards = gsap.utils.toArray(
                 featuresRef.current?.children || []
             );
@@ -121,44 +81,18 @@ export default function ContentSection() {
                 );
 
             return () => {
-                split.revert();
                 ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
             };
         },
         { scope: sectionRef }
     );
     return (
-        <section ref={sectionRef} className="mt-0 py-0 md:py-16">
+        <section ref={sectionRef} className="mt-0 py-0 md:pb-12 md:pt-0">
 
 
 
-            <div className="relative pt-8 md:pt-12">
-                <div className="mx-auto max-w-5xl space-y-8 px-4 sm:px-6 md:space-y-12 ">
-                    
-                    <div className="mx-auto max-w-4xl space-y-4 text-center md:space-y-8">
-                        <h2 className="cta-title text-lg sm:text-2xl lg:text-4xl font-semibold overflow-hidden text-balance leading-snug">
-                            One ERP | Every Process | Zero Bottleneck
-
-                        </h2>
-                    </div>
-
-                    <div className="mx-auto max-w-4xl space-y-4 text-center md:space-y-8">
-                        <p
-                            ref={headingRef}
-                            className="text-lg sm:text-xl md:text-2xl font-semibold leading-relaxed"
-                        >
-                            A single platform built around how your business actually operates - connecting every team, workflow, and decision so nothing depends on one person to keep running.
-                        </p>
-                        <p
-                            ref={paragraphRef}>
-
-                            No more scattered data. No more processes that live in one person's head. Just one connected system your whole business runs on.
-
-                        </p>
-                    </div>
-
-
-                </div>
+            <div className="relative pt-0">
+                {/* "One ERP | Every Process | Zero Bottleneck" intro removed — replaced by the Products & Services tablet showcase (components/products-showcase) */}
                 <AnimatedGroup
                     variants={{
                         container: {
@@ -217,7 +151,7 @@ export default function ContentSection() {
                         },
                         ...transitionVariants,
                     }}>
-                    <div className="relative mt-4 px-2 sm:mt-8 md:mt-16 mb- 0 md:mb-8">
+                    <div className="relative mt-0 px-2 sm:mt-2 md:mt-0 md:mb-0">
                         <div className="relative mx-auto w-full md:max-w-6xl">
                             <Dashboard />
                         </div>

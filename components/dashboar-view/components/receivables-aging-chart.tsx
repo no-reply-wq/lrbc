@@ -72,7 +72,7 @@ export default function ReceivablesAgingChart() {
 
               <Tooltip
                 cursor={{
-                  fill: "hsl(var(--muted))",
+                  fill: "var(--muted)",
                   opacity: 0.15,
                 }}
                 formatter={(value) => [
@@ -80,8 +80,8 @@ export default function ReceivablesAgingChart() {
                   "Receivables",
                 ]}
                 contentStyle={{
-                  background: "hsl(var(--popover))",
-                  border: "1px solid hsl(var(--border))",
+                  background: "var(--popover)",
+                  border: "1px solid var(--border)",
                   borderRadius: 10,
                 }}
               />

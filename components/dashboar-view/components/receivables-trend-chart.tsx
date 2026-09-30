@@ -68,13 +68,13 @@ export default function ReceivablesTrendChart() {
                 >
                   <stop
                     offset="0%"
-                    stopColor="hsl(var(--destructive))"
+                    stopColor="var(--destructive)"
                     stopOpacity={0.35}
                   />
 
                   <stop
                     offset="100%"
-                    stopColor="hsl(var(--destructive))"
+                    stopColor="var(--destructive)"
                     stopOpacity={0}
                   />
                 </linearGradient>
@@ -104,8 +104,8 @@ export default function ReceivablesTrendChart() {
               <Tooltip
                 formatter={(value) => [`₹${value}L`, ""]}
                 contentStyle={{
-                  background: "hsl(var(--popover))",
-                  border: "1px solid hsl(var(--border))",
+                  background: "var(--popover)",
+                  border: "1px solid var(--border)",
                   borderRadius: 10,
                 }}
               />
@@ -118,7 +118,7 @@ export default function ReceivablesTrendChart() {
                 type="monotone"
                 dataKey="actual"
                 name="Actual"
-                stroke="hsl(var(--destructive))"
+                stroke="var(--destructive)"
                 strokeWidth={2.5}
                 fill="url(#actualGradient)"
                 activeDot={{
@@ -132,7 +132,7 @@ export default function ReceivablesTrendChart() {
                 type="monotone"
                 dataKey="plan"
                 name="Plan"
-                stroke="hsl(var(--chart-2))"
+                stroke="var(--chart-2)"
                 strokeWidth={2}
                 strokeDasharray="6 4"
                 dot={{

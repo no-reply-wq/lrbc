@@ -363,6 +363,7 @@ const CASE_STUDIES = [
 const REVIEWS = [
   {
     quote: "We engaged LRBC to streamline our internal systems, and we are incredibly pleased with the results. They provided a true end-to-end solution that handles everything from initial inquiries and the complete sales process to our manufacturing and stores modules. We are very happy with how seamlessly the product connects all our processes. Thanks to this system, our dependency on manual effort has reduced significantly.",
+    headline: "One connected system — and far less manual effort",
     name: "Prabhu Pandurang",
     designation: "CEO",
     company: "Chefmate — Commercial Kitchen Hoods",
@@ -371,6 +372,7 @@ const REVIEWS = [
   },
   {
     quote: "When hiring someone to build business systems, you need a partner who understands your requirements and seamlessly translates ideas into practical solutions. Working with Lalit at LRBC was exactly that experience. He is incredibly patient, approachable, and highly prompt in his responses. Lalit stays updated with the latest technologies and genuinely cares about helping your business grow. He made our entire system-building process smooth and completely hassle-free. If you are looking for a technology partner who truly listens and delivers, I confidently recommend LRBC. Highly recommended for anyone wanting to create robust systems to scale their business!",
+    headline: "A technology partner who truly listens and delivers",
     name: "Ekkta V Vohra",
     designation: "Founder",
     company: "Wedding Alliances",
@@ -379,6 +381,7 @@ const REVIEWS = [
   },
   {
     quote: "The unique part about their offerings is that they spend time in understanding your business and its details, and offer products which have been made specifically for our needs rather than pushing any standard product. This helps in keeping the operation and learning simple and cost friendly.",
+    headline: "Built for our needs — not a standard product",
     name: "Varun Bathwal",
     designation: "CEO",
     company: "ARV",
@@ -387,6 +390,7 @@ const REVIEWS = [
   },
   {
     quote: "Team LRBC is highly capable and possesses extensive knowledge across various subjects, particularly in the area of process optimisation for business owners. I personally consult with them for technology-related solutions and consistently receive valuable and meaningful insights.",
+    headline: "Sharp process insight, every time we ask",
     name: "Kanul Verma",
     designation: "Executive Director",
     company: "Hitco Group",

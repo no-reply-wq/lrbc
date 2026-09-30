@@ -1,12 +1,12 @@
 "use client";
 
-import ContentSection from "@/components/content-section";
+import ProductsShowcase from "@/components/products-showcase/ProductsShowcase";
 import TestimonialsSection from "@/components/testimonials-section";
 import FAQs from "@/components/faq";
 import TeamSection from "@/components/team";
 import FooterSection from "@/components/footer-section";
 import { HeroHeader } from "@/components/header";
-import ProductSection from "@/components/products";
+import Transformation from "@/components/transformation";
 import ContactSection2 from "@/components/ContactSection2";
 import NewHeroSection from "@/components/new-components/new-hero";
 
@@ -33,11 +33,11 @@ export default function LandingPage() {
         badgeText="Lean Resource Business Consulting Private Limited"
       />
 
-      <ContentSection />
+      <ProductsShowcase />
 
       <TestimonialsSection />
 
-      <ProductSection />
+      <Transformation />
 
       <FAQs />
 

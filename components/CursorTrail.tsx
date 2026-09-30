@@ -2,106 +2,135 @@
 
 import { useEffect, useRef } from 'react';
 
-const TRAIL_LENGTH = 12;
-const DOT_SIZE     = 6;
+/**
+ * Cursor tail — the normal arrow stays; a short, quick teardrop trails behind it.
+ *  • One tapered "comet" blob (fat at the pointer, sharp at the tip) that stretches while you move and
+ *    snaps back when you stop. Filled with the site's indigo → violet gradient.
+ *  • Drawn on a canvas that is sized in explicit CSS pixels, so it stays aligned with the real pointer
+ *    at any screen scaling / zoom. Never intercepts clicks.
+ *  • Touch devices are skipped; reduced-motion users get no tail.
+ */
+
+const N = 9;           // points along the tail (short)
+const HEAD_R = 7;      // half-thickness at the pointer (px)
+const FOLLOW = 0.62;   // how fast the tail catches up (higher = shorter, snappier)
 
 export default function CursorTrail() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
-        if (typeof window === 'undefined' || window.innerWidth < 768) return;
+        if (typeof window === 'undefined') return;
         if (window.matchMedia('(pointer: coarse)').matches) return;
-
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         const canvas = canvasRef.current;
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
         const resize = () => {
-            canvas.width  = window.innerWidth;
-            canvas.height = window.innerHeight;
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const w = window.innerWidth, h = window.innerHeight;
+            canvas.width = Math.round(w * dpr);
+            canvas.height = Math.round(h * dpr);
+            canvas.style.width = w + 'px';
+            canvas.style.height = h + 'px';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         };
         resize();
         window.addEventListener('resize', resize);
 
-        let mouseX = -100, mouseY = -100;
-        const dots = Array.from({ length: TRAIL_LENGTH }, () => ({ x: -100, y: -100 }));
-        let ringX = -100, ringY = -100;
-        let isHovering = false;
+        const pts = Array.from({ length: N }, () => ({ x: -100, y: -100 }));
+        let mx = -100, my = -100;
+        let inside = false;
+        let raf = 0, running = false, idle = 0;
 
+        const wake = () => {
+            idle = 0;
+            if (!running) { running = true; raf = requestAnimationFrame(tick); }
+        };
         const onMove = (e: MouseEvent) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
+            if (!inside) pts.forEach((p) => { p.x = e.clientX; p.y = e.clientY; });
+            inside = true;
+            mx = e.clientX; my = e.clientY;
+            wake();
         };
-        window.addEventListener('mousemove', onMove);
+        const onLeave = () => { inside = false; wake(); };
 
-        const onOver = (e: MouseEvent) => {
-            const t = e.target as HTMLElement;
-            isHovering = !!(t.closest('a, button, [role="button"], input, textarea, select'));
-        };
-        window.addEventListener('mouseover', onOver);
+        window.addEventListener('mousemove', onMove, { passive: true });
+        document.documentElement.addEventListener('mouseleave', onLeave);
 
-        let raf: number;
-        const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-
-        const draw = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            ringX = lerp(ringX, mouseX, 0.12);
-            ringY = lerp(ringY, mouseY, 0.12);
-
-            // Ring — enlarges on hover
-            const ringSize = isHovering ? 40 : 28;
-            ctx.beginPath();
-            ctx.arc(ringX, ringY, ringSize / 2, 0, Math.PI * 2);
-            ctx.strokeStyle = isHovering
-                ? 'rgba(160, 0, 240, 0.85)'
-                : 'rgba(15, 93, 255, 0.5)';
-            ctx.lineWidth = isHovering ? 2 : 1.5;
-            ctx.stroke();
-
-            // Inner dot
-            ctx.beginPath();
-            ctx.arc(mouseX, mouseY, 3, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(15, 93, 255, 1)';
-            ctx.fill();
-
-            // Trail
-            dots[0].x = lerp(dots[0].x, mouseX, 0.35);
-            dots[0].y = lerp(dots[0].y, mouseY, 0.35);
-            for (let i = 1; i < TRAIL_LENGTH; i++) {
-                dots[i].x = lerp(dots[i].x, dots[i - 1].x, 0.6);
-                dots[i].y = lerp(dots[i].y, dots[i - 1].y, 0.6);
-            }
-            for (let i = 0; i < TRAIL_LENGTH; i++) {
-                const progress = 1 - i / TRAIL_LENGTH;
-                const size     = DOT_SIZE * progress * 0.6;
-                const alpha    = progress * 0.5;
-                const hue      = i % 2 === 0 ? 224 : 276;
-                ctx.beginPath();
-                ctx.arc(dots[i].x, dots[i].y, size, 0, Math.PI * 2);
-                ctx.fillStyle = `hsla(${hue}, 100%, 60%, ${alpha})`;
-                ctx.fill();
+        function tick() {
+            let moving = false;
+            let px = mx, py = my;
+            for (let i = 0; i < N; i++) {
+                const p = pts[i];
+                const k = FOLLOW - i * 0.02;
+                const nx = p.x + (px - p.x) * k;
+                const ny = p.y + (py - p.y) * k;
+                if (Math.abs(nx - p.x) + Math.abs(ny - p.y) > 0.15) moving = true;
+                p.x = nx; p.y = ny; px = nx; py = ny;
             }
 
-            raf = requestAnimationFrame(draw);
-        };
+            ctx!.clearRect(0, 0, canvas!.width, canvas!.height);
+            const tail = pts[N - 1];
+            const len = Math.hypot(mx - tail.x, my - tail.y);
+            if (inside && len > 2.5) {
+                const chain = [{ x: mx, y: my }, ...pts];
+                const left: { x: number; y: number }[] = [];
+                const right: { x: number; y: number }[] = [];
+                const thick = Math.min(1, 0.35 + len / 45);   // thinner when the tail is short
+                for (let i = 0; i < chain.length; i++) {
+                    const a = chain[Math.max(0, i - 1)];
+                    const b = chain[Math.min(chain.length - 1, i + 1)];
+                    let dx = b.x - a.x, dy = b.y - a.y;
+                    const d = Math.hypot(dx, dy) || 1;
+                    dx /= d; dy /= d;
+                    const t = i / (chain.length - 1);
+                    const r = HEAD_R * Math.pow(1 - t, 0.9) * thick;
+                    left.push({ x: chain[i].x - dy * r, y: chain[i].y + dx * r });
+                    right.push({ x: chain[i].x + dy * r, y: chain[i].y - dx * r });
+                }
+                ctx!.beginPath();
+                ctx!.moveTo(left[0].x, left[0].y);
+                for (let i = 1; i < left.length; i++) {
+                    const m = { x: (left[i - 1].x + left[i].x) / 2, y: (left[i - 1].y + left[i].y) / 2 };
+                    ctx!.quadraticCurveTo(left[i - 1].x, left[i - 1].y, m.x, m.y);
+                }
+                ctx!.lineTo(left[left.length - 1].x, left[left.length - 1].y);
+                ctx!.lineTo(right[right.length - 1].x, right[right.length - 1].y);
+                for (let i = right.length - 1; i > 0; i--) {
+                    const m = { x: (right[i].x + right[i - 1].x) / 2, y: (right[i].y + right[i - 1].y) / 2 };
+                    ctx!.quadraticCurveTo(right[i].x, right[i].y, m.x, m.y);
+                }
+                ctx!.closePath();
 
-        draw();
+                // site colours: indigo at the pointer → violet → fades out at the tip
+                const g = ctx!.createLinearGradient(mx, my, tail.x, tail.y);
+                g.addColorStop(0, 'rgba(79,70,229,0.95)');
+                g.addColorStop(0.5, 'rgba(124,92,246,0.7)');
+                g.addColorStop(1, 'rgba(168,85,247,0)');
+                ctx!.fillStyle = g;
+                ctx!.fill();
+            }
+
+            idle = moving ? 0 : idle + 1;
+            if (idle > 3) { running = false; ctx!.clearRect(0, 0, canvas!.width, canvas!.height); return; }
+            raf = requestAnimationFrame(tick);
+        }
 
         return () => {
             cancelAnimationFrame(raf);
-            window.removeEventListener('mousemove', onMove);
-            window.removeEventListener('mouseover', onOver);
             window.removeEventListener('resize', resize);
+            window.removeEventListener('mousemove', onMove);
+            document.documentElement.removeEventListener('mouseleave', onLeave);
         };
     }, []);
 
     return (
         <canvas
             ref={canvasRef}
-            className="pointer-events-none fixed inset-0 z-[9998] hidden md:block"
             aria-hidden="true"
+            style={{ position: 'fixed', left: 0, top: 0, pointerEvents: 'none', zIndex: 2147483000 }}
         />
     );
 }

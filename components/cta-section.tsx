@@ -63,25 +63,44 @@ export default function CallToAction() {
             Give your team instant access to accurate business data, reduce time spent managing information, and focus on growing your business.
           </p>
 
-          <div className="cta-form mx-auto mt-10 max-w-sm lg:mt-12">
-            <div className="cta-glow bg-background relative flex flex-col sm:flex-row items-stretch sm:items-center rounded-2xl sm:rounded-[calc(var(--radius)+0.75rem)] border p-3 sm:pr-2 sm:p-0 shadow shadow-zinc-950/5 gap-3 sm:gap-2">
-              <Mail className="cta-mail text-caption pointer-events-none absolute left-5 size-5 text-muted-foreground" />
+          <div className="cta-form mx-auto mt-10 max-w-md lg:mt-12 px-2 sm:px-0">
+            <div className="cta-glow bg-background rounded-2xl border shadow shadow-zinc-950/5 overflow-hidden">
 
-              <input
-                type="email"
-                placeholder="Your mail address"
-                className="cta-input h-12 sm:h-14 w-full bg-transparent pl-10 sm:pl-12 focus:outline-none text-base sm:text-sm"
-              />
-
-              {/* Simple link button — NOT nested inside a <Button> component */}
-              <div className="cta-button shrink-0">
+              {/* Mobile layout — stacked */}
+              <div className="flex flex-col sm:hidden p-3 gap-3">
+                <div className="flex items-center gap-2 border rounded-xl px-3 h-12 bg-background">
+                  <Mail className="cta-mail shrink-0 size-4 text-muted-foreground" />
+                  <input
+                    type="email"
+                    placeholder="Your mail address"
+                    className="cta-input flex-1 bg-transparent focus:outline-none text-sm"
+                  />
+                </div>
                 <Link
                   href="/contact?openForm=true"
-                  className="inline-flex items-center justify-center rounded-xl bg-primary px-4 h-12 sm:h-10 w-full sm:w-auto text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
+                  className="cta-button inline-flex items-center justify-center rounded-xl bg-primary h-12 w-full text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
+                
                 >
                   Request a demo
                 </Link>
               </div>
+
+              {/* Desktop layout — inline */}
+              <div className="hidden sm:flex items-center pr-2 pl-4 py-2 gap-2">
+                <Mail className="cta-mail shrink-0 size-5 text-muted-foreground" />
+                <input
+                  type="email"
+                  placeholder="Your mail address"
+                  className="cta-input flex-1 h-12 bg-transparent focus:outline-none text-sm"
+                />
+                <Link
+                  href="/contact?openForm=true"
+                  className="cta-button shrink-0 inline-flex items-center justify-center rounded-xl bg-primary px-5 h-10 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
+                >
+                  Request a demo
+                </Link>
+              </div>
+
             </div>
           </div>
         </div>

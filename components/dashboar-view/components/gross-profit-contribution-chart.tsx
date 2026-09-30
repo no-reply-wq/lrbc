@@ -20,17 +20,17 @@ const data = [
   {
     name: "Product 1",
     value: 22,
-    color: "hsl(var(--chart-1))",
+    color: "var(--chart-1)",
   },
   {
     name: "Product 2",
     value: 46,
-    color: "hsl(var(--chart-2))",
+    color: "var(--chart-2)",
   },
   {
     name: "Product 3",
     value: 32,
-    color: "hsl(var(--chart-3))",
+    color: "var(--chart-3)",
   },
 ];
 
@@ -67,8 +67,8 @@ export default function GrossProfitContributionChart() {
               <Tooltip
                 formatter={(value) => [`${value}%`, "Contribution"]}
                 contentStyle={{
-                  background: "hsl(var(--popover))",
-                  border: "1px solid hsl(var(--border))",
+                  background: "var(--popover)",
+                  border: "1px solid var(--border)",
                   borderRadius: 10,
                 }}
               />

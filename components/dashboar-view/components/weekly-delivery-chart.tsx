@@ -79,12 +79,12 @@ export default function WeeklyDeliveryChart() {
 
               <Tooltip
                 cursor={{
-                  fill: "hsl(var(--muted))",
+                  fill: "var(--muted)",
                   opacity: 0.15,
                 }}
                 contentStyle={{
-                  background: "hsl(var(--popover))",
-                  border: "1px solid hsl(var(--border))",
+                  background: "var(--popover)",
+                  border: "1px solid var(--border)",
                   borderRadius: 10,
                 }}
                 formatter={(value, name) => [
@@ -103,7 +103,7 @@ export default function WeeklyDeliveryChart() {
                 dataKey="onTime"
                 stackId="delivery"
                 name="onTime"
-                fill="hsl(var(--chart-2))"
+                fill="var(--chart-2)"
                 radius={[0, 0, 8, 8]}
               />
 
@@ -111,7 +111,7 @@ export default function WeeklyDeliveryChart() {
                 dataKey="late"
                 stackId="delivery"
                 name="late"
-                fill="hsl(var(--destructive))"
+                fill="var(--destructive)"
                 radius={[8, 8, 0, 0]}
               />
             </BarChart>

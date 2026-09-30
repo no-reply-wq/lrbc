@@ -106,10 +106,10 @@ export default function ProductsSection() {
     }, { scope: sectionRef });
 
     return (
-        <section ref={sectionRef} className="relative bg-background py-8 md:py-10">
+        <section ref={sectionRef} className="relative bg-background py-8 md:py-12">
             <div className="mx-auto max-w-6xl px-4 sm:px-6">
 
-                <div className="mx-auto mt-5 max-w-4xl text-center">
+                <div className="mx-auto max-w-4xl text-center">
                     <h2 ref={headingRef} className="text-4xl font-semibold tracking-tight sm:text-5xl lg:text-7xl">
                         Products
                     </h2>
@@ -126,7 +126,7 @@ export default function ProductsSection() {
                 </div>
 
                 {/* DESKTOP — GSAP scroll-pin stacking */}
-                <div className="lrbc-st-container relative mt-24 hidden md:block" ref={stageRef}>
+                <div className="lrbc-st-container relative mt-10 hidden md:block" ref={stageRef}>
                     <div className="lrbc-st-wrapper">
                         {products.map((product, index) => (
                             <div

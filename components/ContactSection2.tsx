@@ -8,7 +8,7 @@ import { useFadeUp } from "@/components/ui/use-scroll-animation";
 export default function ContactSection2() {
   const ref = useFadeUp()
   return (
-    <section ref={ref} className="relative py-8 md:py-16 lg:py-24">
+    <section ref={ref} className="relative py-8 md:py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <div className="grid items-start gap-10 lg:gap-20 lg:grid-cols-2">
 
@@ -72,7 +72,7 @@ export default function ContactSection2() {
           </div>
 
           {/* RIGHT / FORM */}
-          <div className="lrbc-anim lrbc-anim-d2 overflow-y-auto pr-1 max-h-[65vh] lg:sticky lg:top-24 lg:max-h-[70vh] [scrollbar-width:thin] [scrollbar-color:oklch(var(--primary)/0.35)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-primary/35">
+          <div className="lrbc-anim lrbc-anim-d2 lg:sticky lg:top-24 [scrollbar-width:thin] [scrollbar-color:oklch(var(--primary)/0.35)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-primary/35">
             <ContactForm />
           </div>
         </div>

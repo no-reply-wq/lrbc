@@ -1,13 +1,12 @@
 import type React from "react";
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Inter, Instrument_Serif } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import FooterSection from "@/components/footer-section";
-import SplashCursor from "@/components/SplashCursor";
 import CursorTrail from "@/components/CursorTrail";
 import WhatsAppFloat from "@/components/whatsapp-float";
 
@@ -18,12 +17,18 @@ const inter = Inter({
   preload: true,
 });
 
-const instrumentSerif = Instrument_Serif({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  variable: "--font-instrument-serif",
-  weight: ["400"],
+  variable: "--font-jakarta",
+  weight: ["500", "600", "700", "800"],
   display: "swap",
-  preload: true,
+});
+
+const jetbrains = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains",
+  weight: ["400", "500", "600"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -37,7 +42,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${jakarta.variable} ${jetbrains.variable}`}>
       <head>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-HC5EJ4P8W5"
@@ -56,23 +61,11 @@ export default function RootLayout({
 
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
-          enableSystem
+          defaultTheme="light"
+          enableSystem={false}
+          storageKey="lrbc-theme-v2"
           disableTransitionOnChange
         >
-          {/* Global Splash Cursor */}
-          <SplashCursor
-            DENSITY_DISSIPATION={2.8}
-            VELOCITY_DISSIPATION={1.8}
-            PRESSURE={0.25}
-            CURL={18}
-            SPLAT_RADIUS={0.18}
-            SPLAT_FORCE={8000}
-            COLOR_UPDATE_SPEED={15}
-            SHADING
-            RAINBOW_MODE={false}
-            COLOR="#5028f0"
-          />
           <CursorTrail />
 
           <WhatsAppFloat />

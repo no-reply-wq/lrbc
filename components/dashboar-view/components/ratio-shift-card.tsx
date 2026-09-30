@@ -49,8 +49,8 @@ export default function RatioShiftCard() {
                 paddingAngle={0}
                 stroke="none"
               >
-                <Cell fill="hsl(var(--primary))" />
-                <Cell fill="hsl(var(--muted))" />
+                <Cell fill="var(--primary)" />
+                <Cell fill="var(--muted)" />
               </Pie>
             </PieChart>
           </ResponsiveContainer>

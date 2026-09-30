@@ -7,7 +7,7 @@ import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import TestimonialCard from "./belief-section/testimonial-card";
+import TestimonialsGrid from "./testimonials-grid";
 import { LogoCloud } from "./logo-cloud-4";
 import MoltenMetal from "./new-components/MoltenMetal";
 import SectionBadge from "./section-badge";
@@ -203,21 +203,21 @@ export default function TestimonialsSection() {
   );
 
   return (
-    <div ref={sectionRef} className="mx-auto w-full flex flex-col justify-center items-center max-w-6xl px-4 sm:px-6 lg:px-10 py-6 md:py-10">
+    <div ref={sectionRef} className="mx-auto w-full flex flex-col justify-center items-center max-w-6xl px-4 sm:px-6 lg:px-10 py-8 md:py-12">
       
       {/* Header Section */}
-      <div className="mx-auto max-w-2xl space-y-3 text-center mt-4 sm:mt-8">
+      <div className="mx-auto max-w-2xl space-y-3 text-center mt-0">
          <SectionBadge
                                                          text="Testimonials"
                                                          icon={MessageSquareQuote }
-                                                         className="mt-6 mb-12"
+                                                         className="mb-5"
                                                      />
         <div className="overflow-hidden">
           <h1
             ref={headingRef}
             className="text-center text-2xl sm:text-3xl md:text-4xl font-semibold lg:text-5xl"
           >
-            What Our Clients Say
+            What Our Clients <span className="bg-gradient-to-r from-primary to-indigo-500 bg-clip-text text-transparent">Say</span>
           </h1>
         </div>
         <div className="overflow-hidden">
@@ -229,21 +229,11 @@ export default function TestimonialsSection() {
           </p>
         </div>
       </div>
-      {/* Testimonial Content */}
-      <div className="relative self-stretch px-2 overflow-hidden flex justify-start items-center bg-background border-none">
-        
-        <div className="flex-1 py-8 flex flex-col md:flex-row justify-center items-end gap-6 z-10 bg-transparent">
-          <div className="self-stretch px-3 md:px-12 justify-center items-start gap-4 flex flex-col md:flex-row bg-transparent">
-           <div ref={quoteRef}>
-              <TestimonialCard />
-            </div>
-          </div>
-
-         
-
-        </div>
+      {/* Testimonial Content — multi-card, fixed-size grid */}
+      <div ref={quoteRef} className="relative w-full self-stretch pt-8 pb-2">
+        <TestimonialsGrid />
       </div>
-      <div className="mx-auto max-w-2xl text-center mt-8 mb-12">
+      <div className="mx-auto max-w-2xl text-center mt-6 mb-0">
         <LogoCloud />
       </div>
     </div>

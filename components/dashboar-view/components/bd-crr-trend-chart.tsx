@@ -76,8 +76,8 @@ export default function NbdCrrTrendChart() {
               <Tooltip
                 formatter={(value) => [`₹${value}L`, "Revenue"]}
                 contentStyle={{
-                  background: "hsl(var(--popover))",
-                  border: "1px solid hsl(var(--border))",
+                  background: "var(--popover)",
+                  border: "1px solid var(--border)",
                   borderRadius: 10,
                 }}
               />
@@ -91,7 +91,7 @@ export default function NbdCrrTrendChart() {
                 name="CRR"
                 stackId="revenue"
                 radius={[0, 0, 8, 8]}
-                fill="hsl(var(--primary))"
+                fill="var(--primary)"
               />
 
               {/* New Business */}
@@ -101,7 +101,7 @@ export default function NbdCrrTrendChart() {
                 name="NBD"
                 stackId="revenue"
                 radius={[8, 8, 0, 0]}
-                fill="hsl(var(--chart-2, var(--primary)))"
+                fill="var(--chart-2, var(--primary))"
                 opacity={0.8}
               />
             </BarChart>

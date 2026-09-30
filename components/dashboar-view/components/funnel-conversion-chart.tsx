@@ -72,13 +72,13 @@ export default function FunnelConversionChart() {
                 >
                   <stop
                     offset="5%"
-                    stopColor="hsl(var(--primary))"
+                    stopColor="var(--primary)"
                     stopOpacity={0.35}
                   />
 
                   <stop
                     offset="95%"
-                    stopColor="hsl(var(--primary))"
+                    stopColor="var(--primary)"
                     stopOpacity={0}
                   />
                 </linearGradient>
@@ -110,12 +110,12 @@ export default function FunnelConversionChart() {
 
               <Tooltip
                 cursor={{
-                  stroke: "hsl(var(--primary))",
+                  stroke: "var(--primary)",
                   strokeDasharray: "4 4",
                 }}
                 contentStyle={{
-                  background: "hsl(var(--popover))",
-                  border: "1px solid hsl(var(--border))",
+                  background: "var(--popover)",
+                  border: "1px solid var(--border)",
                   borderRadius: 10,
                 }}
               />
@@ -123,7 +123,7 @@ export default function FunnelConversionChart() {
               <Area
                 type="monotone"
                 dataKey="value"
-                stroke="hsl(var(--primary))"
+                stroke="var(--primary)"
                 strokeWidth={3}
                 fill="url(#conversionGradient)"
                 activeDot={{
