@@ -19,10 +19,10 @@ const links = [
   {
     group: "Industry",
     items: [
-      { title: "ARV", href: "/testimonials-case-studies?client=arv" },
-      { title: "NAV Tech.", href: "/testimonials-case-studies?client=navtech" },
-      { title: "Colorplas", href: "/testimonials-case-studies?client=colorplas" },
-      { title: "Chefmate", href: "/testimonials-case-studies?client=chefmate" },
+      { title: "Plastic Manufacture", href: "/testimonials-case-studies?industry=plastic" },
+      { title: "Woven Manufacture", href: "/testimonials-case-studies?industry=woven" },
+      { title: "Kitchenware", href: "/testimonials-case-studies?industry=kitchenware" },
+      { title: "Digital Marketing", href: "/testimonials-case-studies?industry=digital-marketing" },
     ],
   },
   {

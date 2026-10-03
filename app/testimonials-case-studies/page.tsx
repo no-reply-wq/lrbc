@@ -702,10 +702,10 @@ export default function CaseStudiesPage() {
   const [shuffled, setShuffled] = useState(CASE_STUDIES);
   useEffect(() => {
     const rest = [...CASE_STUDIES].sort(() => Math.random() - 0.5);
-    // footer "Industry" links open this page with ?client=arv / navtech / colorplas / chefmate → that client's cases come first
-    const want = new URLSearchParams(window.location.search).get("client")?.toLowerCase();
+    // footer "Industry" links open this page with ?industry=plastic / woven / kitchenware / digital-marketing → that industry's cases come first
+    const want = new URLSearchParams(window.location.search).get("industry")?.toLowerCase().replace(/-/g, " ");
     if (want) {
-      const mine = CASE_STUDIES.filter((c) => c.id.toLowerCase().startsWith(want));
+      const mine = CASE_STUDIES.filter((c) => c.industry.toLowerCase().includes(want));
       setShuffled([...mine, ...rest.filter((c) => !mine.includes(c))]);
       setTimeout(() => sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 600);
     } else setShuffled(rest);
