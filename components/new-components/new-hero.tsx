@@ -24,6 +24,8 @@ interface NewHeroSectionProps {
   badgeIcon?: LucideIcon;
   /** Optional right-half content (shown beside the text on large screens, below it on mobile) */
   aside?: React.ReactNode;
+  /** Replaces the secondary (ghost) button, e.g. a Download Brochure button */
+  secondaryAction?: React.ReactNode;
 }
 
 export default function NewHeroSection({
@@ -34,6 +36,7 @@ export default function NewHeroSection({
   badgeText,
   className = "",
   aside,
+  secondaryAction,
 }: NewHeroSectionProps) {
   const sectionRef    = useRef<HTMLDivElement>(null);
   const headingRef    = useRef<HTMLHeadingElement>(null);
@@ -157,11 +160,13 @@ export default function NewHeroSection({
                   </Button>
                 </MagneticButton>
               </div>
-              <Button asChild size="lg" variant="ghost" className="rounded-xl px-5 w-full sm:w-auto">
-                <Link href={buttonHref}>
-                  <span className="text-nowrap">{buttonText}</span>
-                </Link>
-              </Button>
+              {secondaryAction ?? (
+                <Button asChild size="lg" variant="ghost" className="rounded-xl px-5 w-full sm:w-auto">
+                  <Link href={buttonHref}>
+                    <span className="text-nowrap">{buttonText}</span>
+                  </Link>
+                </Button>
+              )}
             </div>
           )}
         </div>

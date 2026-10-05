@@ -15,7 +15,9 @@ import { useEffect, useRef } from 'react';
  */
 
 const LINK = 'a,button,[role="button"],summary,label,select,[data-magnet-wrap]';
-const TEXT = 'input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not([type="submit"]),textarea,[contenteditable="true"]';
+// Anywhere you type or fill in details (forms, pop-ups, fields) the normal system cursor is used and the effect steps aside,
+// so the pointer / text caret is always exactly what the browser normally shows.
+const TEXT = 'form,[role="dialog"],input,textarea,select,option,[contenteditable="true"]';
 
 export default function CursorTrail() {
     const dotRef = useRef<HTMLDivElement>(null);
@@ -66,6 +68,7 @@ export default function CursorTrail() {
         const onLeave = () => { inside = false; wake(); };
         const onDown = (e: MouseEvent) => {
             down = true; wake();
+            if (mode === 'text') return;
             // soft ripple at the click point
             ripple.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
             ripple.classList.remove('lrbc-ripple-go');

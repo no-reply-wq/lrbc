@@ -35,7 +35,7 @@ export default function ContactFormModal({
   }, [isOpen]);
 
   const modal = isOpen ? (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+    <div role="dialog" aria-modal="true" className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
       <div
         className="absolute inset-0 -z-10"
         onClick={close}

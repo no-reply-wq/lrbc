@@ -9,6 +9,7 @@ import { HeroHeader } from "@/components/header";
 import Transformation from "@/components/transformation";
 import ContactSection2 from "@/components/ContactSection2";
 import HeroChecklist from "@/components/new-components/hero-checklist";
+import BrochureDownload from "@/components/BrochureDownload";
 import NewHeroSection from "@/components/new-components/new-hero";
 
 export default function LandingPage() {
@@ -33,6 +34,7 @@ export default function LandingPage() {
         buttonHref="/contact"
         badgeText="Lean Resource Business Consulting Private Limited"
         aside={<HeroChecklist />}
+        secondaryAction={<BrochureDownload source="Home hero" />}
       />
 
       <ProductsShowcase />
