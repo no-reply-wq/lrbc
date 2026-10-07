@@ -63,7 +63,7 @@ export default function SalesFunnelCard() {
     >
       <Card className="h-full rounded-2xl border border-[#293041] bg-[#191c24] transition-all duration-300 hover:border-violet-500/40 hover:shadow-[0_0_45px_rgba(124,58,237,.15)]">
 
-        <CardHeader className="flex-row items-center justify-between space-y-0">
+        <CardHeader className="flex-row flex-wrap items-center justify-between gap-2 space-y-0">
 
           <div>
 
@@ -93,39 +93,39 @@ export default function SalesFunnelCard() {
 
         <CardContent>
 
-          <div className="mb-8 grid grid-cols-3 gap-4">
+          <div className="mb-6 grid grid-cols-3 gap-2 sm:mb-8 sm:gap-4">
 
-            <div className="rounded-xl bg-[#202430] p-4">
+            <div className="min-w-0 rounded-xl bg-[#202430] p-3 sm:p-4">
 
               <p className="text-xs text-zinc-400">
                 Total Leads
               </p>
 
-              <h3 className="mt-2 text-2xl font-bold text-white">
+              <h3 className="mt-1 text-xl font-bold text-white sm:mt-2 sm:text-2xl">
                 420
               </h3>
 
             </div>
 
-            <div className="rounded-xl bg-[#202430] p-4">
+            <div className="min-w-0 rounded-xl bg-[#202430] p-3 sm:p-4">
 
               <p className="text-xs text-zinc-400">
                 Qualified
               </p>
 
-              <h3 className="mt-2 text-2xl font-bold text-white">
+              <h3 className="mt-1 text-xl font-bold text-white sm:mt-2 sm:text-2xl">
                 320
               </h3>
 
             </div>
 
-            <div className="rounded-xl bg-[#202430] p-4">
+            <div className="min-w-0 rounded-xl bg-[#202430] p-3 sm:p-4">
 
               <p className="text-xs text-zinc-400">
                 Closed
               </p>
 
-              <h3 className="mt-2 text-2xl font-bold text-white">
+              <h3 className="mt-1 text-xl font-bold text-white sm:mt-2 sm:text-2xl">
                 92
               </h3>
 
@@ -156,8 +156,9 @@ export default function SalesFunnelCard() {
                 <XAxis
                   tickLine={false}
                   axisLine={false}
-                  tick={{ fill: "#8f96a3", fontSize: 12 }}
+                  tick={{ fill: "#8f96a3", fontSize: 11 }}
                   dataKey="stage"
+                  interval={0}
                 />
 
                 <YAxis

@@ -5,6 +5,7 @@ import { Check, Zap, Briefcase, Building2, Crown, ArrowRight } from "lucide-reac
 import { cn } from "@/lib/utils";
 import { useFadeUp } from "@/components/ui/use-scroll-animation";
 import React from "react";
+import { Et, Hide } from "@/components/cms/editable";
 
 const PLANS = [
   {
@@ -91,7 +92,7 @@ function PlanCard({ plan, index }: { plan: typeof PLANS[0]; index: number }) {
     <div
       className={cn(
         "lrbc-anim", delay,
-        "group relative flex flex-col rounded-2xl border p-7",
+        "group relative flex flex-col rounded-2xl border p-6 sm:p-7",
         "transition-all duration-300 ease-out cursor-default",
         // Hover: lift + shadow
         "hover:-translate-y-3",
@@ -110,7 +111,7 @@ function PlanCard({ plan, index }: { plan: typeof PLANS[0]; index: number }) {
             className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-bold tracking-wide text-white whitespace-nowrap shadow-lg"
             style={{ background: "linear-gradient(90deg, #7c3aed, #a855f7)" }}
           >
-            ★ Most Popular
+            <Et id={`workpilot.pricing.plan.${index}.badge`} def="★ Most Popular" />
           </span>
         </div>
       )}
@@ -133,27 +134,25 @@ function PlanCard({ plan, index }: { plan: typeof PLANS[0]; index: number }) {
 
       {/* Name + tagline */}
       <div className="relative z-10">
-        <h3 className="text-xl font-bold tracking-tight">{plan.name}</h3>
-        <p className="text-sm text-muted-foreground mt-1">{plan.tagline}</p>
+        <Et as="h3" id={`workpilot.pricing.plan.${index}.name`} def={plan.name} className="text-xl font-bold tracking-tight" />
+        <Et as="p" id={`workpilot.pricing.plan.${index}.tagline`} def={plan.tagline} className="text-sm text-muted-foreground mt-1" />
       </div>
 
       {/* Price */}
       <div className="relative z-10 mt-6 mb-1">
         <div className="flex items-end gap-2">
-          <span
+          <Et
+            id={`workpilot.pricing.plan.${index}.price`}
+            def={`₹${plan.price}`}
             className="text-5xl font-black tracking-tighter transition-colors duration-300 group-hover:text-[var(--accent-color)]"
             style={{ "--accent-color": plan.accent } as React.CSSProperties}
-          >
-            ₹{plan.price}
-          </span>
+          />
           <div className="pb-2 text-muted-foreground text-xs leading-tight">
-            <div>per user</div>
-            <div>per month</div>
+            <Et as="div" id={`workpilot.pricing.plan.${index}.unit1`} def="per user" />
+            <Et as="div" id={`workpilot.pricing.plan.${index}.unit2`} def="per month" />
           </div>
         </div>
-        <p className="text-xs text-muted-foreground mt-2">
-          {plan.users} · Min ₹{(plan.price * plan.minUsers).toLocaleString()}/month
-        </p>
+        <Et as="p" id={`workpilot.pricing.plan.${index}.min`} def={`${plan.users} · Min ₹${(plan.price * plan.minUsers).toLocaleString()}/month`} className="text-xs text-muted-foreground mt-2" />
       </div>
 
       {/* Divider */}
@@ -164,16 +163,18 @@ function PlanCard({ plan, index }: { plan: typeof PLANS[0]; index: number }) {
 
       {/* Features */}
       <ul className="relative z-10 space-y-3 flex-1 mb-8">
-        {plan.features.map((f) => (
-          <li key={f} className="flex items-start gap-3 text-sm">
+        {plan.features.map((f, fi) => (
+          <Hide key={f} id={`workpilot.pricing.plan.${index}.feature.${fi}`}>
+          <li className="flex items-start gap-3 text-sm">
             <div
               className="mt-0.5 h-4 w-4 shrink-0 rounded-full flex items-center justify-center"
               style={{ background: `${plan.accent}18` }}
             >
               <Check className="h-2.5 w-2.5" style={{ color: plan.accent }} />
             </div>
-            <span className="text-foreground/75 leading-snug">{f}</span>
+            <Et id={`workpilot.pricing.plan.${index}.feature.${fi}.text`} def={f} className="text-foreground/75 leading-snug" />
           </li>
+          </Hide>
         ))}
       </ul>
 
@@ -211,7 +212,7 @@ function PlanCard({ plan, index }: { plan: typeof PLANS[0]; index: number }) {
           el.style.borderColor = `${plan.accent}40`;
         }}
       >
-        {sent ? "✓ Check your email!" : "Start 15-Day Free Trial"}
+        {sent ? "✓ Check your email!" : <Et id="workpilot.pricing.trialCta" def="Start 15-Day Free Trial" />}
         {!sent && (
           <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
         )}
@@ -235,6 +236,7 @@ export default function WorkPilotPricing() {
   };
 
   return (
+    <Hide id="workpilot.pricing.sec">
     <section ref={ref} id="pricing" className="py-8 md:py-12 relative overflow-hidden">
 
       {/* bg glow */}
@@ -245,23 +247,19 @@ export default function WorkPilotPricing() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
 
         {/* Heading */}
-        <div className="mx-auto max-w-3xl text-center mb-16">
+        <div className="mx-auto max-w-3xl text-center mb-10 sm:mb-16">
           <p className="lrbc-anim inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-primary mb-4">
-            <span className="h-px w-8 bg-primary/50" />Pricing<span className="h-px w-8 bg-primary/50" />
+            <span className="h-px w-8 bg-primary/50" /><Et id="workpilot.pricing.eyebrow" def="Pricing" /><span className="h-px w-8 bg-primary/50" />
           </p>
-          <h2 className="lrbc-anim lrbc-anim-d1 text-3xl font-black sm:text-4xl tracking-tight">
-            Simple, transparent pricing
-          </h2>
+          <Et as="h2" id="workpilot.pricing.title" def="Simple, transparent pricing" className="lrbc-anim lrbc-anim-d1 text-3xl font-black sm:text-4xl tracking-tight" />
           <p className="lrbc-anim lrbc-anim-d2 mt-4 text-muted-foreground text-lg max-w-xl mx-auto">
-            Every plan starts with a{" "}
-            <span className="text-primary font-semibold">15-day free trial</span>.
-            No credit card. No commitment.
+            <Et id="workpilot.pricing.text1" def="Every plan starts with a " /><Et id="workpilot.pricing.text2" def="15-day free trial" className="text-primary font-semibold" /><Et id="workpilot.pricing.text3" def=". No credit card. No commitment." />
           </p>
         </div>
 
         {/* Cards — pt-6 to give space for the Popular badge */}
-        <div className="grid gap-5 sm:grid-cols-3 pt-6">
-          {PLANS.map((plan, i) => <PlanCard key={plan.id} plan={plan} index={i} />)}
+        <div className="mx-auto grid max-w-md gap-8 pt-6 lg:max-w-none lg:grid-cols-3 lg:gap-5">
+          {PLANS.map((plan, i) => <Hide key={plan.id} id={`workpilot.pricing.plan.${i}`}><PlanCard plan={plan} index={i} /></Hide>)}
         </div>
 
         {/* Enterprise */}
@@ -274,10 +272,8 @@ export default function WorkPilotPricing() {
               <Crown className="h-7 w-7 text-orange-500" />
             </div>
             <div>
-              <h3 className="text-xl font-bold">Enterprise Plan</h3>
-              <p className="text-muted-foreground text-sm mt-1 max-w-md">
-                For teams of 20+ · Custom pricing · Dedicated support · White-glove onboarding
-              </p>
+              <Et as="h3" id="workpilot.pricing.ent.title" def="Enterprise Plan" className="text-xl font-bold" />
+              <Et as="p" id="workpilot.pricing.ent.text" def="For teams of 20+ · Custom pricing · Dedicated support · White-glove onboarding" className="text-muted-foreground text-sm mt-1 max-w-md" />
             </div>
           </div>
           <button
@@ -285,16 +281,17 @@ export default function WorkPilotPricing() {
             className="h-12 px-7 rounded-xl font-semibold text-sm shrink-0 border border-orange-400/30 bg-orange-500/10 text-orange-500 transition-all duration-300 group-hover:bg-orange-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-orange-500/30"
             onClick={e => { e.stopPropagation(); !enterpriseSent && handleEnterprise(); }}
           >
-            {enterpriseSent ? "✓ Check your email!" : "Request Custom Quote →"}
+            {enterpriseSent ? "✓ Check your email!" : <Et id="workpilot.pricing.ent.cta" def="Request Custom Quote →" />}
           </button>
         </div>
 
         <p className="lrbc-anim lrbc-anim-d3 text-center text-sm text-muted-foreground mt-10">
-          All plans include setup assistance · Pricing in INR + applicable GST ·{" "}
+          <Et id="workpilot.pricing.footnote" def="All plans include setup assistance · Pricing in INR + applicable GST · " />
           <a href="mailto:hello@lrbc.ai" className="text-primary hover:underline font-medium">hello@lrbc.ai</a>
         </p>
 
       </div>
     </section>
+    </Hide>
   );
 }

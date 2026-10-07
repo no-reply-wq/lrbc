@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { type LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Et } from "@/components/cms/editable";
 import MoltenMetal from "./MoltenMetal";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -26,6 +27,8 @@ interface NewHeroSectionProps {
   aside?: React.ReactNode;
   /** Replaces the secondary (ghost) button, e.g. a Download Brochure button */
   secondaryAction?: React.ReactNode;
+  /** When set, the badge and main button label become editable from the backend editor (ids start with this) */
+  cmsId?: string;
 }
 
 export default function NewHeroSection({
@@ -37,6 +40,7 @@ export default function NewHeroSection({
   className = "",
   aside,
   secondaryAction,
+  cmsId,
 }: NewHeroSectionProps) {
   const sectionRef    = useRef<HTMLDivElement>(null);
   const headingRef    = useRef<HTMLHeadingElement>(null);
@@ -124,7 +128,7 @@ export default function NewHeroSection({
                 ref={badgeTextRef}
                 className="text-[10px] sm:text-xs font-medium text-foreground"
               >
-                {badgeText}
+                {cmsId ? <Et id={`${cmsId}.badge`} def={badgeText} /> : badgeText}
               </span>
             </div>
           )}
@@ -155,7 +159,7 @@ export default function NewHeroSection({
                 <MagneticButton strength={0.3} radius={80} className="w-full sm:w-auto">
                   <Button asChild size="lg" className="rounded-xl px-5 text-base w-full sm:w-auto">
                     <Link href="/contact?openForm=true">
-                      <span className="text-nowrap">Contact our team</span>
+                      <span className="text-nowrap">{cmsId ? <Et id={`${cmsId}.cta`} def="Contact our team" /> : "Contact our team"}</span>
                     </Link>
                   </Button>
                 </MagneticButton>

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdmin } from '@/lib/auth';
 import { connectDB } from '@/lib/mongodb';
 import TeamMember from '@/lib/models/TeamMember';
 export async function GET() {
@@ -6,6 +7,7 @@ export async function GET() {
   catch (e:unknown) { return NextResponse.json({ error:String(e) }, { status:500 }); }
 }
 export async function POST(req:NextRequest) {
+  const deny = requireAdmin(req); if (deny) return deny;
   try { await connectDB(); const body = await req.json(); const doc = await TeamMember.create(body); return NextResponse.json(doc, { status:201 }); }
   catch (e:unknown) { return NextResponse.json({ error:String(e) }, { status:500 }); }
 }

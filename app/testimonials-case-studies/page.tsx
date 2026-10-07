@@ -29,6 +29,7 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Et, Hide, Lnk } from "@/components/cms/editable";
 
 // =============================================================================
 // ✏️  EDIT YOUR CASE STUDIES HERE
@@ -606,6 +607,7 @@ function ImageStage({ cs, idx, setIdx, onClose }: { cs: { client: string; images
 
 function CaseStudyCard({ cs, index }: { cs: typeof CASE_STUDIES[0]; index: number }) {
   const imageRight = index % 2 === 0;
+  const k = CASE_STUDIES.indexOf(cs); // stable id index (position in the data array, not the shuffled order)
   const [idx, setIdx] = useState(0);
   const [open, setOpen] = useState(false);
   const carousel = <ImageCarousel images={cs.images} idx={idx} setIdx={setIdx} onOpen={() => setOpen(true)} />;
@@ -618,23 +620,23 @@ function CaseStudyCard({ cs, index }: { cs: typeof CASE_STUDIES[0]; index: numbe
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <div className="flex flex-wrap items-center gap-2 mb-2">
-              {cs.featured && <Badge variant="secondary" className="text-xs rounded-full">Featured</Badge>}
-              <Badge variant="outline" className="text-xs rounded-full">{cs.industry}</Badge>
+              {cs.featured && <Badge variant="secondary" className="text-xs rounded-full"><Et id="cases.cs.featuredBadge" def="Featured" /></Badge>}
+              <Badge variant="outline" className="text-xs rounded-full"><Et id={`cases.cs.${k}.industry`} def={cs.industry} /></Badge>
               {cs.date && (
                 <span className="flex items-center gap-1 text-xs text-muted-foreground">
                   <Calendar className="h-3 w-3" />
-                  {cs.date}
+                  <Et id={`cases.cs.${k}.date`} def={cs.date} />
                 </span>
               )}
             </div>
-            <h3 className="text-xl sm:text-2xl font-semibold">{cs.client}</h3>
+            <Et as="h3" id={`cases.cs.${k}.client`} def={cs.client} className="text-xl sm:text-2xl font-semibold" />
           </div>
           {cs.metrics.length > 0 && (
             <div className="flex flex-wrap gap-2 justify-start sm:justify-end">
               {cs.metrics.map((m, i) => (
                 <div key={i} className="flex flex-col items-center gap-0.5 rounded-xl border border-primary/20 bg-primary/5 px-3 py-2 text-center min-w-[72px]">
-                  <span className="text-sm font-bold text-primary leading-tight">{m.value}</span>
-                  <span className="text-[10px] text-muted-foreground leading-tight">{m.label}</span>
+                  <Et id={`cases.cs.${k}.metric.${i}.value`} def={m.value} className="text-sm font-bold text-primary leading-tight" />
+                  <Et id={`cases.cs.${k}.metric.${i}.label`} def={m.label} className="text-[10px] text-muted-foreground leading-tight" />
                 </div>
               ))}
             </div>
@@ -652,16 +654,16 @@ function CaseStudyCard({ cs, index }: { cs: typeof CASE_STUDIES[0]; index: numbe
         {imageRight ? (
             <div className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-4">
               <div className="order-1 md:order-1 rounded-2xl bg-muted/40 p-4 sm:p-5">
-                <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-red-500">Problem</p>
-                <p className="text-sm text-foreground/80 leading-6">{cs.problem}</p>
+                <Et as="p" id="cases.cs.label.problem" def="Problem" className="text-xs font-semibold uppercase tracking-wider mb-2 text-red-500" />
+                <Et as="p" id={`cases.cs.${k}.problem`} def={cs.problem} className="text-sm text-foreground/80 leading-6" />
               </div>
               <div className="order-3 md:order-2 rounded-2xl bg-muted/40 p-4 sm:p-5">
-                <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-green-500">Result</p>
-                <p className="text-sm text-foreground/80 leading-6">{cs.result}</p>
+                <Et as="p" id="cases.cs.label.result" def="Result" className="text-xs font-semibold uppercase tracking-wider mb-2 text-green-500" />
+                <Et as="p" id={`cases.cs.${k}.result`} def={cs.result} className="text-sm text-foreground/80 leading-6" />
               </div>
               <div className="order-2 md:order-3 rounded-2xl bg-muted/40 p-4 sm:p-5">
-                <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-blue-500">Solution</p>
-                <p className="text-sm text-foreground/80 leading-6">{cs.solution}</p>
+                <Et as="p" id="cases.cs.label.solution" def="Solution" className="text-xs font-semibold uppercase tracking-wider mb-2 text-blue-500" />
+                <Et as="p" id={`cases.cs.${k}.solution`} def={cs.solution} className="text-sm text-foreground/80 leading-6" />
               </div>
               <div className="order-4 md:order-4 rounded-2xl overflow-hidden">
                 {carousel}
@@ -670,16 +672,16 @@ function CaseStudyCard({ cs, index }: { cs: typeof CASE_STUDIES[0]; index: numbe
           ) : (
             <div className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-4">
               <div className="order-1 md:order-2 rounded-2xl bg-muted/40 p-4 sm:p-5">
-                <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-red-500">Problem</p>
-                <p className="text-sm text-foreground/80 leading-6">{cs.problem}</p>
+                <Et as="p" id="cases.cs.label.problem" def="Problem" className="text-xs font-semibold uppercase tracking-wider mb-2 text-red-500" />
+                <Et as="p" id={`cases.cs.${k}.problem`} def={cs.problem} className="text-sm text-foreground/80 leading-6" />
               </div>
               <div className="order-3 md:order-1 rounded-2xl bg-muted/40 p-4 sm:p-5">
-                <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-green-500">Result</p>
-                <p className="text-sm text-foreground/80 leading-6">{cs.result}</p>
+                <Et as="p" id="cases.cs.label.result" def="Result" className="text-xs font-semibold uppercase tracking-wider mb-2 text-green-500" />
+                <Et as="p" id={`cases.cs.${k}.result`} def={cs.result} className="text-sm text-foreground/80 leading-6" />
               </div>
               <div className="order-2 md:order-4 rounded-2xl bg-muted/40 p-4 sm:p-5">
-                <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-blue-500">Solution</p>
-                <p className="text-sm text-foreground/80 leading-6">{cs.solution}</p>
+                <Et as="p" id="cases.cs.label.solution" def="Solution" className="text-xs font-semibold uppercase tracking-wider mb-2 text-blue-500" />
+                <Et as="p" id={`cases.cs.${k}.solution`} def={cs.solution} className="text-sm text-foreground/80 leading-6" />
               </div>
               <div className="order-4 md:order-3 rounded-2xl overflow-hidden">
                 {carousel}
@@ -720,28 +722,27 @@ export default function CaseStudiesPage() {
       <NewHeroSection
         title={
           <h1 className="mx-auto max-w-5xl flex flex-col text-center text-4xl max-md:font-bold md:text-5xl xl:text-[5.25rem]">
-            <span className="overflow-hidden pb-1">Operations, sorted.</span>
-            <span className="overflow-hidden pb-1">Outcomes, on record.</span>
+            <Et id="cases.hero.title1" def="Operations, sorted." reload className="overflow-hidden pb-1" />
+            <Et id="cases.hero.title2" def="Outcomes, on record." reload className="overflow-hidden pb-1" />
           </h1>
         }
-        subtitle="Every case study is a real business problem we solved. Every number is verified."
+        subtitle={<Et id="cases.hero.subtitle" def="Every case study is a real business problem we solved. Every number is verified." reload />}
         buttonText="Book a Discovery Call"
         buttonHref="/contact"
         badgeText="Case Studies"
+        cmsId="cases.hero"
       />
 
       {/* ── Case Studies ─────────────────────────────────────────────── */}
       <section ref={sectionRef} className="mx-auto max-w-6xl px-4 sm:px-6 py-8 md:py-12">
-        <div className="text-center mb-14">
-          <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">Deep Dives</p>
-          <h2 className="lrbc-anim text-3xl sm:text-4xl font-semibold">The Work, In Detail</h2>
-          <p className="mt-4 text-muted-foreground max-w-xl mx-auto text-sm sm:text-base">
-            Each case study shows the specific problem, the system we built, and the measurable outcome.
-          </p>
+        <div className="text-center mb-10 md:mb-14">
+          <Et as="p" id="cases.cs.eyebrow" def="Deep Dives" className="text-xs font-semibold uppercase tracking-widest text-primary mb-3" />
+          <Et as="h2" id="cases.cs.title" def="The Work, In Detail" className="lrbc-anim text-3xl sm:text-4xl font-semibold" />
+          <Et as="p" id="cases.cs.text" def="Each case study shows the specific problem, the system we built, and the measurable outcome." className="mt-4 text-muted-foreground max-w-xl mx-auto text-sm sm:text-base" />
         </div>
 
         <div className="flex flex-col gap-8">
-          {shownCs.map((cs, i) => <CaseStudyCard key={cs.id} cs={cs} index={i} />)}
+          {shownCs.map((cs, i) => <Hide key={cs.id} id={`cases.cs.${CASE_STUDIES.indexOf(cs)}`}><CaseStudyCard cs={cs} index={i} /></Hide>)}
         </div>
 
         {CASE_STUDIES.length > CS_PAGE && (
@@ -752,7 +753,7 @@ export default function CaseStudiesPage() {
                 className="flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-2.5 text-sm font-medium text-muted-foreground transition-all hover:border-primary hover:text-primary hover:bg-primary/5"
               >
                 <ChevronDown className="h-4 w-4" />
-                Load more
+                <Et id="cases.cs.loadMore" def="Load more" />
               </button>
             ) : (
               <button
@@ -760,7 +761,7 @@ export default function CaseStudiesPage() {
                 className="flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-2.5 text-sm font-medium text-muted-foreground transition-all hover:border-primary hover:text-primary hover:bg-primary/5"
               >
                 <ChevronDown className="h-4 w-4 rotate-180" />
-                Show less
+                <Et id="cases.cs.showLess" def="Show less" />
               </button>
             )}
           </div>
@@ -768,20 +769,20 @@ export default function CaseStudiesPage() {
       </section>
 
       {/* ── CTA ──────────────────────────────────────────────────────── */}
+      <Hide id="cases.cta.sec">
       <section className="mx-auto max-w-4xl px-4 sm:px-6 py-8 md:py-12">
-        <div className="rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/5 via-background to-purple-500/5 p-10 text-center shadow-sm">
+        <div className="rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/5 via-background to-purple-500/5 p-6 sm:p-10 text-center shadow-sm">
           <TrendingUp className="mx-auto mb-4 h-10 w-10 text-primary" />
-          <h3 className="text-2xl sm:text-3xl font-semibold mb-3">Ready to become the next case study?</h3>
-          <p className="text-muted-foreground mb-7 max-w-md mx-auto text-sm sm:text-base">
-            Book a discovery call and let us map out what a Business Operating System looks like for your operations.
-          </p>
+          <Et as="h3" id="cases.cta.title" def="Ready to become the next case study?" className="text-2xl sm:text-3xl font-semibold mb-3" />
+          <Et as="p" id="cases.cta.text" def="Book a discovery call and let us map out what a Business Operating System looks like for your operations." className="text-muted-foreground mb-7 max-w-md mx-auto text-sm sm:text-base" />
           <Button asChild size="lg" className="rounded-full px-8">
-            <Link href="/contact?openForm=true">
-              Get Started <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
+            <Lnk id="cases.cta.link" href="/contact?openForm=true" labelId="cases.cta.button" label="Get Started ">
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Lnk>
           </Button>
         </div>
       </section>
+      </Hide>
 
       <FooterSection />
     </div>

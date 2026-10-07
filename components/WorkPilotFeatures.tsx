@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useFadeUp } from "@/components/ui/use-scroll-animation";
+import { Et, Hide } from "@/components/cms/editable";
 import React from "react";
 import {
   Clock, CheckSquare, BarChart3, History,
@@ -124,7 +125,7 @@ function MetricsBand() {
                 {Math.round(m.num * t)}{m.suffix}
               </p>
               <span className="mt-4 h-0.5 w-10 rounded-full bg-gradient-to-r from-indigo-400 to-fuchsia-400 transition-all duration-300 group-hover:w-16" />
-              <p className="mt-3 max-w-[14rem] text-sm font-medium leading-snug text-white/80">{m.label}</p>
+              <Et as="p" id={`workpilot.features.metric.${i}.label`} def={m.label} className="mt-3 max-w-[14rem] text-sm font-medium leading-snug text-white/80" />
             </div>
           );
         })}
@@ -137,6 +138,7 @@ export default function WorkPilotFeatures() {
   const ref = useFadeUp() as React.RefObject<HTMLElement>;
 
   return (
+    <Hide id="workpilot.features.sec">
     <section
       ref={ref}
       id="features"
@@ -146,16 +148,9 @@ export default function WorkPilotFeatures() {
 
         {/* Heading */}
         <div className="mx-auto max-w-3xl text-center mb-14">
-          <p className="lrbc-anim text-sm font-semibold uppercase tracking-widest text-primary mb-3">
-            Features
-          </p>
-          <h2 className="lrbc-anim lrbc-anim-d1 text-3xl font-bold sm:text-4xl">
-            Everything your workforce needs, in one place
-          </h2>
-          <p className="lrbc-anim lrbc-anim-d2 mt-4 text-muted-foreground text-lg">
-            WorkPilot is built for businesses where teams are spread across floors,
-            sites, and shifts — and managers need clarity without chasing anyone.
-          </p>
+          <Et as="p" id="workpilot.features.eyebrow" def="Features" className="lrbc-anim text-sm font-semibold uppercase tracking-widest text-primary mb-3" />
+          <Et as="h2" id="workpilot.features.title" def="Everything your workforce needs, in one place" className="lrbc-anim lrbc-anim-d1 text-3xl font-bold sm:text-4xl" />
+          <Et as="p" id="workpilot.features.text" def="WorkPilot is built for businesses where teams are spread across floors, sites, and shifts — and managers need clarity without chasing anyone." className="lrbc-anim lrbc-anim-d2 mt-4 text-muted-foreground text-lg" />
         </div>
 
         {/* Feature grid */}
@@ -163,17 +158,18 @@ export default function WorkPilotFeatures() {
           {FEATURES.map((f, i) => {
             const Icon = f.icon;
             return (
+              <Hide key={f.title} id={`workpilot.features.item.${i}`}>
               <div
-                key={f.title}
                 className={`lrbc-anim rounded-2xl border bg-background p-5 transition-all duration-300 hover:shadow-md hover:border-primary/30 hover:-translate-y-1`}
                 style={{ transitionDelay: `${i * 0.05}s` }}
               >
                 <div className={`${f.bg} ${f.color} inline-flex rounded-xl p-2.5 mb-4`}>
                   <Icon className="h-5 w-5" />
                 </div>
-                <h3 className="font-semibold text-sm mb-2">{f.title}</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">{f.desc}</p>
+                <Et as="h3" id={`workpilot.features.item.${i}.title`} def={f.title} className="font-semibold text-sm mb-2" />
+                <Et as="p" id={`workpilot.features.item.${i}.desc`} def={f.desc} className="text-xs text-muted-foreground leading-relaxed" />
               </div>
+              </Hide>
             );
           })}
         </div>
@@ -184,18 +180,16 @@ export default function WorkPilotFeatures() {
         {/* How it works */}
         <div className="mt-20">
           <div className="mx-auto max-w-3xl text-center mb-12">
-            <h2 className="lrbc-anim text-2xl font-bold sm:text-3xl">How WorkPilot works</h2>
-            <p className="lrbc-anim lrbc-anim-d1 mt-3 text-muted-foreground">
-              From day one to daily operations — set up in hours, not weeks.
-            </p>
+            <Et as="h2" id="workpilot.features.how.title" def="How WorkPilot works" className="lrbc-anim text-2xl font-bold sm:text-3xl" />
+            <Et as="p" id="workpilot.features.how.text" def="From day one to daily operations — set up in hours, not weeks." className="lrbc-anim lrbc-anim-d1 mt-3 text-muted-foreground" />
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-3">
             {[
               {
                 step: "01",
                 title: "Add your team",
-                desc: "Import employees, define roles, and set up departments. WorkPilot maps to your existing org structure — no restructuring needed.",
+                desc: "Import employees, define roles, and set up departments. WorkPilot maps to your existing organization structure, no restructuring needed.",
               },
               {
                 step: "02",
@@ -205,21 +199,22 @@ export default function WorkPilotFeatures() {
               {
                 step: "03",
                 title: "Review & improve",
-                desc: "Weekly performance reports show who is excelling and where bottlenecks are forming — before they affect your business.",
+                desc: "Weekly performance reports show who is excelling and where bottlenecks are forming, before they affect your business.",
               },
-            ].map((s) => (
-              <div key={s.step} className="lrbc-anim relative rounded-2xl border bg-background p-6">
-                <span className="text-5xl font-black text-primary/10 absolute top-4 right-5">
-                  {s.step}
-                </span>
-                <h3 className="font-semibold text-base mb-2">{s.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
+            ].map((s, i) => (
+              <Hide key={s.step} id={`workpilot.features.step.${i}`}>
+              <div className="lrbc-anim relative rounded-2xl border bg-background p-6">
+                <Et id={`workpilot.features.step.${i}.num`} def={s.step} className="text-5xl font-black text-primary/10 absolute top-4 right-5" />
+                <Et as="h3" id={`workpilot.features.step.${i}.title`} def={s.title} className="font-semibold text-base mb-2" />
+                <Et as="p" id={`workpilot.features.step.${i}.desc`} def={s.desc} className="text-sm text-muted-foreground leading-relaxed" />
               </div>
+              </Hide>
             ))}
           </div>
         </div>
 
       </div>
     </section>
+    </Hide>
   );
 }

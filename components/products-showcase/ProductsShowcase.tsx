@@ -1,11 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import { Et, Hide, Lnk } from "@/components/cms/editable";
 import { ArrowUpRight, BatteryFull, Check, ChevronDown, ChevronLeft, ChevronRight, Info, Signal, Wifi } from "lucide-react";
-import SectionBadge from "@/components/section-badge";
 import { useFadeUp } from "@/components/ui/use-scroll-animation";
-import { PRODUCTS, type Product, type ShowcaseCard } from "./data";
+import { PRODUCTS, cid, pid, type Product, type ShowcaseCard } from "./data";
 import { ProductLink, VISUALS } from "./visuals";
 
 /* ───────────────────────── helpers ───────────────────────── */
@@ -24,42 +23,45 @@ function DetailBody({ card, product, interactive = false }: { card: ShowcaseCard
           <Icon className="h-4 w-4" />
         </span>
         <div className="min-w-0">
-          <p className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">{product.name}</p>
-          <h4 className="text-sm font-bold leading-tight">{card.detail.heading}</h4>
+          <Et as="p" id={pid(product, "name")} def={product.name} className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground" />
+          <Et as="h4" id={cid(product, card, "dheading")} def={card.detail.heading} className="text-sm font-bold leading-tight" />
         </div>
       </div>
-      <p className="mt-2.5 text-[12.5px] leading-relaxed text-muted-foreground">{card.detail.body}</p>
+      <Et as="p" id={cid(product, card, "dbody")} def={card.detail.body} className="mt-2.5 text-[12.5px] leading-relaxed text-muted-foreground" />
 
       {card.metrics && (
         <div className="mt-3 grid grid-cols-2 gap-2">
-          {card.metrics.map((m) => (
+          {card.metrics.map((m, mi) => (
             <div key={m.label} className="rounded-xl bg-primary/5 px-2.5 py-2">
-              <p className="font-heading text-lg font-extrabold leading-none text-primary">{m.value}</p>
-              <p className="mt-1 text-[10px] leading-tight text-muted-foreground">{m.label}</p>
+              <Et as="p" id={cid(product, card, `m.${mi}.value`)} def={m.value} className="font-heading text-lg font-extrabold leading-none text-primary" />
+              <Et as="p" id={cid(product, card, `m.${mi}.label`)} def={m.label} className="mt-1 text-[10px] leading-tight text-muted-foreground" />
             </div>
           ))}
         </div>
       )}
 
       <ul className="mt-3 space-y-1.5">
-        {card.detail.points.map((p) => (
+        {card.detail.points.map((p, pi) => (
           <li key={p} className="flex items-start gap-2 text-[12px] leading-snug">
             <span className="mt-[1px] grid h-4 w-4 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
               <Check className="h-2.5 w-2.5" strokeWidth={3} />
             </span>
-            <span>{p}</span>
+            <Et id={cid(product, card, `pt.${pi}`)} def={p} />
           </li>
         ))}
       </ul>
 
       {interactive && (
-        <Link
+        <Lnk
+          id={pid(product, "href")}
           href={product.href}
           className="mt-3.5 inline-flex items-center gap-1 text-[12px] font-semibold text-primary hover:underline"
         >
-          Learn more about {product.name}
+          <span>
+            <Et id="home.products.learnmore" def="Learn more about" /> <Et id={pid(product, "name")} def={product.name} />
+          </span>
           <ArrowUpRight className="h-3 w-3" />
-        </Link>
+        </Lnk>
       )}
     </>
   );
@@ -104,7 +106,7 @@ function BentoCard({ card, product }: { card: ShowcaseCard; product: Product }) 
           <span className="grid h-6 w-6 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
             <Icon className="h-3.5 w-3.5" />
           </span>
-          <h3 className="min-w-0 flex-1 truncate text-[12.5px] font-bold tracking-tight">{card.title}</h3>
+          <Et as="h3" id={cid(product, card, "title")} def={card.title} className="min-w-0 flex-1 line-clamp-2 break-words text-[12px] font-bold leading-tight tracking-tight sm:text-[12.5px]" />
           <button
             type="button"
             aria-expanded={open}
@@ -179,7 +181,9 @@ function CardsArea({ product }: { product: Product }) {
         className="-mx-3 flex snap-x snap-mandatory gap-2.5 overflow-x-auto px-3 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:h-[456px] md:snap-none md:grid-cols-12 md:grid-rows-3 md:overflow-visible md:px-0 md:pb-0"
       >
         {product.cards.map((card) => (
-          <BentoCard key={card.id} card={card} product={product} />
+          <Hide key={card.id} id={cid(product, card, "card")}>
+            <BentoCard card={card} product={product} />
+          </Hide>
         ))}
       </div>
       {/* compact pager — mobile only */}
@@ -237,13 +241,14 @@ function AppPanel({ product, front, leaving, entering }: { product: Product; fro
           {product.initial}
         </span>
         <div className="min-w-0">
-          <p
+          <Et
+            as="p"
+            id={pid(product, "name")}
+            def={product.name}
             className="truncate font-heading text-lg font-extrabold leading-tight tracking-tight text-transparent sm:text-xl"
             style={{ backgroundImage: product.gradient, WebkitBackgroundClip: "text", backgroundClip: "text" }}
-          >
-            {product.name}
-          </p>
-          <p className="truncate text-[11px] font-medium text-muted-foreground sm:text-xs">{product.tagline}</p>
+          />
+          <Et as="p" id={pid(product, "tagline")} def={product.tagline} className="truncate text-[11px] font-medium text-muted-foreground sm:text-xs" />
         </div>
         <ProductLink product={product} className="ml-auto max-sm:hidden" />
       </div>
@@ -383,6 +388,7 @@ export default function ProductsShowcase() {
     "absolute top-1/2 z-[50] grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-background/90 text-primary shadow-lg ring-1 ring-border backdrop-blur transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring max-sm:h-9 max-sm:w-9";
 
   return (
+    <Hide id="home.products.sec">
     <section
       ref={ref}
       id="products-services"
@@ -396,11 +402,9 @@ export default function ProductsShowcase() {
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         {/* heading */}
         <div className="mx-auto max-w-3xl text-center">
-          <SectionBadge text="What we build" className="lrbc-anim mb-5" />
-          <h2 className="lrbc-anim lrbc-anim-d1 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">Products &amp; Services</h2>
-          <p className="lrbc-anim lrbc-anim-d2 mx-auto mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg">
-            Software built around how your business actually operates. Hover (or tap) any card to see what it does and how it works.
-          </p>
+          <Et as="div" id="home.products.badge" def="What we build" className="mx-auto w-fit rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-primary lrbc-anim mb-5" />
+          <Et as="h2" id="home.products.heading" def="Products & Services" className="lrbc-anim lrbc-anim-d1 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl" />
+          <Et as="p" id="home.products.subtitle" def="Software built around how your business actually operates." className="lrbc-anim lrbc-anim-d2 mx-auto mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg" />
         </div>
 
         {/* stage */}
@@ -450,10 +454,11 @@ export default function ProductsShowcase() {
             ))}
           </div>
           <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
-            {PRODUCTS[active].name} · {String(active + 1).padStart(2, "0")}/{String(N).padStart(2, "0")}
+            <Et id={pid(PRODUCTS[active], "name")} def={PRODUCTS[active].name} /> · {String(active + 1).padStart(2, "0")}/{String(N).padStart(2, "0")}
           </p>
         </div>
       </div>
     </section>
+    </Hide>
   );
 }

@@ -3,42 +3,42 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Desktop-only cursor ("Orbit"):
- *  • a small brand-gradient diamond that sits exactly on the pointer (precise, zero lag),
- *  • a hairline ring that glides after it with easing, with a tiny satellite orbiting on it,
- *  • a very light aura glow behind the ring (never covers text),
- *  • over links / buttons the ring grows and fills with a translucent brand tint,
- *  • on press the ring squeezes, and each click sends out a soft ripple,
- *  • over text fields the effect gets out of the way and the normal I-beam shows.
- * Touch / mobile devices get nothing at all (native behaviour, no finger trail).
+ * Desktop-only cursor ("Spark + Viewfinder + Spotlight"):
+ *  • a small brand-gradient four-point sparkle sits exactly on the pointer (precise, zero lag) and turns slowly,
+ *  • four thin corner brackets (a camera viewfinder) appear ONLY over links and buttons, gliding out and snapping around the element,
+ *  • a faint violet-to-pink spotlight glows softly behind the pointer and warms up a little over links,
+ *  • on press the sparkle and brackets squeeze slightly,
+ *  • over text fields everything gives way to a slim text bar (the system cursor is never shown).
+ * Touch / mobile devices get nothing at all (native behaviour).
  * The native arrow is hidden only after the first frame has really been drawn.
  */
 
-const LINK = 'a,button,[role="button"],summary,label,select,[data-magnet-wrap]';
-// Anywhere you type or fill in details (forms, pop-ups, fields) the normal system cursor is used and the effect steps aside,
-// so the pointer / text caret is always exactly what the browser normally shows.
-const TEXT = 'form,[role="dialog"],input,textarea,select,option,[contenteditable="true"]';
+const LINK = 'a,button,[role="button"],summary,label,[data-magnet-wrap],input[type="checkbox"],input[type="radio"],input[type="submit"],input[type="button"],input[type="file"]';
+const TEXT = 'input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not([type="range"]),textarea,[contenteditable="true"]';
+// things the browser draws itself (dropdown lists, embedded maps) or the admin editor: the effect steps aside and the normal cursor shows
+const NATIVE = 'select,option,iframe,[data-cms-panel],.lrbc-cms-hide';
 
 export default function CursorTrail() {
-    const dotRef = useRef<HTMLDivElement>(null);
-    const ringRef = useRef<HTMLDivElement>(null);
-    const auraRef = useRef<HTMLDivElement>(null);
-    const rippleRef = useRef<HTMLDivElement>(null);
+    const glowRef = useRef<HTMLDivElement>(null);
+    const frameRef = useRef<HTMLDivElement>(null);
+    const sparkRef = useRef<HTMLDivElement>(null);
+    const barRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
-        // Only for real mouse / trackpad devices. Phones & tablets: nothing.
         const finePointer = window.matchMedia('(any-pointer: fine)').matches && window.matchMedia('(any-hover: hover)').matches;
-        const dot = dotRef.current, ring = ringRef.current, aura = auraRef.current, ripple = rippleRef.current;
-        if (!finePointer || !dot || !ring || !aura || !ripple) return;
+        const glow = glowRef.current, frame = frameRef.current, spark = sparkRef.current, bar = barRef.current;
+        if (!finePointer || !glow || !frame || !spark || !bar) return;
         const root = document.documentElement;
 
-        let mx = -200, my = -200;      // pointer
-        let rx = -200, ry = -200;      // ring (eased)
-        let ax = -200, ay = -200;      // aura (eased, slower)
-        let inside = false, alpha = 0;
-        let scale = 1, scaleTarget = 1;
-        let mode: 'idle' | 'link' | 'text' = 'idle';
+        let mx = -200, my = -200;                 // pointer
+        let gx = -200, gy = -200;                 // spotlight (eased)
+        // viewfinder frame: position + size, eased toward its target
+        let fx = -200, fy = -200, fw = 26, fh = 26;
+        let inside = false, alpha = 0, warm = 0, warmT = 0, fa = 0;
+        let sparkScale = 1, sparkT = 1;
+        let mode: 'idle' | 'link' | 'text' | 'native' = 'idle';
+        let target: Element | null = null;
         let down = false;
         let raf = 0, running = false, hidArrow = false, still = 0;
 
@@ -47,34 +47,31 @@ export default function CursorTrail() {
             if (!running) { running = true; raf = requestAnimationFrame(tick); }
         };
 
-        const setMode = (target: EventTarget | null) => {
+        const setMode = (t: EventTarget | null) => {
             let m: typeof mode = 'idle';
-            if (target instanceof Element) {
-                if (target.closest(TEXT)) m = 'text';
-                else if (target.closest(LINK)) m = 'link';
+            let tgt: Element | null = null;
+            if (root.classList.contains('lrbc-editing')) m = 'native';
+            else if (t instanceof Element) {
+                if (t.closest(NATIVE)) m = 'native';
+                else if (t.closest(TEXT)) m = 'text';
+                else {
+                    const l = t.closest(LINK);
+                    if (l) { m = 'link'; tgt = l; }
+                }
             }
-            mode = m;
-            scaleTarget = m === 'link' ? 0.8 : 1;   // gets slightly tighter over buttons, never covers them
-            ring.dataset.mode = m;
+            mode = m; target = tgt;
+            warmT = m === 'link' ? 1 : 0;
         };
 
         const onMove = (e: MouseEvent) => {
-            if (!inside) { rx = ax = mx = e.clientX; ry = ay = my = e.clientY; }
+            if (!inside) { gx = fx = mx = e.clientX; gy = fy = my = e.clientY; }
             inside = true;
             mx = e.clientX; my = e.clientY;
             setMode(e.target);
             wake();
         };
         const onLeave = () => { inside = false; wake(); };
-        const onDown = (e: MouseEvent) => {
-            down = true; wake();
-            if (mode === 'text') return;
-            // soft ripple at the click point
-            ripple.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
-            ripple.classList.remove('lrbc-ripple-go');
-            void ripple.offsetWidth;
-            ripple.classList.add('lrbc-ripple-go');
-        };
+        const onDown = () => { down = true; wake(); };
         const onUp = () => { down = false; wake(); };
 
         window.addEventListener('mousemove', onMove, { passive: true });
@@ -86,33 +83,54 @@ export default function CursorTrail() {
 
         function tick() {
             try {
-                alpha += ((inside ? 1 : 0) - alpha) * 0.2;
+                alpha += ((inside ? 1 : 0) - alpha) * 0.25;
                 if (!inside && alpha < 0.02) alpha = 0;
+                warm += (warmT - warm) * 0.15;
 
-                // ring follows quickly but smoothly, aura a little slower
-                rx += (mx - rx) * 0.22; ry += (my - ry) * 0.22;
-                ax += (mx - ax) * 0.1;  ay += (my - ay) * 0.1;
-                const target = down ? scaleTarget * 0.8 : scaleTarget;
-                scale += (target - scale) * 0.2;
+                const text = mode === 'text';
+                const a = mode === 'native' ? 0 : alpha;
 
-                const textMode = mode === 'text';
-                const a = textMode ? 0 : alpha;                       // step aside over text fields
-                const ringA = mode === 'link' ? a * 0.55 : a;
-                const auraA = mode === 'link' ? 0 : a;
+                // spotlight: eased, faint, never covers content
+                gx += (mx - gx) * 0.14; gy += (my - gy) * 0.14;
+                const gs = 1 + warm * 0.25;
+                glow!.style.transform = `translate3d(${gx}px, ${gy}px, 0) scale(${gs.toFixed(3)})`;
+                glow!.style.opacity = String(text ? a * 0.5 : a * (0.75 + warm * 0.25));
 
-                dot.style.transform = `translate3d(${mx}px, ${my}px, 0) scale(${mode === 'link' ? 0.8 : 1})`;
-                dot.style.opacity = String(a);
-                ring.style.transform = `translate3d(${rx}px, ${ry}px, 0) scale(${scale.toFixed(3)})`;
-                ring.style.opacity = String(ringA);
-                aura.style.transform = `translate3d(${ax}px, ${ay}px, 0)`;
-                aura.style.opacity = String(auraA);
+                // viewfinder target box
+                let tx = mx - 13, ty = my - 13, tw = 26, th = 26;
+                let snapped = false;
+                if (mode === 'link' && target) {
+                    const r = target.getBoundingClientRect();
+                    // very large link areas (whole cards) keep the small frame so nothing is boxed in awkwardly
+                    if (r.width > 0 && r.height > 0 && r.width < 520 && r.height < 200) {
+                        tx = r.left - 7; ty = r.top - 6; tw = r.width + 14; th = r.height + 12; snapped = true;
+                    }
+                }
+                if (down) { tx += 2; ty += 2; tw -= 4; th -= 4; }
+                const k = snapped ? 0.3 : 0.4;
+                fx += (tx - fx) * k; fy += (ty - fy) * k; fw += (tw - fw) * k; fh += (th - fh) * k;
+                frame!.style.width = `${Math.max(0, fw).toFixed(1)}px`;
+                frame!.style.height = `${Math.max(0, fh).toFixed(1)}px`;
+                frame!.style.transform = `translate3d(${fx}px, ${fy}px, 0)`;
+                fa += ((snapped ? 1 : 0) - fa) * 0.3;               // brackets show only while a link or button is under the pointer
+                frame!.style.opacity = String(text ? 0 : a * fa);
+
+                // sparkle sits exactly on the pointer
+                sparkT = down ? 0.8 : (mode === 'link' ? (snapped ? 0.75 : 1.35) : 1);
+                sparkScale += (sparkT - sparkScale) * 0.25;
+                spark!.style.transform = `translate3d(${mx}px, ${my}px, 0) scale(${sparkScale.toFixed(3)})`;
+                spark!.style.opacity = String(text ? 0 : a);
+
+                bar!.style.transform = `translate3d(${mx}px, ${my}px, 0)`;
+                bar!.style.opacity = String(text ? a : 0);
 
                 if (alpha > 0.02 && !hidArrow) { root.classList.add('lrbc-cursor'); hidArrow = true; }
 
                 const settled =
-                    Math.abs(mx - rx) < 0.1 && Math.abs(my - ry) < 0.1 &&
-                    Math.abs(mx - ax) < 0.3 && Math.abs(my - ay) < 0.3 &&
-                    Math.abs(scale - target) < 0.005 && (inside ? alpha > 0.98 || textMode : alpha === 0);
+                    Math.abs(tx - fx) < 0.2 && Math.abs(ty - fy) < 0.2 && Math.abs(tw - fw) < 0.2 && Math.abs(th - fh) < 0.2 &&
+                    Math.abs(mx - gx) < 0.3 && Math.abs(my - gy) < 0.3 &&
+                    Math.abs(sparkT - sparkScale) < 0.004 && Math.abs((snapped ? 1 : 0) - fa) < 0.01 && Math.abs(warmT - warm) < 0.01 &&
+                    (inside ? alpha > 0.98 || mode === 'native' : alpha === 0);
                 still = settled ? still + 1 : 0;
                 if (still > 6) { running = false; return; }
             } catch (err) {
@@ -135,10 +153,22 @@ export default function CursorTrail() {
 
     return (
         <div aria-hidden="true" className="lrbc-cur" style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 2147483000, overflow: 'hidden' }}>
-            <div ref={auraRef} className="lrbc-cur-aura" />
-            <div ref={rippleRef} className="lrbc-cur-ripple" />
-            <div ref={ringRef} className="lrbc-cur-ring" data-mode="idle"><span className="lrbc-cur-spin" /></div>
-            <div ref={dotRef} className="lrbc-cur-dot"><i /></div>
+            <div ref={glowRef} className="lrbc-cur-glow" />
+            <div ref={frameRef} className="lrbc-cur-frame"><i /><i /><i /><i /></div>
+            <div ref={sparkRef} className="lrbc-cur-spark">
+                <svg viewBox="0 0 24 24" width="26" height="26">
+                    <defs>
+                        <linearGradient id="lrbcSparkGrad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0" stopColor="#5227FF" />
+                            <stop offset="0.55" stopColor="#a855f7" />
+                            <stop offset="1" stopColor="#d946ef" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M12 1 L14.6 9.4 L23 12 L14.6 14.6 L12 23 L9.4 14.6 L1 12 L9.4 9.4 Z"
+                          fill="url(#lrbcSparkGrad)" stroke="#fff" strokeWidth="1.3" strokeLinejoin="round" paintOrder="stroke" />
+                </svg>
+            </div>
+            <div ref={barRef} className="lrbc-cur-bar" />
         </div>
     );
 }

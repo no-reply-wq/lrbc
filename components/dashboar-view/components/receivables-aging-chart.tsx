@@ -48,7 +48,7 @@ export default function ReceivablesAgingChart() {
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={data}
-              barCategoryGap={30}
+              barCategoryGap="20%"
             >
               <CartesianGrid
                 vertical={false}
@@ -59,9 +59,10 @@ export default function ReceivablesAgingChart() {
 
               <XAxis
                 dataKey="bucket"
+                interval={0}
                 tickLine={false}
                 axisLine={false}
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: 11 }}
               />
 
               <YAxis

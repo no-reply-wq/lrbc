@@ -9,10 +9,10 @@ export default function LekhaSetu() {
                 
                 <div className="text-center">
                     <h2 className="text-balance text-4xl font-semibold lg:text-5xl">
-                        Your Tally. Always Up to Date.</h2>
+                        Your account data. Always up to date.</h2>
                     <p className="mt-4">
                         Forget manual exports and outdated reports. LekhaSetu keeps your
-                        Tally data synchronized in the background, so your dashboards, reports,
+                        Account data synchronized in the background, so your dashboards, reports,
                         and business insights are always current and accessible from anywhere.</p>
                 </div>
                 <div className="@min-4xl:max-w-full @min-4xl:grid-cols-4 mx-auto mt-8 grid max-w-sm gap-6 *:text-center md:mt-16">

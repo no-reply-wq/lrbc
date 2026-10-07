@@ -1,5 +1,6 @@
 "use client";
 
+import { Et, Hide } from "@/components/cms/editable";
 import {
   Database,
   Cloud,
@@ -44,6 +45,7 @@ const rightIcons = [
 
 export default function IntegrationsSection() {
   return (
+    <Hide id="lekha.integrations.sec">
     <section className="mx-auto max-w-6xl relative overflow-hidden rounded-[32px] py-8 md:py-12">
       <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6">
         {/* LEFT ICONS */}
@@ -67,18 +69,13 @@ export default function IntegrationsSection() {
         {/* CONTENT */}
 
         <div className="relative z-10 max-w-2xl text-center">
-          <h2 className="text-balance text-4xl font-bold tracking-tight text-zinc-900 md:text-6xl dark:text-white">
-            Meet LekhaSetu.
-          </h2>
+          <Et as="h2" id="lekha.integrations.title" def="Meet LekhaSetu." className="text-balance text-4xl font-bold tracking-tight text-zinc-900 md:text-6xl dark:text-white" />
 
           <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            LekhaSetu automatically syncs your accounts software data to the cloud in
-            the background, keeping your business information accurate,
-            connected, and always up to date.
+            <Et id="lekha.integrations.text1" def="LekhaSetu automatically syncs your accounts software data to the cloud in the background, keeping your business information accurate, connected, and always up to date." />
             <br />
             <br />
-            No manual effort. No interruptions. Just the clarity you need to
-            make better business decisions.
+            <Et id="lekha.integrations.text2" def="No manual effort. No interruptions. Just the clarity you need to make better business decisions." />
           </p>
         </div>
 
@@ -123,5 +120,6 @@ export default function IntegrationsSection() {
         ))}
       </div>
     </section>
+    </Hide>
   );
 }

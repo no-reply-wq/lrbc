@@ -10,8 +10,7 @@ import { useGSAP } from "@gsap/react";
 import TestimonialsGrid from "./testimonials-grid";
 import { LogoCloud } from "./logo-cloud-4";
 import MoltenMetal from "./new-components/MoltenMetal";
-import SectionBadge from "./section-badge";
-import { MessageSquareQuote } from "lucide-react";
+import { Et, Hide } from "@/components/cms/editable";
 
 gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
 
@@ -203,39 +202,39 @@ export default function TestimonialsSection() {
   );
 
   return (
+    <Hide id="home.testimonials.sec">
     <div ref={sectionRef} className="mx-auto w-full flex flex-col justify-center items-center max-w-6xl px-4 sm:px-6 lg:px-10 py-8 md:py-12">
       
       {/* Header Section */}
       <div className="mx-auto max-w-2xl space-y-3 text-center mt-0">
-         <SectionBadge
-                                                         text="Testimonials"
-                                                         icon={MessageSquareQuote }
-                                                         className="mb-5"
-                                                     />
+         <Et as="div" id="home.testimonials.badge" def="Testimonials" className="mx-auto w-fit rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-primary mb-5" />
         <div className="overflow-hidden">
           <h1
             ref={headingRef}
             className="text-center text-2xl sm:text-3xl md:text-4xl font-semibold lg:text-5xl"
           >
-            What Our Clients <span className="bg-gradient-to-r from-primary to-indigo-500 bg-clip-text text-transparent">Say</span>
+            <Et id="home.testimonials.heading.1" def="What Our Clients " reload /><Et id="home.testimonials.heading.2" def="Say" reload className="bg-gradient-to-r from-primary to-indigo-500 bg-clip-text text-transparent" />
           </h1>
         </div>
         <div className="overflow-hidden">
-          <p
+          <Et
+            as="p"
+            id="home.testimonials.subtitle"
+            def="Hear from our satisfied clients..."
+            reload
             ref={subtitleRef}
             className="text-lg text-muted-foreground"
-          >
-            Hear from our satisfied clients...
-          </p>
+          />
         </div>
       </div>
       {/* Testimonial Content — multi-card, fixed-size grid */}
       <div ref={quoteRef} className="relative w-full self-stretch pt-8 pb-2">
         <TestimonialsGrid />
       </div>
-      <div className="mx-auto max-w-2xl text-center mt-6 mb-0">
+      <div className="mx-auto w-full max-w-5xl text-center mt-6 mb-0">
         <LogoCloud />
       </div>
     </div>
+    </Hide>
   )
 }

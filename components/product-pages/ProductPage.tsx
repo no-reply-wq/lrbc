@@ -1,9 +1,10 @@
-import Link from "next/link";
 import { Check, X, ArrowRight, type LucideIcon } from "lucide-react";
 import { HeroHeader } from "@/components/header";
 import FooterSection from "@/components/footer-section";
 import ContactFormModal from "@/components/ContactFormModal";
 import StepsFlow from "@/components/product-pages/StepsFlow";
+import { Et, Lnk, Hide } from "@/components/cms/editable";
+import { getContent } from "@/lib/content";
 
 export interface ProductPageData {
   slug: string;
@@ -30,15 +31,18 @@ export interface ProductPageData {
 
 const SITE = "https://lrbc.ai";
 
-export function ProductPage({ d }: { d: ProductPageData }) {
+export async function ProductPage({ d }: { d: ProductPageData }) {
   const url = `${SITE}/${d.slug}`;
+  const c = await getContent();
+  const v = (id: string, def: string) => (id in c ? c[id] : def);
+  const k = (x: string) => `${d.slug}.${x}`;
   const jsonLd = [
     {
       "@context": "https://schema.org",
       "@type": "Service",
       name: d.name,
       serviceType: "ERP software and implementation",
-      description: d.answer,
+      description: v(k("answer"), d.answer),
       url,
       areaServed: "IN",
       provider: { "@type": "Organization", name: "Lean Resource Business Consulting Private Limited (LRBC)", url: SITE },
@@ -46,10 +50,10 @@ export function ProductPage({ d }: { d: ProductPageData }) {
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      mainEntity: d.faqs.map((f) => ({
+      mainEntity: d.faqs.map((f, i) => ({
         "@type": "Question",
-        name: f.q,
-        acceptedAnswer: { "@type": "Answer", text: f.a },
+        name: v(k(`faq.${i}.q`), f.q),
+        acceptedAnswer: { "@type": "Answer", text: v(k(`faq.${i}.a`), f.a) },
       })),
     },
     {
@@ -80,13 +84,13 @@ export function ProductPage({ d }: { d: ProductPageData }) {
           </div>
           <div className="mx-auto max-w-4xl text-center">
             <span className="inline-flex items-center rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-              {d.badge}
+              <Et id={k("badge")} def={d.badge} />
             </span>
             <h1 className="mt-6 text-balance text-4xl font-semibold tracking-tight text-foreground sm:text-5xl md:text-6xl">
-              {d.h1[0]}{" "}
-              <span className="bg-gradient-to-r from-[#5227FF] via-[#8b5cf6] to-[#d946ef] bg-clip-text text-transparent">{d.h1[1]}</span>
+              <Et id={k("h1a")} def={d.h1[0]} />{" "}
+              <Et id={k("h1b")} def={d.h1[1]} className="bg-gradient-to-r from-[#5227FF] via-[#8b5cf6] to-[#d946ef] bg-clip-text text-transparent" />
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-balance text-base leading-relaxed text-muted-foreground sm:text-lg">{d.heroText ?? d.answer}</p>
+            <Et as="p" id={k("heroText")} def={d.heroText ?? d.answer} className="mx-auto mt-6 max-w-2xl text-balance text-base leading-relaxed text-muted-foreground sm:text-lg" />
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <ContactFormModal buttonText={d.heroCta ?? `Talk to us about ${d.name}`} source={`${d.name} page — hero`} className={cta} />
               <a href="#how" className="lrbc-btn lrbc-btn-secondary sm:w-auto">
@@ -94,111 +98,115 @@ export function ProductPage({ d }: { d: ProductPageData }) {
               </a>
             </div>
             <dl className="mx-auto mt-8 grid max-w-3xl grid-cols-1 gap-3 sm:grid-cols-3">
-              {d.stats.map((s) => (
-                <div key={s.label} className="rounded-2xl border border-border/70 bg-background/70 px-5 py-4 backdrop-blur">
-                  <dt className="text-xs uppercase tracking-wide text-muted-foreground">{s.label}</dt>
-                  <dd className="mt-1 text-xl font-semibold text-foreground">{s.value}</dd>
+              {d.stats.map((s, i) => (
+                <Hide key={s.label} id={k(`stat.${i}`)}>
+                <div className="rounded-2xl border border-border/70 bg-background/70 px-5 py-4 backdrop-blur">
+                  <Et as="dt" id={k(`stat.${i}.label`)} def={s.label} className="text-xs uppercase tracking-wide text-muted-foreground" />
+                  <Et as="dd" id={k(`stat.${i}.value`)} def={s.value} className="mt-1 text-xl font-semibold text-foreground" />
                 </div>
+                </Hide>
               ))}
             </dl>
           </div>
         </section>
 
         {/* Features */}
-        <section className="px-4 py-8 sm:px-6 sm:py-12" aria-labelledby="features-h">
+        <Hide id={k("sec.features")}><section className="px-4 py-8 sm:px-6 sm:py-12" aria-labelledby="features-h">
           <div className="mx-auto max-w-6xl">
             <h2 id="features-h" className="mx-auto max-w-2xl text-balance text-center text-3xl font-semibold tracking-tight sm:text-4xl">
-              What {d.name} gives your business
+              <Et id={k("featuresTitle")} def={`What ${d.name} gives your business`} />
             </h2>
             <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {d.features.map((f) => (
-                <article key={f.title} className="group relative overflow-hidden rounded-2xl border border-border/70 bg-card p-6 transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10">
+              {d.features.map((f, i) => (
+                <Hide key={f.title} id={k(`feat.${i}`)}>
+                <article className="group relative overflow-hidden rounded-2xl border border-border/70 bg-card p-6 transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10">
                   <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-[#5227FF] to-[#a855f7] text-white shadow-md shadow-primary/30">
                     <f.icon className="h-5 w-5" />
                   </span>
-                  <h3 className="mt-4 text-lg font-semibold text-foreground">{f.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.text}</p>
+                  <Et as="h3" id={k(`feat.${i}.title`)} def={f.title} className="mt-4 block text-lg font-semibold text-foreground" />
+                  <Et as="p" id={k(`feat.${i}.text`)} def={f.text} className="mt-2 text-sm leading-relaxed text-muted-foreground" />
                 </article>
+                </Hide>
               ))}
             </div>
           </div>
-        </section>
+        </section></Hide>
 
         {/* How it works */}
-        <section id="how" className="scroll-mt-24 px-4 py-8 sm:px-6 sm:py-12" aria-labelledby="how-h">
+        <Hide id={k("sec.how")}><section id="how" className="scroll-mt-24 px-4 py-8 sm:px-6 sm:py-12" aria-labelledby="how-h">
           <div className="mx-auto max-w-5xl">
-            <h2 id="how-h" className="text-center text-3xl font-semibold tracking-tight sm:text-4xl">How {d.name} works</h2>
+            <h2 id="how-h" className="text-center text-3xl font-semibold tracking-tight sm:text-4xl"><Et id={k("howTitle")} def={`How ${d.name} works`} /></h2>
             <div className="mt-12"><StepsFlow steps={d.steps} /></div>
           </div>
-        </section>
+        </section></Hide>
 
         {/* Fit */}
-        <section className="px-4 py-8 sm:px-6 sm:py-12" aria-labelledby="fit-h">
+        <Hide id={k("sec.fit")}><section className="px-4 py-8 sm:px-6 sm:py-12" aria-labelledby="fit-h">
           <div className="mx-auto max-w-5xl">
-            <h2 id="fit-h" className="text-center text-3xl font-semibold tracking-tight sm:text-4xl">Is {d.name} right for you?</h2>
+            <h2 id="fit-h" className="text-center text-3xl font-semibold tracking-tight sm:text-4xl"><Et id={k("fitTitle")} def={`Is ${d.name} right for you?`} /></h2>
             <div className="mt-10 grid gap-4 md:grid-cols-2">
               <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-6">
-                <h3 className="font-semibold text-foreground">A good fit if…</h3>
+                <Et as="h3" id={k("fitGoodTitle")} def="A good fit if…" className="font-semibold text-foreground" />
                 <ul className="mt-4 space-y-3">
-                  {d.fits.map((t) => (
-                    <li key={t} className="flex gap-3 text-sm text-muted-foreground"><Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />{t}</li>
+                  {d.fits.map((t, i) => (
+                    <Hide key={t} id={k(`fit.${i}`)}><li className="flex gap-3 text-sm text-muted-foreground"><Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" /><Et id={k(`fit.${i}`)} def={t} /></li></Hide>
                   ))}
                 </ul>
               </div>
               <div className="rounded-2xl border border-border/70 bg-card p-6">
-                <h3 className="font-semibold text-foreground">Probably not the right fit if…</h3>
+                <Et as="h3" id={k("fitBadTitle")} def="Probably not the right fit if…" className="font-semibold text-foreground" />
                 <ul className="mt-4 space-y-3">
-                  {d.notFits.map((t) => (
-                    <li key={t} className="flex gap-3 text-sm text-muted-foreground"><X className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground/70" />{t}</li>
+                  {d.notFits.map((t, i) => (
+                    <Hide key={t} id={k(`notfit.${i}`)}><li className="flex gap-3 text-sm text-muted-foreground"><X className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground/70" /><Et id={k(`notfit.${i}`)} def={t} /></li></Hide>
                   ))}
                 </ul>
-                <Link href={d.other.href} className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline">
-                  {d.other.text} <ArrowRight className="h-4 w-4" />
-                </Link>
+                <Lnk id={k("other.href")} href={d.other.href} labelId={k("other.text")} label={d.other.text} className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline" />
               </div>
             </div>
           </div>
-        </section>
+        </section></Hide>
 
         {/* Pricing guidance */}
-        <section className="px-4 py-8 sm:px-6 md:py-12" aria-labelledby="price-h">
+        <Hide id={k("sec.pricing")}><section className="px-4 py-8 sm:px-6 md:py-12" aria-labelledby="price-h">
           <div className="mx-auto max-w-4xl rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-fuchsia-500/10 p-6 sm:p-10">
-            <h2 id="price-h" className="text-2xl font-semibold tracking-tight sm:text-3xl">{d.pricing.title}</h2>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">{d.pricing.text}</p>
+            <h2 id="price-h" className="text-2xl font-semibold tracking-tight sm:text-3xl"><Et id={k("pricing.title")} def={d.pricing.title} /></h2>
+            <Et as="p" id={k("pricing.text")} def={d.pricing.text} className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base" />
             <ul className="mt-5 grid gap-2 sm:grid-cols-2">
-              {d.pricing.points.map((p) => (
-                <li key={p} className="flex gap-3 text-sm text-foreground"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />{p}</li>
+              {d.pricing.points.map((p, i) => (
+                <Hide key={p} id={k(`pricing.pt.${i}`)}><li className="flex gap-3 text-sm text-foreground"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" /><Et id={k(`pricing.pt.${i}`)} def={p} /></li></Hide>
               ))}
             </ul>
             <div className="mt-7">
               <ContactFormModal buttonText="Know your Quote" source={`${d.name} page — pricing`} className={cta} />
             </div>
           </div>
-        </section>
+        </section></Hide>
 
         {/* FAQ */}
-        <section className="px-4 py-8 sm:px-6 sm:py-12" aria-labelledby="faq-h">
+        <Hide id={k("sec.faq")}><section className="px-4 py-8 sm:px-6 sm:py-12" aria-labelledby="faq-h">
           <div className="mx-auto max-w-3xl">
-            <h2 id="faq-h" className="text-center text-3xl font-semibold tracking-tight sm:text-4xl">{d.name} — common questions</h2>
+            <h2 id="faq-h" className="text-center text-3xl font-semibold tracking-tight sm:text-4xl"><Et id={k("faqTitle")} def={`${d.name} — common questions`} /></h2>
             <div className="mt-8 space-y-3">
-              {d.faqs.map((f) => (
-                <details key={f.q} className="group rounded-2xl border border-border/70 bg-card p-5 open:border-primary/40">
+              {d.faqs.map((f, i) => (
+                <Hide key={f.q} id={k(`faq.${i}`)}>
+                <details className="group rounded-2xl border border-border/70 bg-card p-5 open:border-primary/40">
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-foreground [&::-webkit-details-marker]:hidden">
-                    {f.q}
+                    <Et id={k(`faq.${i}.q`)} def={f.q} />
                     <span className="text-primary transition group-open:rotate-45 text-xl leading-none">+</span>
                   </summary>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{f.a}</p>
+                  <Et as="p" id={k(`faq.${i}.a`)} def={f.a} className="mt-3 text-sm leading-relaxed text-muted-foreground" />
                 </details>
+                </Hide>
               ))}
             </div>
           </div>
-        </section>
+        </section></Hide>
 
         {/* Final CTA */}
-        <section className="px-4 py-8 sm:px-6 md:py-12">
+        <Hide id={k("sec.cta")}><section className="px-4 py-8 sm:px-6 md:py-12">
           <div className="mx-auto max-w-4xl rounded-3xl bg-gradient-to-br from-[#312e81] via-[#5227FF] to-[#a855f7] p-8 text-center text-white shadow-2xl shadow-primary/30 sm:p-12">
-            <h2 className="text-balance text-3xl font-semibold tracking-tight sm:text-4xl">{d.ctaTitle}</h2>
-            <p className="mx-auto mt-3 max-w-xl text-sm text-white/80 sm:text-base">{d.ctaText}</p>
+            <Et as="h2" id={k("ctaTitle")} def={d.ctaTitle} className="block text-balance text-3xl font-semibold tracking-tight sm:text-4xl" />
+            <Et as="p" id={k("ctaText")} def={d.ctaText} className="mx-auto mt-3 max-w-xl text-sm text-white/80 sm:text-base" />
             <div className="mt-7 flex justify-center">
               <ContactFormModal
                 buttonText="Get in touch"
@@ -207,7 +215,7 @@ export function ProductPage({ d }: { d: ProductPageData }) {
               />
             </div>
           </div>
-        </section>
+        </section></Hide>
       </main>
 
       <FooterSection />

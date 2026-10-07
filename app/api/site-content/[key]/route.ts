@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdmin } from '@/lib/auth';
 import { connectDB } from '@/lib/mongodb';
 import SiteContent from '@/lib/models/SiteContent';
 
@@ -15,6 +16,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ key
 }
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ key: string }> }) {
+  const deny = requireAdmin(req); if (deny) return deny;
   try {
     await connectDB();
     const { key } = await params;

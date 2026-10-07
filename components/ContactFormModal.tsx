@@ -40,7 +40,7 @@ export default function ContactFormModal({
         className="absolute inset-0 -z-10"
         onClick={close}
       />
-      <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[32px] shadow-2xl animate-in fade-in zoom-in-95 duration-200 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <div className="relative w-full max-w-2xl max-h-[90vh] max-h-[90dvh] overflow-y-auto overscroll-contain rounded-[32px] bg-background shadow-2xl animate-in fade-in zoom-in-95 duration-200 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <button
           onClick={close}
           className="absolute right-4 top-4 sm:right-6 sm:top-6 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-background/50 hover:bg-background transition-colors"

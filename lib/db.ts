@@ -66,8 +66,10 @@ export const updateSiteContent = (key: string, section: string, data: Record<str
   api<SiteContent>(`/api/site-content/${key}`, { method:'PUT', body:JSON.stringify({ section, data }) });
 
 export async function uploadImage(file: File, folder = 'general'): Promise<string> {
+  const { compressImage } = await import('./imageCompress');
+  const small = await compressImage(file);
   const form = new FormData();
-  form.append('file', file);
+  form.append('file', small);
   form.append('folder', folder);
   const res = await fetch('/api/upload', { method: 'POST', body: form });
   if (!res.ok) throw new Error('Upload failed: ' + await res.text());

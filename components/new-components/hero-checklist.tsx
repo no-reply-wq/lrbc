@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Check, X, RotateCcw } from "lucide-react";
+import { Et, Hide } from "@/components/cms/editable";
 
 const AVOID = [
   "Delay in decision making",
@@ -44,19 +45,18 @@ export default function HeroChecklist() {
         <span aria-hidden className="lr-check-sheen" />
 
         {/* AVOID */}
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Through LRBC you avoid</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground"><Et id="home.check.avoidTitle" def="Through LRBC you avoid" /></p>
         <ul className="mt-3 flex flex-wrap gap-2 sm:mt-4 sm:grid sm:grid-cols-2">
           {AVOID.map((t, i) => (
-            <li
-              key={t}
+            <Hide key={t} id={`home.check.avoid.${i}`}><li
               style={{ ["--i" as string]: i }}
               className="lr-pain flex items-center gap-2.5 rounded-full border border-rose-500/30 bg-rose-500/[0.10] px-2.5 py-1.5 text-[13px] font-medium sm:rounded-xl sm:px-3 sm:py-2.5 sm:text-sm text-foreground"
             >
               <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-rose-500/15 text-rose-600">
                 <X className="h-3 w-3" strokeWidth={3} />
               </span>
-              <span className="lr-pain-text relative">{t}</span>
-            </li>
+              <Et id={`home.check.avoid.${i}`} def={t} className="lr-pain-text relative" />
+            </li></Hide>
           ))}
         </ul>
 
@@ -70,19 +70,18 @@ export default function HeroChecklist() {
         </div>
 
         {/* ACHIEVE */}
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Instead achieve</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary"><Et id="home.check.achieveTitle" def="Instead achieve" /></p>
         <ul className="mt-3 flex flex-wrap gap-2 sm:mt-4 sm:grid sm:grid-cols-2">
           {ACHIEVE.map((t, i) => (
-            <li
-              key={t}
+            <Hide key={t} id={`home.check.achieve.${i}`}><li
               style={{ ["--i" as string]: i }}
               className="lr-gain flex items-center gap-2.5 rounded-full border border-primary/25 bg-gradient-to-br from-primary/10 to-fuchsia-500/10 px-2.5 py-1.5 text-[13px] font-semibold sm:rounded-xl sm:px-3 sm:py-2.5 sm:text-sm text-foreground"
             >
               <span className="lr-gain-tick flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#5227FF] to-[#a855f7] text-white">
                 <Check className="h-3 w-3" strokeWidth={3.5} />
               </span>
-              {t}
-            </li>
+              <Et id={`home.check.achieve.${i}`} def={t} />
+            </li></Hide>
           ))}
         </ul>
 

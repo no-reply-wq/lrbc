@@ -13,6 +13,7 @@ import {
 import { Button }  from "@/components/ui/button";
 import { Badge }   from "@/components/ui/badge";
 import { Logo }    from "@/components/logo";
+import WebsitePanel from "@/components/cms/WebsitePanel";
 import {
   getTestimonials, addTestimonial, updateTestimonial, deleteTestimonial,
   getCaseStudies,  addCaseStudy,   updateCaseStudy,   deleteCaseStudy,
@@ -25,41 +26,45 @@ import {
   type BlogPost, type SiteContent,
 } from "@/lib/db";
 
-// ── PIN Gate ──────────────────────────────────────────────────────────────────
-const ADMIN_PIN    = process.env.NEXT_PUBLIC_ADMIN_PIN ?? "lrbc2025";
-const PIN_SESS_KEY = "lrbc_admin_v3";
-
-function PinGate({ onUnlock }: { onUnlock: () => void }) {
-  const [pin, setPin]   = useState("");
-  const [show, setShow] = useState(false);
-  const [err, setErr]   = useState(false);
-  function attempt() {
-    if (pin === ADMIN_PIN) { sessionStorage.setItem(PIN_SESS_KEY, "1"); onUnlock(); }
-    else { setErr(true); setPin(""); setTimeout(() => setErr(false), 2000); }
+// ── Admin login (email + password, checked on the server) ─────────────────────
+function LoginGate({ onUnlock }: { onUnlock: () => void }) {
+  const [email, setEmail] = useState("");
+  const [pw, setPw]       = useState("");
+  const [show, setShow]   = useState(false);
+  const [err, setErr]     = useState("");
+  const [busy, setBusy]   = useState(false);
+  async function attempt() {
+    if (busy) return;
+    setBusy(true); setErr("");
+    try {
+      const res = await fetch("/api/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, password: pw }) });
+      if (res.ok) { onUnlock(); return; }
+      const j = await res.json().catch(() => ({}));
+      setErr(j.error || "Could not sign in."); setPw("");
+    } catch { setErr("Could not reach the server."); }
+    setBusy(false);
   }
+  const inp = "w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-ring";
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="w-full max-w-sm rounded-3xl border bg-card p-8 shadow-xl flex flex-col gap-6">
+      <form onSubmit={(e) => { e.preventDefault(); attempt(); }} className="w-full max-w-sm rounded-3xl border bg-card p-8 shadow-xl flex flex-col gap-5">
         <div className="flex flex-col items-center gap-3">
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10">
             <ShieldCheck className="h-7 w-7 text-primary" />
           </div>
           <Logo />
-          <p className="text-sm text-muted-foreground text-center mt-1">Content Management System</p>
+          <p className="text-sm text-muted-foreground text-center mt-1">Website admin — sign in</p>
         </div>
+        <input type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Admin email" className={inp} />
         <div className="relative">
-          <input type={show ? "text" : "password"} value={pin}
-            onChange={e => setPin(e.target.value)} onKeyDown={e => e.key === "Enter" && attempt()}
-            placeholder="Admin PIN"
-            className={`w-full rounded-xl border ${err ? "border-destructive" : "border-input"} bg-background px-4 py-3 pr-12 text-sm outline-none focus:ring-2 focus:ring-ring`}
-          />
-          <button onClick={() => setShow(!show)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+          <input type={show ? "text" : "password"} autoComplete="current-password" value={pw} onChange={(e) => setPw(e.target.value)} placeholder="Password" className={`${inp} pr-12`} />
+          <button type="button" onClick={() => setShow(!show)} aria-label="Show or hide password" className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
             {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
         </div>
-        {err && <p className="text-xs text-destructive text-center -mt-3">Incorrect PIN. Try again.</p>}
-        <Button onClick={attempt} size="lg" className="rounded-xl">Enter Dashboard</Button>
-      </div>
+        {err && <p role="alert" className="text-xs text-destructive text-center -mt-2">{err}</p>}
+        <Button type="submit" disabled={busy} size="lg" className="rounded-xl">{busy ? "Signing in…" : "Sign in"}</Button>
+      </form>
     </div>
   );
 }
@@ -788,16 +793,11 @@ function BlogPanel() {
 // ── Main Dashboard ────────────────────────────────────────────────────────────
 
 type Tab =
-  | "home" | "about" | "lekhasetu" | "contact" | "testimonials-page"
+  | "website" | "home" | "about" | "lekhasetu" | "contact" | "testimonials-page"
   | "testimonials" | "case-studies" | "faqs" | "team" | "blog";
 
 const TABS: { key: Tab; label: string; icon: ReactNode; group: string }[] = [
-  // Page content
-  { key:"home",              label:"Home Page",           icon:<Home className="h-4 w-4" />,              group:"Pages" },
-  { key:"about",             label:"About Page",          icon:<Info className="h-4 w-4" />,              group:"Pages" },
-  { key:"lekhasetu",         label:"LekhaSetu Page",      icon:<Layers className="h-4 w-4" />,            group:"Pages" },
-  { key:"contact",           label:"Contact Page",        icon:<Phone className="h-4 w-4" />,             group:"Pages" },
-  { key:"testimonials-page", label:"Testimonials Page",   icon:<MessageSquareQuote className="h-4 w-4" />,group:"Pages" },
+  { key:"website",          label:"Website (edit & publish)", icon:<Pencil className="h-4 w-4" />,         group:"Website" },
   // Content collections
   { key:"testimonials",  label:"Testimonials",   icon:<MessageSquareQuote className="h-4 w-4" />, group:"Content" },
   { key:"case-studies",  label:"Case Studies",   icon:<BookOpen className="h-4 w-4" />,           group:"Content" },
@@ -822,7 +822,7 @@ const PREVIEW_MAP: Record<string, string> = {
 };
 
 function Dashboard({ onLogout }: { onLogout: () => void }) {
-  const [tab, setTab]           = useState<Tab>("home");
+  const [tab, setTab]           = useState<Tab>("website");
   const [content, setContent]   = useState<SiteContent[]>([]);
   const [cLoading, setCLoading] = useState(true);
 
@@ -874,6 +874,11 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
               </span>
             </div>
             <div className="flex items-center gap-2">
+              <Button asChild size="sm" className="rounded-full gap-1.5 text-xs">
+                <a href="/" onClick={() => { try { sessionStorage.setItem("lrbc_mode", "edit"); } catch {} }}>
+                  <Pencil className="h-3.5 w-3.5" /> Edit website live
+                </a>
+              </Button>
               <Button asChild variant="outline" size="sm" className="rounded-full gap-1.5 text-xs">
                 <Link href={previewUrl} target="_blank">
                   <ExternalLink className="h-3.5 w-3.5" /> Preview
@@ -915,6 +920,8 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             )
           )}
 
+          {tab === "website" && <WebsitePanel />}
+
           {/* Collection tabs */}
           {tab === "testimonials"  && <TestimonialsPanel />}
           {tab === "case-studies"  && <CaseStudiesPanel />}
@@ -929,9 +936,12 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
 
 // ── Page export ───────────────────────────────────────────────────────────────
 export default function AdminPage() {
-  const [authed, setAuthed] = useState(false);
-  useEffect(() => { if (sessionStorage.getItem(PIN_SESS_KEY) === "1") setAuthed(true); }, []);
-  function logout() { sessionStorage.removeItem(PIN_SESS_KEY); setAuthed(false); }
-  if (!authed) return <PinGate onUnlock={() => setAuthed(true)} />;
+  const [authed, setAuthed] = useState<boolean | null>(null);
+  useEffect(() => {
+    fetch("/api/auth/me", { cache: "no-store" }).then((r) => r.json()).then((j) => setAuthed(!!j.admin)).catch(() => setAuthed(false));
+  }, []);
+  async function logout() { await fetch("/api/auth/logout", { method: "POST" }); setAuthed(false); }
+  if (authed === null) return <div className="min-h-screen bg-background" />;
+  if (!authed) return <LoginGate onUnlock={() => setAuthed(true)} />;
   return <Dashboard onLogout={logout} />;
 }

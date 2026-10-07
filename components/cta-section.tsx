@@ -6,10 +6,12 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplitText from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
+import { Et, Hide, useVal } from "@/components/cms/editable";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
-export default function CallToAction() {
+export default function CallToAction({ cmsId = "cta" }: { cmsId?: string } = {}) {
+  const buttonText = useVal(`${cmsId}.button`, "Get a Free Walkthrough");
   const section = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -40,23 +42,20 @@ export default function CallToAction() {
   );
 
   return (
+    <Hide id={`${cmsId}.sec`}>
     <section
       ref={section}
       className="py-8 md:py-12 bg-card/50 backdrop-blur-sm border-t border-b border-border relative overflow-hidden"
     >
       <div className="mx-auto max-w-5xl px-6">
         <div className="cta-wrapper text-center">
-          <h2 className="cta-title text-balance text-2xl sm:text-3xl lg:text-5xl font-semibold overflow-hidden">
-            Ready to Keep Your Business in Sync?
-          </h2>
+          <Et as="h2" id={`${cmsId}.title`} def="Ready to Keep Your Business in Sync?" reload className="cta-title text-balance text-2xl sm:text-3xl lg:text-5xl font-semibold overflow-hidden" />
 
-          <p className="cta-description mt-3 text-sm sm:text-base overflow-hidden text-muted-foreground">
-            Give your team instant access to accurate business data, reduce time spent managing information, and focus on growing your business.
-          </p>
+          <Et as="p" id={`${cmsId}.text`} def="Give your team instant access to accurate business data, reduce time spent managing information, and focus on growing your business." className="cta-description mt-3 text-sm sm:text-base overflow-hidden text-muted-foreground" />
 
           <div className="cta-form mx-auto mt-8 flex justify-center lg:mt-10">
             <ContactFormModal
-              buttonText="Get a Free Walkthrough"
+              buttonText={buttonText}
               source="Product page — Free walkthrough"
               className="cta-button inline-flex h-12 w-full max-w-xs items-center justify-center rounded-xl bg-primary px-8 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-colors hover:bg-primary/90 sm:w-auto"
             />
@@ -64,5 +63,6 @@ export default function CallToAction() {
         </div>
       </div>
     </section>
+    </Hide>
   );
 }

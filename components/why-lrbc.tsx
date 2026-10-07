@@ -1,12 +1,12 @@
 "use client";
 
 import { useRef } from "react";
+import { Et, Hide, Lnk } from "@/components/cms/editable";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
 import { ArrowRight, Quote } from "lucide-react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 
@@ -110,58 +110,52 @@ export default function WhyLRBC() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
 
         <div className="text-center mb-12">
-          <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">Why LRBC</p>
+          <Et as="p" id="why.main.eyebrow" def="Why LRBC" className="text-xs font-semibold uppercase tracking-widest text-primary mb-3" />
         </div>
 
         <div className="text-center mb-8 md:mb-20">
-          <h2
+          <Et
+            as="h2"
             ref={taglineRef}
-            className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground leading-tight md:text-6xl lg:text-7xl"
-          >
-            Systems Create Organizations.
-          </h2>
+            id="why.main.title"
+            reload
+            def="Systems Create Organizations."
+            className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground leading-tight md:text-5xl lg:text-6xl xl:text-7xl"
+          />
         </div>
 
         <div className="grid gap-0 lg:grid-cols-3 lg:gap-px lg:divide-x divide-border">
           {NARRATIVE.map((n, i) => (
+            <Hide key={i} id={`why.main.item.${i}`}>
             <div
-              key={i}
-              className={"why-block flex flex-col gap-5 px-0 py-10 lg:px-10 " + (i > 0 ? "border-t border-border lg:border-t-0" : "")}
+              className={"why-block flex flex-col gap-5 px-0 py-10 lg:px-6 xl:px-10 " + (i > 0 ? "border-t border-border lg:border-t-0" : "")}
             >
               <div className="flex items-center gap-3">
                 <div className={"h-2 w-2 rounded-full " + n.dotColor} />
-                <span className={"text-xs font-semibold uppercase tracking-widest " + n.labelColor}>
-                  {n.label}
-                </span>
+                <Et id={`why.main.item.${i}.label`} def={n.label} className={"text-xs font-semibold uppercase tracking-widest " + n.labelColor} />
               </div>
-              <p className="why-para text-base text-foreground/80 leading-7">{n.text}</p>
+              <Et as="p" id={`why.main.item.${i}.text`} reload def={n.text} className="why-para text-base text-foreground/80 leading-7" />
             </div>
+            </Hide>
           ))}
         </div>
 
         <div className="mt-10 md:mt-20 relative">
           <Quote className="why-quote-mark absolute -top-4 -left-2 h-12 w-12 text-primary/20" />
           <blockquote className="pl-8">
-            <p className="text-xl md:text-2xl font-medium text-foreground leading-relaxed max-w-3xl">
-              A company that scales predictably, protects its margins, and does not depend on any single individual to function.
-            </p>
-            <footer className="mt-4 text-sm text-muted-foreground">
-              That is what "Systems Create Organizations" means in practice.
-            </footer>
+            <Et as="p" id="why.main.quote" def="A company that scales predictably, protects its margins, and does not depend on any single individual to function." className="text-xl md:text-2xl font-medium text-foreground leading-relaxed max-w-3xl" />
+            <Et as="footer" id="why.main.quoteFooter" def={'That is what "Systems Create Organizations" means in practice.'} className="mt-4 text-sm text-muted-foreground" />
           </blockquote>
         </div>
 
         <div className="mt-8 flex flex-col sm:flex-row items-center gap-3 justify-center">
           <Button asChild size="lg" className="rounded-full px-6 w-full sm:w-auto">
-            <Link href="/contact?openForm=true">
-              Start with a discovery call
+            <Lnk id="why.main.cta1.href" href="/contact?openForm=true" labelId="why.main.cta1" label="Start with a discovery call">
               <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
+            </Lnk>
           </Button>
           <Button asChild variant="ghost" size="lg" className="rounded-full px-6 w-full sm:w-auto">
-            <Link href="/testimonials-case-studies">
-              See real results
-            </Link>
+            <Lnk id="why.main.cta2.href" href="/testimonials-case-studies" labelId="why.main.cta2" label="See real results" />
           </Button>
         </div>
       </div>

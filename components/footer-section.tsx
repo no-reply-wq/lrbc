@@ -5,6 +5,7 @@ import { Logo } from "@/components/logo";
 import Link from "next/link"
 import MagneticButton from "@/components/MagneticButton"
 import SpotlightIcon from "@/components/SpotlightIcon";
+import { Et, Lnk, Hide } from "@/components/cms/editable";
 
 const links = [
   {
@@ -173,22 +174,25 @@ export default function FooterSection() {
                 sm:grid-cols-4
               "
             >
-              {links.map((link) => (
+              {links.map((link, gi) => (
+                <Hide key={link.group} id={`footer.col.${gi}`}>
                 <div
-                  key={link.group}
                   className="space-y-5 text-sm"
                 >
                   {/* Section Title */}
                   <span className="block font-mono text-xs font-semibold uppercase tracking-[0.16em] text-foreground">
-                    {link.group}
+                    <Et id={`footer.col.${gi}.title`} def={link.group} />
                   </span>
 
                   {/* Section Links */}
                   <div className="space-y-3.5">
-                    {link.items.map((item) => (
-                      <Link
-                        key={item.title}
+                    {link.items.map((item, ii) => (
+                      <Hide key={item.title} id={`footer.col.${gi}.item.${ii}`}>
+                      <Lnk
+                        id={`footer.col.${gi}.item.${ii}.href`}
                         href={item.href}
+                        labelId={`footer.col.${gi}.item.${ii}.label`}
+                        label={item.title}
                         className="
                           block
                           text-muted-foreground
@@ -197,12 +201,12 @@ export default function FooterSection() {
                           hover:translate-x-0.5
                           hover:text-primary
                         "
-                      >
-                        {item.title}
-                      </Link>
+                      />
+                      </Hide>
                     ))}
                   </div>
                 </div>
+                </Hide>
               ))}
             </div>
           </div>
@@ -237,7 +241,7 @@ export default function FooterSection() {
               md:text-left
             "
           >
-            © {2026} LRBC, All rights reserved
+            <Et id="footer.copyright" def="© 2026 LRBC, All rights reserved" />
           </span>
 
           {/* =====================================================

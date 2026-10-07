@@ -10,6 +10,8 @@ import FooterSection from "@/components/footer-section";
 import CursorTrail from "@/components/CursorTrail";
 import MagneticAll from "@/components/MagneticAll";
 import WhatsAppFloat from "@/components/whatsapp-float";
+import ContentProvider from "@/components/cms/ContentProvider";
+import { getContent } from "@/lib/content";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -58,10 +60,10 @@ export const metadata: Metadata = {
     "MSME software",
     "small business ERP",
     "manufacturing ERP",
-    "Tally integration",
-    "Tally cloud sync",
-    "Tally dashboard",
-    "Tally data synchronization",
+    "Account data integration",
+    "Account data cloud sync",
+    "Account data dashboard",
+    "Account data synchronization",
     "LekhaSetu",
     "WorkPilot",
     "attendance and task management software",
@@ -108,17 +110,21 @@ const orgJsonLd = {
       description: DESCRIPTION,
       telephone: "+91-9954953008",
       areaServed: "IN",
-      knowsAbout: ["Custom ERP", "Business automation", "Tally integration", "MSME digital transformation"],
+      knowsAbout: ["Custom ERP", "Business automation", "Account data integration", "MSME digital transformation"],
     },
     { "@type": "WebSite", "@id": `${SITE_URL}/#website`, url: SITE_URL, name: "LRBC", description: DESCRIPTION, publisher: { "@id": `${SITE_URL}/#org` } },
   ],
 };
 
-export default function RootLayout({
+// pages refresh at most every 5 minutes, and instantly when you save in the editor
+export const revalidate = 300;
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const content = await getContent();
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${jakarta.variable} ${jetbrains.variable}`}>
       <head>
@@ -150,9 +156,11 @@ export default function RootLayout({
 
           <WhatsAppFloat />
 
-          <TooltipProvider>
-            {children}
-          </TooltipProvider>
+          <ContentProvider initial={content}>
+            <TooltipProvider>
+              {children}
+            </TooltipProvider>
+          </ContentProvider>
 
         </ThemeProvider>
 

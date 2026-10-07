@@ -12,6 +12,7 @@ import WorkPilotMini from "@/components/workpilot-mini";
 import MagneticButton from "@/components/MagneticButton";
 import ContactFormModal from "@/components/ContactFormModal";
 import { CheckCircle2 } from "lucide-react";
+import { Et, Hide, Lnk, useVal } from "@/components/cms/editable";
 
 gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
 
@@ -23,6 +24,7 @@ const FEATURES = [
 ];
 
 export default function WorkPilotHero() {
+  const demoLabel = useVal("workpilot.hero.cta", "Book Demo");
   const sectionRef  = useRef<HTMLDivElement>(null);
   const headingRef  = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
@@ -40,6 +42,7 @@ export default function WorkPilotHero() {
   }, { scope: sectionRef });
 
   return (
+    <Hide id="workpilot.hero.sec">
     <section ref={sectionRef} className="relative overflow-hidden bg-background">
 
       {/* Same radial gradient used across all pages — no external image */}
@@ -61,7 +64,7 @@ export default function WorkPilotHero() {
               ref={badgeRef}
               className="hover:bg-background overflow-hidden dark:hover:border-t-border bg-muted group mx-auto flex w-fit items-center gap-4 rounded-full border p-1 pl-4 shadow-md shadow-zinc-950/5 transition-colors duration-300 dark:border-t-white/5 dark:shadow-zinc-950"
             >
-              <span className="text-foreground text-sm">WorkPilot</span>
+              <Et id="workpilot.hero.badge" def="WorkPilot" className="text-foreground text-sm" />
               <span className="dark:border-background block h-4 w-0.5 border-l bg-white dark:bg-zinc-700" />
             </div>
 
@@ -70,25 +73,25 @@ export default function WorkPilotHero() {
               ref={headingRef}
               className="mx-auto mt-6 max-w-5xl text-center text-3xl font-bold sm:text-5xl lg:mt-12 xl:text-[5.25rem] xl:leading-[1.05]"
             >
-              <span className="block overflow-hidden">Your Team.</span>
-              <span className="block overflow-hidden">Always Visible.</span>
+              <Et id="workpilot.hero.title1" def="Your Team." reload className="block overflow-hidden" />
+              <Et id="workpilot.hero.title2" def="Always Visible." reload className="block overflow-hidden" />
             </h1>
 
             {/* Subtitle */}
-            <p
+            <Et
+              as="p"
+              id="workpilot.hero.subtitle"
+              def="WorkPilot brings attendance, task allocation, and performance tracking into one centralized platform — so you spend less time chasing updates and more time building your business."
+              reload
               ref={subtitleRef}
               className="mx-auto mt-5 max-w-2xl text-center text-base sm:text-lg text-muted-foreground px-2"
-            >
-              WorkPilot brings attendance, task allocation, and performance
-              tracking into one centralized platform — so you spend less time
-              chasing updates and more time building your business.
-            </p>
+            />
 
             {/* Book Demo button */}
             <div className="mt-8 sm:mt-10">
               <MagneticButton strength={0.3} radius={80}>
                 <ContactFormModal
-                  buttonText="Book Demo"
+                  buttonText={demoLabel}
                   showArrow
                   className="inline-flex items-center justify-center gap-2 h-11 px-8 rounded-full bg-primary text-primary-foreground text-base font-semibold transition-all duration-300 hover:bg-primary/90 hover:scale-[1.02]"
                 />
@@ -103,24 +106,23 @@ export default function WorkPilotHero() {
 
             {/* Feature pills */}
             <div>
-              <p className="text-sm font-semibold uppercase tracking-widest text-primary mb-5">
-                What WorkPilot does
-              </p>
+              <Et as="p" id="workpilot.hero.listTitle" def="What WorkPilot does" className="text-sm font-semibold uppercase tracking-widest text-primary mb-5" />
               <div className="grid grid-cols-2 gap-3">
-                {FEATURES.map((f) => (
+                {FEATURES.map((f, i) => (
+                  <Hide key={f} id={`workpilot.hero.feature.${i}`}>
                   <div
-                    key={f}
                     className="flex items-center gap-2 rounded-xl border bg-background/80 px-4 py-3 text-sm shadow-sm transition-all duration-200 hover:border-primary/30 hover:shadow-md"
                   >
                     <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
-                    {f}
+                    <Et id={`workpilot.hero.feature.${i}.text`} def={f} />
                   </div>
+                  </Hide>
                 ))}
               </div>
               <div className="mt-8">
                 <MagneticButton strength={0.25} radius={70}>
                   <Button asChild size="lg" variant="outline" className="rounded-full px-8">
-                    <Link href="#features">See all features</Link>
+                    <Lnk id="workpilot.hero.featuresLink" href="#features" labelId="workpilot.hero.featuresLabel" label="See all features" />
                   </Button>
                 </MagneticButton>
               </div>
@@ -134,7 +136,7 @@ export default function WorkPilotHero() {
                   <div className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
                   <div className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
                   <div className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
-                  <span className="ml-2 text-[10px] text-muted-foreground font-medium">WorkPilot</span>
+                  <Et id="workpilot.hero.dashLabel" def="WorkPilot" className="ml-2 text-[10px] text-muted-foreground font-medium" />
                 </div>
                 <div className="h-[420px]">
                   <WorkPilotMini />
@@ -146,5 +148,6 @@ export default function WorkPilotHero() {
         </div>
       </div>
     </section>
+    </Hide>
   );
 }

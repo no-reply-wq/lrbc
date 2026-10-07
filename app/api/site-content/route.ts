@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdmin } from '@/lib/auth';
 import { connectDB } from '@/lib/mongodb';
 import SiteContent from '@/lib/models/SiteContent';
 
@@ -57,7 +58,7 @@ const SEED_CONTENT = [
   { key: 'about_team', page: 'about', section: 'Team Section', data: {
     badge: 'Team',
     heading: 'Meet the team',
-    subheading: 'During the working process, we perform regular fitting with the client because he is the only person who can feel whether a new suit fits or not.',
+    subheading: 'During the work process, we perform regular fittings with the client because only the client can know whether a new suit fits or not.',
   }},
 
   // ── LEKHASETU ─────────────────────────────────────────────────────────────
@@ -134,6 +135,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  const deny = requireAdmin(req); if (deny) return deny;
   try {
     await connectDB();
     const body = await req.json();

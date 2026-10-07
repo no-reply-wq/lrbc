@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, Suspense } from "react";
+import { Et } from "@/components/cms/editable";
 import { useSearchParams, useRouter } from "next/navigation";
 import ContactSection2 from "@/components/ContactSection2";
 import FooterSection from "@/components/footer-section";
@@ -33,16 +34,17 @@ function ContactPageContent() {
       <NewHeroSection 
         title={
           <h1 className="overflow-hidden mx-auto max-w-5xl flex flex-col text-center text-4xl max-md:font-bold md:text-5xl xl:text-[5.25rem]">
-            <span className="overflow-hidden">Your next stage of growth<br /> starts here.</span>
+            <span className="overflow-hidden"><Et id="contact.hero.title1" def="Your next stage of growth" reload /><br /><Et id="contact.hero.title2" def=" starts here." reload /></span>
           </h1>
         }
         subtitle={
           <p className="mx-auto max-w-2xl text-center text-lg overflow-hidden">
-            Less time managing operations.<br /> More time building your business.
+            <Et id="contact.hero.sub1" def="Less time managing operations." reload /><br /><Et id="contact.hero.sub2" def=" More time building your business." reload />
           </p>
         }
         badgeText="Contact Us"
         badgeIcon={MessageSquare} 
+        cmsId="contact.hero"
       />
      
       <ContactSection2 />

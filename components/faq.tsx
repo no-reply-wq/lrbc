@@ -8,7 +8,7 @@ import {
     AccordionTrigger,
 } from '@/components/ui/accordion'
 import { DynamicIcon, type IconName } from 'lucide-react/dynamic'
-import Link from 'next/link'
+import { Et, Hide, Lnk } from '@/components/cms/editable'
 import { useFadeUp } from '@/components/ui/use-scroll-animation'
 
 type FAQItem = {
@@ -38,6 +38,7 @@ export default function FAQs() {
     const hiddenCount  = ALL_FAQ_ITEMS.length - INITIAL_VISIBLE
 
     return (
+        <Hide id="faq.sec">
         <section ref={sectionRef} className="bg-muted dark:bg-background py-8 md:py-12">
             <div className="mx-auto max-w-5xl px-4 md:px-6">
                 <div className="flex flex-col gap-6 md:flex-row md:gap-16">
@@ -45,13 +46,11 @@ export default function FAQs() {
                     <div className="md:w-1/3">
                         <div className="md:sticky md:top-20">
                             <h2 className="lrbc-anim mt-2 text-2xl font-bold sm:text-3xl">
-                                Frequently Asked<br className="hidden sm:block" /> Questions
+                                <Et id="faq.heading.1" def="Frequently Asked" /><br className="hidden sm:block" /><Et id="faq.heading.2" def=" Questions" />
                             </h2>
                             <p className="lrbc-anim lrbc-anim-d1 text-muted-foreground mt-3 text-sm sm:text-base">
-                                {"Can't find what you're looking for? Contact our "}
-                                <Link href="/contact" className="text-primary font-medium hover:underline">
-                                    customer support team
-                                </Link>
+                                <Et id="faq.support.text" def="Can't find what you're looking for? Contact our " />
+                                <Lnk id="faq.support.href" href="/contact" labelId="faq.support.label" label="customer support team" className="text-primary font-medium hover:underline" />
                             </p>
                         </div>
                     </div>
@@ -59,8 +58,8 @@ export default function FAQs() {
                     <div className="md:w-2/3">
                         <Accordion type="single" collapsible className="w-full space-y-2">
                             {visibleItems.map((item, i) => (
+                                <Hide key={item.id} id={`faq.item.${i}`}>
                                 <AccordionItem
-                                    key={item.id}
                                     value={item.id}
                                     className="lrbc-anim bg-background shadow-xs rounded-lg border px-4 last:border-b"
                                     style={{ transitionDelay: `${i * 0.06}s` }}
@@ -70,17 +69,16 @@ export default function FAQs() {
                                             <div className="flex size-5 shrink-0">
                                                 <DynamicIcon name={item.icon} className="m-auto size-4" />
                                             </div>
-                                            <span className="text-sm sm:text-base">{item.question}</span>
+                                            <Et id={`faq.item.${i}.q`} def={item.question} className="text-sm sm:text-base" />
                                         </div>
                                     </AccordionTrigger>
                                     <AccordionContent className="pb-4">
                                         <div className="px-8">
-                                            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                                                {item.answer}
-                                            </p>
+                                            <Et as="p" id={`faq.item.${i}.a`} def={item.answer} className="text-sm sm:text-base text-muted-foreground leading-relaxed" />
                                         </div>
                                     </AccordionContent>
                                 </AccordionItem>
+                                </Hide>
                             ))}
                         </Accordion>
 
@@ -88,7 +86,7 @@ export default function FAQs() {
                             <div className="mt-4 flex justify-center">
                                 <button onClick={() => setShowAll(true)}
                                     className="text-primary text-sm font-medium rounded-md px-3 py-2 hover:bg-primary/5 transition-colors min-h-[44px]">
-                                    See more
+                                    <Et id="faq.more" def="See more" />
                                 </button>
                             </div>
                         )}
@@ -96,7 +94,7 @@ export default function FAQs() {
                             <div className="mt-4 flex justify-center">
                                 <button onClick={() => setShowAll(false)}
                                     className="text-muted-foreground text-sm font-medium rounded-md px-3 py-2 hover:bg-muted transition-colors min-h-[44px]">
-                                    See less
+                                    <Et id="faq.less" def="See less" />
                                 </button>
                             </div>
                         )}
@@ -104,5 +102,6 @@ export default function FAQs() {
                 </div>
             </div>
         </section>
+        </Hide>
     )
 }

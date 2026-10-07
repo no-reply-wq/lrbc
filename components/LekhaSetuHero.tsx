@@ -16,6 +16,7 @@ import { ArrowRight, ArrowUpRight, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 import { AnimatedGroup } from '@/components/ui/animated-group'
 import { Button } from "./ui/button";
+import { Et, Hide } from "@/components/cms/editable";
 
 
 
@@ -118,6 +119,7 @@ export default function LekhaSetuHero() {
     return (
         <>
 
+            <Hide id="lekha.hero.sec">
             <section className="overflow-hidden" ref={sectionRef}>
                 <div
                     aria-hidden
@@ -174,8 +176,7 @@ export default function LekhaSetuHero() {
                                 <div
                                     
                                     className="hover:bg-background overflow-hidden dark:hover:border-t-border bg-muted group mx-auto flex w-fit items-center gap-4 rounded-full border p-1 pl-4 shadow-md shadow-zinc-950/5 transition-colors duration-300 dark:border-t-white/5 dark:shadow-zinc-950">
-                                    <span ref={quoteRef} className="text-foreground text-sm">LekhaSetu
-                                    </span>
+                                    <Et as="span" id="lekha.hero.badge" def="LekhaSetu" ref={quoteRef} className="text-foreground text-sm" />
                                     <span className="dark:border-background block h-4 w-0.5 border-l bg-white dark:bg-zinc-700"></span>
 
                                    
@@ -183,17 +184,14 @@ export default function LekhaSetuHero() {
 
                                 <div className="overflow-hidden">
                                     <h1 ref={headingRef} className="overflow-hidden mx-auto mt-5 max-w-5xl flex flex-col text-center text-2xl font-bold sm:text-4xl md:text-5xl lg:mt-12 xl:text-[5.25rem]">
-                                        <span className="overflow-hidden">Your Accounts.</span>
-                                        <span className="overflow-hidden"> Always in Sync.</span>
+                                        <Et id="lekha.hero.title1" def="Your Accounts." reload className="overflow-hidden" />
+                                        <Et id="lekha.hero.title2" def=" Always in Sync." reload className="overflow-hidden" />
                                         
                                         
                                     </h1>
                                 </div>
                                 <div className="overflow-hidden">
-                                    <p className="mx-auto mt-5 max-w-2xl text-center text-base sm:text-lg overflow-hidden px-2" ref={subtitleRef}>
-                                       Automatically sync your accounting software data to the cloud every few minutes. Access accurate, real-time business insights without changing the way you work.
-
-                                    </p>
+                                    <Et as="p" id="lekha.hero.subtitle" def="Automatically sync your accounting software data to the cloud every few minutes. Access accurate, real-time business insights without changing the way you work." reload className="mx-auto mt-5 max-w-2xl text-center text-base sm:text-lg overflow-hidden px-2" ref={subtitleRef} />
                                 </div>
                             <Button
             asChild
@@ -215,13 +213,9 @@ export default function LekhaSetuHero() {
           group-hover:-translate-y-1/2
         "
                 >
-                  <span className="h-6 leading-6">
-                    Book Demo
-                  </span>
+                  <Et id="lekha.hero.cta" def="Book Demo" className="h-6 leading-6" />
 
-                  <span className="h-6 leading-6">
-                    Book Demo
-                  </span>
+                  <Et id="lekha.hero.cta" def="Book Demo" className="h-6 leading-6" />
                 </span>
               </span>
 
@@ -248,6 +242,7 @@ export default function LekhaSetuHero() {
                 </div>
 
             </section >
+            </Hide>
         </>
     )
 }

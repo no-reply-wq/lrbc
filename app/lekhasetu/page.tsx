@@ -23,7 +23,7 @@ export default function LekhaSetu() {
       <SolutionSection />
       <div className="hidden md:block"><IntegrationsSection/></div>
       <FeaturesSethu />
-      <CallToAction />
+      <CallToAction cmsId="lekha.cta" />
       <FooterSection />
 
   </div>

@@ -14,7 +14,7 @@ export default function WorkPilotPage() {
       <WorkPilotHero />
       <WorkPilotFeatures />
       <WorkPilotPricing />
-      <CallToAction />
+      <CallToAction cmsId="workpilot.cta" />
       <FooterSection />
     </div>
   );

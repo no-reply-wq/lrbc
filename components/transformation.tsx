@@ -4,7 +4,7 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import SectionBadge from "./section-badge";
+import { Et, Hide } from "@/components/cms/editable";
 import { useFadeUp } from "@/components/ui/use-scroll-animation";
 import BeforeDashboard from "./before-dashboard";
 import Dashboard from "./dashboar-view/dashboar-view";
@@ -149,6 +149,7 @@ export default function Transformation() {
   );
 
   return (
+    <Hide id="home.transformation.sec">
     <section
       ref={(el) => {
         (sectionRef as React.MutableRefObject<HTMLElement | null>).current = el;
@@ -159,27 +160,26 @@ export default function Transformation() {
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <SectionBadge text="The Transformation" className="lrbc-anim mb-5" />
-          <h2 className="lrbc-anim lrbc-anim-d1 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">See the Difference ERP Makes</h2>
-          <p className="lrbc-anim lrbc-anim-d2 mx-auto mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg">
-            From scattered information to connected, streamlined operations.
-          </p>
+          <Et as="div" id="home.transformation.badge" def="The Transformation" className="mx-auto w-fit rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-primary lrbc-anim mb-5" />
+          <Et as="h2" id="home.transformation.heading" def="See the Difference ERP Makes" className="lrbc-anim lrbc-anim-d1 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl" />
+          <Et as="p" id="home.transformation.subtitle" def="From scattered information to connected, streamlined operations." className="lrbc-anim lrbc-anim-d2 mx-auto mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg" />
         </div>
 
         {/* Pinned stage — both cards share one grid cell; the second slides over the first */}
         <div className="mt-12 md:mt-14">
           <div ref={stageRef} className="tf-stage grid grid-cols-[minmax(0,1fr)]">
             <div className="tf-c1 relative col-start-1 row-start-1 origin-top self-start pt-3 will-change-transform">
-              <Tag tone="before">Without ERP</Tag>
+              <Tag tone="before"><Et id="home.transformation.tag.before" def="Without ERP" /></Tag>
               <BeforeDashboard />
             </div>
             <div className="tf-c2 relative z-10 col-start-1 row-start-1 self-start pt-3 will-change-transform">
-              <Tag tone="after">With ERP</Tag>
+              <Tag tone="after"><Et id="home.transformation.tag.after" def="With ERP" /></Tag>
               <Dashboard />
             </div>
           </div>
         </div>
       </div>
     </section>
+    </Hide>
   );
 }

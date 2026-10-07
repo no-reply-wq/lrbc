@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { Et, Hide } from "@/components/cms/editable";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
@@ -105,22 +106,26 @@ export default function EngagementProcess() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
 
         <div className="text-center mb-8 md:mb-16">
-          <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">The Engagement Process</p>
+          <Et as="p" id="why.process.eyebrow" def="The Engagement Process" className="text-xs font-semibold uppercase tracking-widest text-primary mb-3" />
           <div className="overflow-hidden">
-            <h2
+            <Et
+              as="h2"
               ref={headingRef}
+              id="why.process.title"
+              reload
+              def="How we build with you"
               className="text-2xl sm:text-3xl font-semibold tracking-tight lg:text-5xl xl:text-6xl"
-            >
-              How we build with you
-            </h2>
+            />
           </div>
           <div className="overflow-hidden mt-5">
-            <p
+            <Et
+              as="p"
               ref={subRef}
+              id="why.process.subtitle"
+              reload
+              def="Three structured phases that take you from fragmented operations to a system-driven business — on your floor, at your pace."
               className="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto leading-relaxed"
-            >
-              Three structured phases that take you from fragmented operations to a system-driven business — on your floor, at your pace.
-            </p>
+            />
           </div>
         </div>
 
@@ -133,28 +138,24 @@ export default function EngagementProcess() {
             {STEPS.map((step, i) => {
               const Icon = step.icon;
               return (
+                <Hide key={i} id={`why.process.step.${i}`}>
                 <div
-                  key={i}
                   className={
                     "ep-card relative rounded-3xl border bg-gradient-to-br p-7 sm:p-8 " +
                     step.border + " " + step.accent
                   }
                 >
                   <div className="flex items-center justify-between mb-7">
-                    <span className="font-mono text-5xl font-bold text-foreground/10 select-none">
-                      {step.number}
-                    </span>
+                    <Et id={`why.process.step.${i}.number`} def={step.number} className="font-mono text-5xl font-bold text-foreground/10 select-none" />
                     <div className={"flex h-12 w-12 items-center justify-center rounded-2xl " + step.iconBg + " " + step.iconColor}>
                       <Icon className="h-5 w-5" />
                     </div>
                   </div>
 
-                  <span className="inline-block rounded-full border border-border bg-background/60 px-3 py-0.5 text-xs font-medium text-muted-foreground mb-4">
-                    {step.tag}
-                  </span>
+                  <Et id={`why.process.step.${i}.tag`} def={step.tag} className="inline-block rounded-full border border-border bg-background/60 px-3 py-0.5 text-xs font-medium text-muted-foreground mb-4" />
 
-                  <h3 className="text-lg font-semibold leading-snug mb-3">{step.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-6">{step.body}</p>
+                  <Et as="h3" id={`why.process.step.${i}.title`} def={step.title} className="text-lg font-semibold leading-snug mb-3" />
+                  <Et as="p" id={`why.process.step.${i}.body`} def={step.body} className="text-sm text-muted-foreground leading-6" />
 
                   {i < STEPS.length - 1 && (
                     <div className="lg:hidden mt-8 flex justify-center">
@@ -162,6 +163,7 @@ export default function EngagementProcess() {
                     </div>
                   )}
                 </div>
+                </Hide>
               );
             })}
           </div>

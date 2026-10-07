@@ -193,8 +193,8 @@ export const PRODUCTS: Product[] = [
           { value: "3–4 weeks", label: "lost per employee" },
         ],
         detail: {
-          heading: "Without automated Tally sync",
-          body: "A mid-sized business with multiple branches, warehouses, or disjointed systems (like CRM/E-commerce operating separately from accounting) loses between 1.5 to 3 hours per day due to a lack of automated Tally data synchronization.",
+          heading: "Without automated account data sync",
+          body: "A mid-sized business with multiple branches, warehouses, or disjointed systems (like CRM/E-commerce operating separately from accounting) loses between 1.5 to 3 hours per day due to a lack of automated data synchronization.",
           points: ["Annually, this translates to 1,000+ hours of wasted productivity — amounting to roughly 3 to 4 weeks of completely lost time per employee involved in the process."],
         },
       },
@@ -292,7 +292,7 @@ export const PRODUCTS: Product[] = [
         ],
         detail: {
           heading: "How WorkPilot works",
-          body: "WorkPilot maps to your existing org structure — no restructuring needed.",
+          body: "WorkPilot maps to your existing organization structure, no restructuring needed.",
           points: [
             "1 · Add your team: import employees, define roles and departments",
             "2 · Assign & track: managers set deadlines, employees update from any device",
@@ -536,3 +536,7 @@ export const PRODUCTS: Product[] = [
     ],
   },
 ];
+
+/* ───────────── CMS id helpers ───────────── */
+export const pid = (product: Product, key: string) => `home.products.${product.id}.${key}`;
+export const cid = (product: Product, card: ShowcaseCard, key: string) => `home.products.${product.id}.${card.id}.${key}`;

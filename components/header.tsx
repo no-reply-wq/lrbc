@@ -7,6 +7,7 @@ import React from 'react'
 import { cn } from '@/lib/utils'
 import { ModeToggle } from './mode-toggle'
 import MagneticButton from './MagneticButton'
+import { Lnk, Hide } from '@/components/cms/editable'
 import { ERPRequestModal } from "@/components/ERPRequestModal"
 
 const menuItems = [
@@ -68,32 +69,33 @@ export const HeroHeader = () => {
                                             <>
                                                 {/* Products — text + arrow, hover (or keyboard focus) opens the dropdown */}
                                                 <div className="flex items-center gap-1 rounded-full px-3 py-1.5 text-muted-foreground transition-colors duration-200 group-hover:bg-primary/10 group-hover:text-primary group-focus-within:bg-primary/10 group-focus-within:text-primary">
-                                                    <Link href={item.href} className="outline-none">
-                                                        {item.name}
-                                                    </Link>
+                                                    <Lnk id={`nav.${index}.href`} href={item.href} labelId={`nav.${index}.label`} label={item.name} className="outline-none" />
                                                     <ChevronDown className="size-3.5 transition-transform duration-300 group-hover:rotate-180 group-focus-within:rotate-180" />
                                                 </div>
                                                 {/* Dropdown */}
                                                 <div className="invisible absolute left-1/2 top-full z-50 -translate-x-1/2 translate-y-1 pt-2 opacity-0 transition-all duration-200 ease-out group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
                                                     <div className="min-w-[190px] overflow-hidden rounded-2xl border border-border bg-background/95 p-1.5 shadow-xl shadow-primary/10 backdrop-blur-xl">
                                                         {item.children.map((child, ci) => (
-                                                            <Link
+                                                            <Lnk
                                                                 key={ci}
+                                                                id={`nav.${index}.${ci}.href`}
                                                                 href={child.href}
+                                                                labelId={`nav.${index}.${ci}.label`}
+                                                                label={child.name}
                                                                 className="group/item flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-sm text-muted-foreground transition-all duration-150 hover:bg-primary/10 hover:pl-4 hover:text-primary focus-visible:bg-primary/10 focus-visible:text-primary focus-visible:outline-none">
-                                                                {child.name}
                                                                 <ArrowRight className="size-3.5 -translate-x-1 opacity-0 transition-all duration-150 group-hover/item:translate-x-0 group-hover/item:opacity-100 group-focus-visible/item:translate-x-0 group-focus-visible/item:opacity-100" />
-                                                            </Link>
+                                                            </Lnk>
                                                         ))}
                                                     </div>
                                                 </div>
                                             </>
                                         ) : (
-                                            <Link
+                                            <Lnk
+                                                id={`nav.${index}.href`}
                                                 href={item.href}
-                                                className="block rounded-full px-3 py-1.5 text-muted-foreground transition-colors duration-200 hover:bg-primary/10 hover:text-primary active:bg-primary/15">
-                                                <span>{item.name}</span>
-                                            </Link>
+                                                labelId={`nav.${index}.label`}
+                                                label={item.name}
+                                                className="block rounded-full px-3 py-1.5 text-muted-foreground transition-colors duration-200 hover:bg-primary/10 hover:text-primary active:bg-primary/15" />
                                         )}
                                     </li>
                                 ))}
@@ -115,12 +117,13 @@ export const HeroHeader = () => {
                                                         "flex items-center justify-between rounded-xl transition-colors duration-150 hover:bg-primary/10 active:bg-primary/15",
                                                         productsOpen && "bg-primary/10"
                                                     )}>
-                                                        <Link
+                                                        <Lnk
+                                                            id={`nav.${index}.href`}
                                                             href={item.href}
+                                                            labelId={`nav.${index}.label`}
+                                                            label={item.name}
                                                             onClick={() => setMenuState(false)}
-                                                            className="flex-1 px-3 py-3 text-lg font-medium text-muted-foreground hover:text-primary active:text-primary">
-                                                            {item.name}
-                                                        </Link>
+                                                            className="flex-1 px-3 py-3 text-lg font-medium text-muted-foreground hover:text-primary active:text-primary" />
                                                         <button
                                                             onClick={() => setProductsOpen(p => !p)}
                                                             aria-label="Show products"
@@ -140,26 +143,29 @@ export const HeroHeader = () => {
                                                         <ul className="ml-4 min-h-0 space-y-1 overflow-hidden border-l-2 border-primary/20 pl-3">
                                                             {item.children.map((child, ci) => (
                                                                 <li key={ci} className={ci === 0 ? "pt-1" : ""}>
-                                                                    <Link
+                                                                    <Lnk
+                                                                        id={`nav.${index}.${ci}.href`}
                                                                         href={child.href}
+                                                                        labelId={`nav.${index}.${ci}.label`}
+                                                                        label={child.name}
                                                                         tabIndex={productsOpen ? 0 : -1}
                                                                         onClick={() => { setMenuState(false); setProductsOpen(false) }}
                                                                         className="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-all duration-150 hover:bg-primary/10 hover:pl-4 hover:text-primary active:bg-primary/15 active:text-primary">
-                                                                        {child.name}
                                                                         <ArrowRight className="size-3.5 opacity-50" />
-                                                                    </Link>
+                                                                    </Lnk>
                                                                 </li>
                                                             ))}
                                                         </ul>
                                                     </div>
                                                 </>
                                             ) : (
-                                                <Link
+                                                <Lnk
+                                                    id={`nav.${index}.href`}
                                                     href={item.href}
+                                                    labelId={`nav.${index}.label`}
+                                                    label={item.name}
                                                     onClick={() => setMenuState(false)}
-                                                    className="block rounded-xl px-3 py-3 text-lg font-medium text-muted-foreground transition-colors duration-150 hover:bg-primary/10 hover:text-primary active:bg-primary/15 active:text-primary">
-                                                    <span>{item.name}</span>
-                                                </Link>
+                                                    className="block rounded-xl px-3 py-3 text-lg font-medium text-muted-foreground transition-colors duration-150 hover:bg-primary/10 hover:text-primary active:bg-primary/15 active:text-primary" />
                                             )}
                                         </li>
                                     ))}
@@ -179,9 +185,7 @@ export const HeroHeader = () => {
                                         asChild
                                         size="sm"
                                         className={cn(isScrolled && 'lg:hidden')}>
-                                        <Link href="https://wa.me/919954953008" target="_blank" rel="noopener noreferrer">
-                                            <span>Whatsapp</span>
-                                        </Link>
+                                        <Lnk id="nav.whatsapp.href" href="https://wa.me/919954953008" labelId="nav.whatsapp.label" label="Whatsapp" target="_blank" rel="noopener noreferrer" />
                                     </Button>
                                 </MagneticButton>
 
@@ -200,9 +204,7 @@ export const HeroHeader = () => {
                             {/* Mobile drawer action buttons */}
                             <div className="lg:hidden flex flex-col gap-3 w-full">
                                 <Button asChild size="sm">
-                                    <Link href="https://wa.me/919954953008" target="_blank" rel="noopener noreferrer">
-                                        <span>Whatsapp</span>
-                                    </Link>
+                                    <Lnk id="nav.whatsapp.href" href="https://wa.me/919954953008" labelId="nav.whatsapp.label" label="Whatsapp" target="_blank" rel="noopener noreferrer" />
                                 </Button>
                                 <ERPRequestModal
                                     buttonText="Book a Demo"

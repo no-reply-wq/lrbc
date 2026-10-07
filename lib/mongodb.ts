@@ -9,15 +9,22 @@ if (!MONGODB_URI) {
 declare global {
   // eslint-disable-next-line no-var
   var _mongooseConn: typeof mongoose | null;
+  // eslint-disable-next-line no-var
+  var _mongoosePromise: Promise<typeof mongoose> | null;
 }
 
-let cached = global._mongooseConn ?? null;
-
+/**
+ * One shared connection. The *promise* is cached, so when several requests arrive at the same moment
+ * they all wait for the same connection instead of querying before it is ready.
+ */
 export async function connectDB(): Promise<typeof mongoose> {
-  if (cached) return cached;
+  if (global._mongooseConn && mongoose.connection.readyState === 1) return global._mongooseConn;
   if (!MONGODB_URI) throw new Error('MONGODB_URI is not defined in .env.local');
-  cached = await mongoose.connect(MONGODB_URI, { bufferCommands: false });
-  global._mongooseConn = cached;
-  console.log('[LRBC] MongoDB connected');
-  return cached;
+  if (!global._mongoosePromise) {
+    global._mongoosePromise = mongoose
+      .connect(MONGODB_URI, { bufferCommands: false, serverSelectionTimeoutMS: 8000 })
+      .then((m) => { global._mongooseConn = m; console.log('[LRBC] MongoDB connected'); return m; })
+      .catch((e) => { global._mongoosePromise = null; global._mongooseConn = null; throw e; });
+  }
+  return global._mongoosePromise;
 }

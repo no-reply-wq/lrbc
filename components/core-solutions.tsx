@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { Et, Hide, Img } from "@/components/cms/editable";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
@@ -102,20 +103,20 @@ function SolutionPanel({ s, index }: { s: typeof SOLUTIONS[0]; index: number }) 
             <div className={"flex h-10 w-10 items-center justify-center rounded-xl " + s.iconBg}>
               <Icon className={"h-5 w-5 " + s.iconColor} />
             </div>
-            <span className={"text-xs font-semibold uppercase tracking-widest " + s.iconColor}>
-              {s.eyebrow}
-            </span>
+            <Et id={`why.core.item.${index}.eyebrow`} def={s.eyebrow} className={"text-xs font-semibold uppercase tracking-widest " + s.iconColor} />
           </div>
 
-          <h3 className="text-xl font-semibold leading-tight sm:text-2xl lg:text-3xl">{s.title}</h3>
-          <p className="text-muted-foreground leading-6 text-sm">{s.body}</p>
+          <Et as="h3" id={`why.core.item.${index}.title`} def={s.title} className="text-xl font-semibold leading-tight sm:text-2xl lg:text-3xl" />
+          <Et as="p" id={`why.core.item.${index}.body`} def={s.body} className="text-muted-foreground leading-6 text-sm" />
 
           <ul className="flex flex-col gap-3 mt-2">
             {s.highlights.map((h, j) => (
-              <li key={j} className="cs-highlight flex items-start gap-3">
+              <Hide key={j} id={`why.core.item.${index}.hl.${j}`}>
+              <li className="cs-highlight flex items-start gap-3">
                 <CheckCircle2 className={"h-5 w-5 shrink-0 mt-0.5 " + s.iconColor} />
-                <span className="text-sm text-foreground/80">{h}</span>
+                <Et id={`why.core.item.${index}.hl.${j}.text`} def={h} className="text-sm text-foreground/80" />
               </li>
+              </Hide>
             ))}
           </ul>
         </div>
@@ -123,14 +124,15 @@ function SolutionPanel({ s, index }: { s: typeof SOLUTIONS[0]; index: number }) 
         <div ref={imgRef} className="relative max-w-md mx-auto lg:max-w-full">
           <div className="relative overflow-hidden rounded-2xl border border-border/50 shadow-xl shadow-black/10">
             <div className="absolute inset-0 z-10 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none" />
-            <img
-              src={s.image}
+            <Img
+              id={`why.core.item.${index}.img`}
+              def={s.image}
               alt={s.imageAlt}
               className="w-full h-44 sm:h-56 lg:h-64 object-cover"
             />
             <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2 rounded-2xl border border-border bg-background/90 px-4 py-2.5 backdrop-blur-md shadow-sm">
               <TrendingUp className={"h-4 w-4 " + s.iconColor} />
-              <span className="text-xs font-medium text-foreground">Live operational data</span>
+              <Et id={`why.core.item.${index}.chip`} def="Live operational data" className="text-xs font-medium text-foreground" />
             </div>
           </div>
           <div className={"absolute -top-3 -right-3 h-6 w-6 rounded-full border-2 border-background " + s.iconBg} />
@@ -167,26 +169,22 @@ export default function CoreSolutions() {
   }, { scope: sectionRef });
 
   return (
-    <section ref={sectionRef} className="py-8 md:py-12">
+    <section ref={sectionRef} className="py-8 md:py-12 overflow-x-clip">
       <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
 
-        <div className="text-center mb-20">
-          <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">Core Solutions</p>
+        <div className="text-center mb-10 md:mb-20">
+          <Et as="p" id="why.core.eyebrow" def="Core Solutions" className="text-xs font-semibold uppercase tracking-widest text-primary mb-3" />
           <div className="overflow-hidden">
-            <h2 ref={headingRef} className="text-4xl font-semibold tracking-tight lg:text-5xl xl:text-6xl">
-              Three systems. Every business need.
-            </h2>
+            <Et as="h2" ref={headingRef} id="why.core.title" reload def="Three systems. Every business need." className="text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl xl:text-6xl" />
           </div>
           <div className="overflow-hidden mt-5">
-            <p ref={subRef} className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
-              Mutually exclusive by function, collectively exhaustive of what a business needs to become fully system-driven.
-            </p>
+            <Et as="p" ref={subRef} id="why.core.subtitle" reload def="Mutually exclusive by function, collectively exhaustive of what a business needs to become fully system-driven." className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto leading-relaxed" />
           </div>
         </div>
 
         <div className="flex flex-col">
           {SOLUTIONS.map((s, i) => (
-            <SolutionPanel key={i} s={s} index={i} />
+            <Hide key={i} id={`why.core.item.${i}`}><SolutionPanel s={s} index={i} /></Hide>
           ))}
         </div>
       </div>

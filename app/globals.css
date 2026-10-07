@@ -815,11 +815,9 @@ button.lrbc-liquid-btn:not([data-slot="button"]) {
 .lr-play .lr-pain { animation: lr-rise .6s cubic-bezier(.2,.8,.2,1) calc(.5s + var(--i) * .1s) both,
                      lr-pain-fade .6s ease calc(1.8s + var(--i) * .22s) forwards; }
 .lr-pain-text { color: color-mix(in srgb, var(--foreground) 92%, transparent); }
-.lr-pain-text::after {
-  content: ""; position: absolute; left: 0; right: 0; top: 52%; height: 2px; border-radius: 2px;
-  background: #e11d48; transform: scaleX(0); transform-origin: left;
-}
-.lr-play .lr-pain-text::after { animation: lr-strike .45s ease calc(1.8s + var(--i) * .22s) forwards; }
+/* strike-through uses real text-decoration so it follows the text when a label wraps onto two lines */
+.lr-pain-text { text-decoration-line: line-through; text-decoration-thickness: 2px; text-decoration-color: transparent; text-decoration-skip-ink: none; }
+.lr-play .lr-pain-text { animation: lr-strike .45s ease calc(1.8s + var(--i) * .22s) forwards; }
 .lr-beam { transform: scaleX(0); }
 .lr-play .lr-beam { animation: lr-beam .8s ease 3.2s forwards; }
 .lr-beam:first-child { transform-origin: right; }
@@ -831,7 +829,7 @@ button.lrbc-liquid-btn:not([data-slot="button"]) {
 
 @keyframes lr-card-in { from { opacity: 0; transform: translateY(28px) scale(.97); filter: blur(8px); } to { opacity: 1; transform: none; filter: none; } }
 @keyframes lr-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-@keyframes lr-strike { to { transform: scaleX(1); } }
+@keyframes lr-strike { to { text-decoration-color: #e11d48; } }
 @keyframes lr-pain-fade { to { opacity: 1; } }
 @keyframes lr-beam { to { transform: scaleX(1); } }
 @keyframes lr-core { from { opacity: 0; transform: scale(.2) rotate(-90deg); } to { opacity: 1; transform: none; } }
@@ -848,65 +846,37 @@ button.lrbc-liquid-btn:not([data-slot="button"]) {
   .lr-check .lr-check-card, .lr-check .lr-check-sheen, .lr-check .lr-pain, .lr-check .lr-beam, .lr-check .lr-core, .lr-check .lr-gain, .lr-check .lr-gain-tick { animation: none !important; opacity: 1 !important; }
   .lr-check .lr-beam { transform: none; }
   .lr-check .lr-pain { opacity: 1 !important; }
-  .lr-check .lr-pain-text::after { transform: scaleX(1); animation: none; }
+  .lr-check .lr-pain-text { text-decoration-color: #e11d48; animation: none; }
 }
 
-/* Custom cursor: hide the default arrow (text fields keep their I-beam) */
+/* Custom cursor everywhere on the page (the normal arrow / I-beam is hidden; ours morphs instead) */
 html.lrbc-cursor, html.lrbc-cursor * { cursor: none !important; }
-html.lrbc-cursor input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not([type="submit"]),
-html.lrbc-cursor textarea, html.lrbc-cursor [contenteditable="true"] { cursor: text !important; }
-html.lrbc-cursor iframe { cursor: auto !important; }
-/* Forms and pop-ups use the normal system cursor (the effect steps aside there) */
-html.lrbc-cursor form, html.lrbc-cursor form *,
-html.lrbc-cursor [role="dialog"], html.lrbc-cursor [role="dialog"] *,
-html.lrbc-cursor select, html.lrbc-cursor option { cursor: auto !important; }
-html.lrbc-cursor form :is(button, a, label, summary, [role="button"], select, input[type="checkbox"], input[type="radio"], input[type="submit"]),
-html.lrbc-cursor [role="dialog"] :is(button, a, label, summary, [role="button"], select, input[type="checkbox"], input[type="radio"], input[type="submit"]) { cursor: pointer !important; }
-html.lrbc-cursor form :is(input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not([type="submit"]), textarea),
-html.lrbc-cursor [role="dialog"] :is(input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not([type="submit"]), textarea) { cursor: text !important; }
+/* only things the browser draws itself keep the system cursor */
+html.lrbc-cursor iframe, html.lrbc-cursor select, html.lrbc-cursor option { cursor: auto !important; }
 
 /* Aura cursor (desktop only; component renders nothing visible on touch devices) */
-.lrbc-cur > div { position: absolute; left: 0; top: 0; opacity: 0; will-change: transform, opacity; }
-.lrbc-cur-dot { width: 12px; height: 12px; margin: -6px 0 0 -6px; }
-.lrbc-cur-dot i {
-  display: block; width: 100%; height: 100%; border-radius: 3px; transform: rotate(45deg) scale(.82);
-  background: linear-gradient(135deg, #5227FF, #a855f7 55%, #d946ef);
-  box-shadow: 0 0 0 1.5px rgba(255,255,255,.95), 0 3px 10px rgba(82,39,255,.45);
+.lrbc-cur-glow, .lrbc-cur-frame, .lrbc-cur-spark, .lrbc-cur-bar { position: absolute; left: 0; top: 0; opacity: 0; will-change: transform, opacity; }
+/* spotlight: a faint violet-to-pink glow behind the pointer (kept light so text stays crisp) */
+.lrbc-cur-glow {
+  width: 240px; height: 240px; margin: -120px 0 0 -120px; border-radius: 9999px;
+  background: radial-gradient(circle, rgba(124,92,246,.17) 0%, rgba(217,70,239,.09) 38%, transparent 68%);
 }
-.lrbc-cur-ring { width: 38px; height: 38px; margin: -19px 0 0 -19px; }
-.lrbc-cur-spin {
-  position: absolute; inset: 0; border-radius: 9999px;
-  border: 1px solid rgba(124,92,246,.28);
-  animation: lrbc-orbit 3.2s linear infinite;
-}
-.lrbc-cur-spin::before {            /* the satellite */
-  content: ""; position: absolute; left: 50%; top: -3.5px; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 9999px;
-  background: linear-gradient(135deg, #a855f7, #d946ef);
-  box-shadow: 0 0 10px 2px rgba(217,70,239,.55);
-}
-.lrbc-cur-spin::after {             /* faint comet tail behind the satellite */
-  content: ""; position: absolute; inset: -1px; border-radius: 9999px;
-  background: conic-gradient(from 0deg, transparent 0deg 300deg, rgba(168,85,247,.55) 360deg);
-  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1px));
-          mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1px));
-  transform: rotate(-12deg);
-}
-.lrbc-cur-ring[data-mode="link"] .lrbc-cur-spin { animation-duration: 1.2s; }
-@keyframes lrbc-orbit { to { transform: rotate(360deg); } }
-.lrbc-cur-aura { transition: none;
-  width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 9999px;
-  background: radial-gradient(circle, rgba(124,92,246,.16) 0%, rgba(217,70,239,.07) 45%, transparent 70%);
-}
-.lrbc-cur-ripple { width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 9999px; }
-.lrbc-cur > .lrbc-cur-ripple { opacity: 1; }
-.lrbc-cur-ripple::after {
-  content: ""; position: absolute; inset: 0; border-radius: inherit;
-  border: 2px solid #a855f7; opacity: 0;
-}
-.lrbc-cur-ripple.lrbc-ripple-go::after { animation: lrbc-ripple .6s cubic-bezier(.22,1,.36,1); }
-@keyframes lrbc-ripple {
-  0% { transform: scale(.4); opacity: .8; }
-  100% { transform: scale(5); opacity: 0; }
+/* viewfinder: four thin corner brackets; they glide out and snap around links and buttons */
+.lrbc-cur-frame i { position: absolute; width: 9px; height: 9px; border: 2px solid #6d3df5; filter: drop-shadow(0 0 3px rgba(139,92,246,.45)); }
+.lrbc-cur-frame i:nth-child(1) { left: 0; top: 0; border-right: 0; border-bottom: 0; border-top-left-radius: 4px; }
+.lrbc-cur-frame i:nth-child(2) { right: 0; top: 0; border-left: 0; border-bottom: 0; border-top-right-radius: 4px; }
+.lrbc-cur-frame i:nth-child(3) { left: 0; bottom: 0; border-right: 0; border-top: 0; border-bottom-left-radius: 4px; }
+.lrbc-cur-frame i:nth-child(4) { right: 0; bottom: 0; border-left: 0; border-top: 0; border-bottom-right-radius: 4px; }
+/* sparkle: tip-centred on the real pointer position, turns slowly */
+.lrbc-cur-spark { width: 26px; height: 26px; margin: -13px 0 0 -13px; }
+.lrbc-cur-spark svg { display: block; overflow: visible; animation: lrbc-spark-spin 9s linear infinite; filter: drop-shadow(0 2px 5px rgba(82,39,255,.4)); }
+@keyframes lrbc-spark-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .lrbc-cur-spark svg { animation: none; } }
+/* over text fields everything gives way to a slim, clearly visible text bar */
+.lrbc-cur-bar {
+  width: 3px; height: 26px; margin: -13px 0 0 -1.5px; border-radius: 3px;
+  background: linear-gradient(180deg, #5227FF, #d946ef);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.95), 0 2px 8px rgba(82,39,255,.4);
 }
 @media (hover: none), (pointer: coarse) { .lrbc-cur { display: none !important; } }
 
@@ -990,3 +960,44 @@ html.lrbc-cursor [role="dialog"] :is(input:not([type="checkbox"]):not([type="rad
 .legal-prose li::before { content: ""; position: absolute; left: .15rem; top: .72em; width: .4rem; height: .4rem; border-radius: 9999px; background: linear-gradient(135deg,#5227FF,#d946ef); }
 .legal-prose a { color: var(--primary); text-decoration: underline; text-underline-offset: 3px; }
 .legal-prose blockquote { margin: .4rem 0; padding-left: 1rem; border-left: 2px solid color-mix(in srgb, var(--primary) 30%, transparent); }
+
+/* ───────── Website editor (only visible to the signed-in admin) ───────── */
+.lrbc-cms-bar{position:fixed;left:12px;bottom:12px;z-index:2147482000;display:flex;flex-wrap:wrap;gap:6px;padding:6px;border-radius:14px;background:rgba(15,12,40,.92);box-shadow:0 10px 30px rgba(0,0,0,.35);font-family:var(--font-inter,Inter),system-ui,sans-serif}
+.lrbc-cms-btn{border:0;border-radius:10px;padding:8px 12px;font-size:12px;font-weight:600;line-height:1;color:#fff;background:#5227ff;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+.lrbc-cms-btn.ghost{background:rgba(255,255,255,.12)}
+.lrbc-cms-btn.on{background:linear-gradient(90deg,#5227ff,#a855f7)}
+.lrbc-cms-btn:disabled{opacity:.6;cursor:wait}
+.lrbc-cms-hint{position:fixed;left:50%;transform:translateX(-50%);bottom:64px;z-index:2147482000;margin:0;padding:8px 14px;border-radius:999px;background:#0f0c28;color:#fff;font-size:12px;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.lrbc-cms-panel{position:fixed;right:12px;bottom:12px;top:auto;z-index:2147482001;width:min(380px,calc(100vw - 24px));max-height:calc(100vh - 24px);overflow:auto;padding:16px;border-radius:16px;background:#fff;color:#111;border:1px solid #e5e7eb;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.lrbc-cms-input{width:100%;border:1px solid #d1d5db;border-radius:10px;padding:9px 11px;font-size:14px;color:#111;background:#fff}
+.lrbc-cms-input:focus{outline:2px solid #5227ff;outline-offset:0}
+html.lrbc-editing [data-cms]{outline:1.5px dashed rgba(82,39,255,.7);outline-offset:2px;cursor:pointer !important}
+html.lrbc-editing [data-cms]:hover{background:rgba(82,39,255,.10)}
+.lrbc-cms-sec{position:relative}
+.lrbc-cms-sec.is-hidden{opacity:.35;outline:2px dashed #ef4444;outline-offset:-2px}
+.lrbc-cms-hide{position:absolute;top:-10px;right:2px;z-index:40;border:0;border-radius:7px;padding:3px 8px;font-size:10px;font-weight:600;line-height:1.4;color:#fff;background:#0f0c28;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .12s}
+.lrbc-cms-sec:hover > .lrbc-cms-hide,.lrbc-cms-sec.is-hidden > .lrbc-cms-hide{opacity:.95;pointer-events:auto}
+html.lrbc-cursor [data-cms-panel], html.lrbc-cursor [data-cms-panel] *, html.lrbc-cursor .lrbc-cms-hide { cursor: auto !important; }
+html.lrbc-cursor [data-cms-panel] :is(button, a, input[type="file"]), html.lrbc-cursor .lrbc-cms-hide { cursor: pointer !important; }
+html.lrbc-cursor [data-cms-panel] :is(textarea, input:not([type="file"])) { cursor: text !important; }
+html.lrbc-cursor.lrbc-editing [data-cms] { cursor: pointer !important; }
+
+.lrbc-cms-btn.warn{background:#f59e0b;color:#1a1200}
+.lrbc-cms-btn.small{padding:6px 9px;font-size:11px}
+.lrbc-cms-btn.ghost.dark{background:#eef0f4;color:#111}
+.lrbc-cms-panel.lrbc-cms-left{right:auto;left:12px;bottom:64px;max-height:calc(100vh - 84px)}
+.lrbc-cms-panel.lrbc-cms-wide{width:min(460px,calc(100vw - 24px));bottom:64px;max-height:calc(100vh - 84px)}
+.lrbc-cms-banner{position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:2147482002;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;max-width:calc(100vw - 20px);padding:8px 12px;border-radius:14px;background:#0f0c28;color:#fff;font-size:12px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.lrbc-cms-flash{animation:lrbc-flash 1.4s ease}
+@keyframes lrbc-flash{0%,60%{background:rgba(245,158,11,.45);outline:3px solid #f59e0b}100%{background:transparent}}
+.lrbc-cms-panel button.lrbc-cms-btn.on{color:#fff}
+.lrbc-cms-panel ul button:not(.lrbc-cms-btn){color:#111}
+
+/* Floating call / WhatsApp buttons: smaller and tucked into the corner on phones so they cover less of the page */
+@media (max-width: 639px) {
+  .whatsapp-float-btn, .call-float-btn { width: 2.75rem !important; height: 2.75rem !important; right: .75rem !important; }
+  .whatsapp-float-btn { bottom: .75rem !important; }
+  .call-float-btn { bottom: 4rem !important; }
+  .whatsapp-float-btn svg { width: 1.6rem; height: 1.6rem; }
+  .call-float-btn svg { width: 1.2rem; height: 1.2rem; }
+}

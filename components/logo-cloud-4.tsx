@@ -34,15 +34,15 @@ export function LogoCloud() {
   return (
     <section className="bg-background py-3 md:py-4">
       <div className="relative m-auto max-w-7xl px-4 sm:px-6">
-        <div className="relative flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-12">
+        <div className="relative flex flex-col gap-3 md:flex-row md:items-center md:gap-8 lg:gap-12">
 
           {/* Label — always left-aligned, sits above slider on mobile */}
           <p className="shrink-0 text-left text-sm font-medium text-muted-foreground
-                        lg:border-r lg:pr-12 lg:text-end">
-            Our<br className="hidden lg:block" /> Clients
+                        md:border-r md:pr-8 md:text-end lg:pr-12">
+            Our<br className="hidden md:block" /> Clients
           </p>
 
-          <div className="w-full overflow-hidden">
+          <div className="w-full min-w-0 overflow-hidden">
             <InfiniteSlider gap={56} speed={32} pauseOnHover className="mask-x-from-85% mask-x-to-99% w-full">
               <Logos />
             </InfiniteSlider>

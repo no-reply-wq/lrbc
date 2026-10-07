@@ -7,12 +7,12 @@ export default function ContentSection2() {
             <div className="mx-auto max-w-5xl space-y-8 px-6 md:space-y-16">
                 <h2 className="relative z-10 max-w-xl text-4xl font-medium lg:text-5xl">LekhaSetu</h2>
                 <h3 className="text-xl font-normal text-muted-foreground">
-                    Your Tally. Always Up to Date.
+                    Your account data. Always up to date.
                 </h3>
                 <div className="grid gap-6 sm:grid-cols-2 md:gap-12 lg:gap-24">
                     <div className="relative space-y-4">
                         <p className="text-muted-foreground">
-                            Forget manual exports and outdated reports. LekhaSetu keeps your  <span className="text-accent-foreground font-bold"> Tally data synchronized </span> in the background, so your dashboards, reports, and business insights are always current and accessible from anywhereIt supports an entire ecosystem — from products innovate.
+                            Forget manual exports and outdated reports. LekhaSetu keeps your  <span className="text-accent-foreground font-bold"> account data synchronized </span> in the background, so your dashboards, reports, and business insights are always current and accessible from anywhereIt supports an entire ecosystem — from products innovate.
                         </p>
                         <p className="text-muted-foreground">It supports an entire ecosystem — from products to the APIs and platforms helping developers and businesses innovate</p>
 

@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import { Et, Lnk } from "@/components/cms/editable";
 import { ArrowUpRight, Check, Cloud, Factory, MapPin, RefreshCw } from "lucide-react";
-import type { Product, ShowcaseCard, VisualKey } from "./data";
+import { cid, pid, type Product, type ShowcaseCard, type VisualKey } from "./data";
 
 /**
  * Mini "screen" visuals drawn inside each bento card.
@@ -224,29 +224,29 @@ function Performance() {
   );
 }
 
-function Impact({ card }: VProps) {
+function Impact({ card, product }: VProps) {
   const m = card.metrics?.[0];
   return (
     <div className="flex h-full flex-col justify-center">
-      <p className="text-3xl font-extrabold leading-none tracking-tight text-primary font-heading">{m?.value}</p>
-      <p className="mt-1 text-[11px] leading-snug text-muted-foreground">{m?.label}</p>
+      <Et as="p" id={cid(product, card, "m.0.value")} def={m?.value ?? ""} className="text-3xl font-extrabold leading-none tracking-tight text-primary font-heading" />
+      <Et as="p" id={cid(product, card, "m.0.label")} def={m?.label ?? ""} className="mt-1 text-[11px] leading-snug text-muted-foreground" />
     </div>
   );
 }
 
-function Loss({ card }: VProps) {
+function Loss({ card, product }: VProps) {
   const [a, b, c] = card.metrics ?? [];
   return (
     <div className="flex h-full items-center gap-3">
       <div className="min-w-0 flex-1">
-        <p className="font-heading text-2xl font-extrabold leading-none tracking-tight text-rose-600 sm:text-3xl">{a?.value}</p>
-        <p className="mt-1 text-[11px] leading-snug text-muted-foreground">{a?.label} · without Tally sync</p>
+        <Et as="p" id={cid(product, card, "m.0.value")} def={a?.value ?? ""} className="font-heading text-2xl font-extrabold leading-none tracking-tight text-rose-600 sm:text-3xl" />
+        <p className="mt-1 text-[11px] leading-snug text-muted-foreground"><Et id={cid(product, card, "m.0.label")} def={a?.label ?? ""} /><Et id={cid(product, card, "suffix")} def=" · without account data sync" /></p>
       </div>
       <div className="flex shrink-0 flex-col gap-1.5">
         {[b, c].map((m, i) => (
           <div key={i} className="ps-fade-up rounded-lg bg-rose-500/10 px-2.5 py-1 text-right" style={{ animationDelay: `${i * 140}ms` }}>
-            <p className="font-heading text-[13px] font-bold leading-tight text-foreground">{m?.value}</p>
-            <p className="text-[9px] leading-tight text-muted-foreground">{m?.label}</p>
+            <Et as="p" id={cid(product, card, `m.${i + 1}.value`)} def={m?.value ?? ""} className="font-heading text-[13px] font-bold leading-tight text-foreground" />
+            <Et as="p" id={cid(product, card, `m.${i + 1}.label`)} def={m?.label ?? ""} className="text-[9px] leading-tight text-muted-foreground" />
           </div>
         ))}
       </div>
@@ -256,13 +256,13 @@ function Loss({ card }: VProps) {
 
 /* ────────────── Mini ERP / Custom ERP ────────────── */
 
-function Fit({ card }: VProps) {
+function Fit({ card, product }: VProps) {
   const m = card.metrics?.[0];
   return (
     <div className="flex h-full min-h-0 flex-col justify-between gap-2">
       <div>
-        <p className="text-[9px] uppercase tracking-wider text-muted-foreground font-mono">{m?.label}</p>
-        <p className="mt-0.5 text-3xl font-extrabold leading-none tracking-tight text-primary font-heading md:text-4xl">{m?.value}</p>
+        <Et as="p" id={cid(product, card, "m.0.label")} def={m?.label ?? ""} className="text-[9px] uppercase tracking-wider text-muted-foreground font-mono" />
+        <Et as="p" id={cid(product, card, "m.0.value")} def={m?.value ?? ""} className="mt-0.5 text-3xl font-extrabold leading-none tracking-tight text-primary font-heading md:text-4xl" />
       </div>
       {/* turnover scale */}
       <div className="rounded-xl border border-border/70 bg-background/70 px-2.5 py-2">
@@ -276,7 +276,7 @@ function Fit({ card }: VProps) {
       <div className="flex flex-wrap gap-1.5">
         {(card.chips ?? []).map((c, i) => (
           <span key={c} className="ps-fade-up inline-flex items-center gap-1 rounded-full border border-primary/25 bg-primary/10 px-2 py-1 text-[10.5px] font-semibold text-primary" style={{ animationDelay: `${i * 90}ms` }}>
-            <Check className="h-2.5 w-2.5" strokeWidth={3} /> {c}
+            <Check className="h-2.5 w-2.5" strokeWidth={3} /> <Et id={cid(product, card, `chip.${i}`)} def={c} />
           </span>
         ))}
       </div>
@@ -284,26 +284,24 @@ function Fit({ card }: VProps) {
   );
 }
 
-function Modules({ card }: VProps) {
+function Modules({ card, product }: VProps) {
   return (
     <div className="grid h-full grid-cols-3 content-center gap-1.5">
       {(card.chips ?? []).map((c, i) => (
-        <span key={c} className="ps-fade-up rounded-lg border border-border/70 bg-background/70 px-2 py-1.5 text-center text-[10.5px] font-semibold" style={{ animationDelay: `${i * 70}ms` }}>
-          {c}
-        </span>
+        <Et key={c} id={cid(product, card, `chip.${i}`)} def={c} className="ps-fade-up rounded-lg border border-border/70 bg-background/70 px-2 py-1.5 text-center text-[10.5px] font-semibold" style={{ animationDelay: `${i * 70}ms` }} />
       ))}
     </div>
   );
 }
 
-function Net({ card }: VProps) {
+function Net({ card, product }: VProps) {
   const list = card.chips ?? [];
   return (
     <div className="flex h-full flex-col justify-center gap-1">
       {list.map((c, i) => (
         <div key={c} className="ps-fade-up flex items-center gap-2 rounded-lg border border-border/70 bg-background/70 px-2 py-1 text-[11px] font-medium" style={{ animationDelay: `${i * 100}ms` }}>
           {c.toLowerCase().includes("factory") ? <Factory className="h-3 w-3 text-primary" /> : <MapPin className="h-3 w-3 text-primary" />}
-          {c}
+          <Et id={cid(product, card, `chip.${i}`)} def={c} />
           <span className="ml-auto h-1.5 w-1.5 rounded-full bg-emerald-500 ps-pulse" />
         </div>
       ))}
@@ -331,7 +329,7 @@ function Cost() {
   );
 }
 
-function CloudRows({ card }: VProps) {
+function CloudRows({ card, product }: VProps) {
   return (
     <div className="flex h-full items-center gap-3">
       <div className="relative grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary">
@@ -344,7 +342,7 @@ function CloudRows({ card }: VProps) {
             <span className="grid h-4 w-4 place-items-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
               <Check className="h-2.5 w-2.5" strokeWidth={3} />
             </span>
-            <span className="font-medium">{r}</span>
+            <Et id={cid(product, card, `chip.${i}`)} def={r} className="font-medium" />
           </div>
         ))}
       </div>
@@ -352,14 +350,14 @@ function CloudRows({ card }: VProps) {
   );
 }
 
-function Flow({ card }: VProps) {
+function Flow({ card, product }: VProps) {
   const list = card.chips ?? [];
   return (
     <div className="flex h-full flex-col justify-center gap-1">
       {list.map((c, i) => (
         <div key={c} className="ps-fade-up flex items-center gap-2 text-[11px] font-medium" style={{ animationDelay: `${i * 100}ms` }}>
           <span className="grid h-4 w-4 place-items-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground">{i + 1}</span>
-          {c}
+          <Et id={cid(product, card, `chip.${i}`)} def={c} />
           {i < list.length - 1 && <span className="ml-auto text-muted-foreground">↓</span>}
         </div>
       ))}
@@ -369,7 +367,7 @@ function Flow({ card }: VProps) {
 
 /* ────────────── Shared ────────────── */
 
-function Steps({ card }: VProps) {
+function Steps({ card, product }: VProps) {
   const steps = card.steps ?? [];
   return (
     <div className="relative flex h-full items-center">
@@ -381,8 +379,8 @@ function Steps({ card }: VProps) {
               {i + 1}
             </span>
             <span className="min-w-0">
-              <span className="block text-[11.5px] font-semibold leading-tight">{s.title}</span>
-              <span className="block truncate text-[10px] leading-tight text-muted-foreground md:whitespace-normal">{s.text}</span>
+              <Et id={cid(product, card, `step.${i}.title`)} def={s.title} className="block text-[11.5px] font-semibold leading-tight" />
+              <Et id={cid(product, card, `step.${i}.text`)} def={s.text} className="block truncate text-[10px] leading-tight text-muted-foreground md:whitespace-normal" />
             </span>
           </li>
         ))}
@@ -395,15 +393,17 @@ function Steps({ card }: VProps) {
 export function ProductLink({ product, className = "", stop = true }: { product: Product; className?: string; stop?: boolean }) {
   return (
     <span className={`group/cta relative inline-flex ${className}`}>
-      <Link
+      <Lnk
+        id={pid(product, "cta.href")}
         href={product.ctaHref ?? product.href}
+        labelId={pid(product, "cta")}
+        label={product.cta ?? `Explore ${product.name}`}
         onClick={stop ? (e) => e.stopPropagation() : undefined}
         className="inline-flex w-fit items-center gap-1 whitespace-nowrap rounded-full px-3 py-1.5 text-[11px] font-semibold text-white shadow-md transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         style={{ background: product.gradient }}
       >
-        {product.cta ?? `Explore ${product.name}`}
         <ArrowUpRight className="h-3 w-3" />
-      </Link>
+      </Lnk>
     </span>
   );
 }
@@ -411,7 +411,7 @@ export function ProductLink({ product, className = "", stop = true }: { product:
 function Pitch({ product }: VProps) {
   return (
     <div className="flex h-full flex-col justify-center">
-      <p className="line-clamp-4 text-[12px] leading-relaxed text-muted-foreground md:line-clamp-3">{product.description}</p>
+      <Et as="p" id={pid(product, "description")} def={product.description} className="line-clamp-4 text-[12px] leading-relaxed text-muted-foreground md:line-clamp-3" />
     </div>
   );
 }
