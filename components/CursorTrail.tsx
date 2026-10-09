@@ -3,11 +3,11 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Desktop-only cursor ("Spark + Viewfinder + Spotlight"):
- *  • a small brand-gradient four-point sparkle sits exactly on the pointer (precise, zero lag) and turns slowly,
- *  • four thin corner brackets (a camera viewfinder) appear ONLY over links and buttons, gliding out and snapping around the element,
- *  • a faint violet-to-pink spotlight glows softly behind the pointer and warms up a little over links,
- *  • on press the sparkle and brackets squeeze slightly,
+ * Desktop-only cursor ("Colour mist"):
+ *  • a round brand-violet dot with a thin white edge sits exactly on the pointer,
+ *  • two soft violet / pink colour clouds swirl slowly around it like a living mist,
+ *  • reaching a link or button sends out a shock-ripple of two faint, short brand-coloured rings,
+ *  • a click pops a small splash of brand-coloured droplets,
  *  • over text fields everything gives way to a slim text bar (the system cursor is never shown).
  * Touch / mobile devices get nothing at all (native behaviour).
  * The native arrow is hidden only after the first frame has really been drawn.
@@ -18,33 +18,50 @@ const TEXT = 'input:not([type="checkbox"]):not([type="radio"]):not([type="submit
 // things the browser draws itself (dropdown lists, embedded maps) or the admin editor: the effect steps aside and the normal cursor shows
 const NATIVE = 'select,option,iframe,[data-cms-panel],.lrbc-cms-hide';
 
+const BRAND = ['#5227ff', '#7c5cf6', '#a855f7', '#d946ef'];
+const col = (i: number) => BRAND[((i % 4) + 4) % 4];
+const rgba = (h: string, a: number) => {
+    const n = parseInt(h.slice(1), 16);
+    return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`;
+};
+const rnd = (a: number, b: number) => a + Math.random() * (b - a);
+
+type Part = { x: number; y: number; vx: number; vy: number; r: number; life: number; d: number; c: string };
+type Ring = { x: number; y: number; r: number; life: number; c: string };
+
 export default function CursorTrail() {
-    const glowRef = useRef<HTMLDivElement>(null);
-    const frameRef = useRef<HTMLDivElement>(null);
-    const sparkRef = useRef<HTMLDivElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
     const barRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
         const finePointer = window.matchMedia('(any-pointer: fine)').matches && window.matchMedia('(any-hover: hover)').matches;
-        const glow = glowRef.current, frame = frameRef.current, spark = sparkRef.current, bar = barRef.current;
-        if (!finePointer || !glow || !frame || !spark || !bar) return;
+        const cv = canvasRef.current, bar = barRef.current;
+        const ctx = cv?.getContext('2d');
+        if (!finePointer || !cv || !bar || !ctx) return;
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const root = document.documentElement;
 
-        let mx = -200, my = -200;                 // pointer
-        let gx = -200, gy = -200;                 // spotlight (eased)
-        // viewfinder frame: position + size, eased toward its target
-        let fx = -200, fy = -200, fw = 26, fh = 26;
-        let inside = false, alpha = 0, warm = 0, warmT = 0, fa = 0;
-        let sparkScale = 1, sparkT = 1;
+        let W = 0, H = 0;
+        const resize = () => {
+            const dpr = Math.min(2, window.devicePixelRatio || 1);
+            W = window.innerWidth; H = window.innerHeight;
+            cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        };
+        resize();
+        window.addEventListener('resize', resize);
+
+        let mx = -200, my = -200;
+        let inside = false, alpha = 0, warm = 0, warmT = 0;
         let mode: 'idle' | 'link' | 'text' | 'native' = 'idle';
         let target: Element | null = null;
-        let down = false;
-        let raf = 0, running = false, hidArrow = false, still = 0;
+        let raf = 0, running = false, hidArrow = false, last = 0;
+        const parts: Part[] = [];
+        const rings: Ring[] = [];
 
         const wake = () => {
-            still = 0;
-            if (!running) { running = true; raf = requestAnimationFrame(tick); }
+            if (!running) { running = true; last = performance.now(); raf = requestAnimationFrame(tick); }
         };
 
         const setMode = (t: EventTarget | null) => {
@@ -59,80 +76,89 @@ export default function CursorTrail() {
                     if (l) { m = 'link'; tgt = l; }
                 }
             }
+            const entered = m === 'link' && tgt && tgt !== target;
             mode = m; target = tgt;
             warmT = m === 'link' ? 1 : 0;
+            if (entered && !reduce) for (let i = 0; i < 2; i++) rings.push({ x: mx, y: my, r: -i * 8, life: 1, c: col(i + 1) });
         };
 
         const onMove = (e: MouseEvent) => {
-            if (!inside) { gx = fx = mx = e.clientX; gy = fy = my = e.clientY; }
-            inside = true;
             mx = e.clientX; my = e.clientY;
+            inside = true;
             setMode(e.target);
             wake();
         };
         const onLeave = () => { inside = false; wake(); };
-        const onDown = () => { down = true; wake(); };
-        const onUp = () => { down = false; wake(); };
+        const onDown = (e: MouseEvent) => {
+            if (mode === 'text' || mode === 'native' || reduce) return;
+            for (let i = 0; i < 8; i++) {
+                const a = rnd(0, Math.PI * 2), v = rnd(1.5, 5);
+                parts.push({ x: e.clientX, y: e.clientY, vx: Math.cos(a) * v, vy: Math.sin(a) * v, r: rnd(2.5, 6), life: 1, d: rnd(0.012, 0.022), c: col(i) });
+            }
+            wake();
+        };
 
         window.addEventListener('mousemove', onMove, { passive: true });
         window.addEventListener('mouseover', onMove, { passive: true });
         window.addEventListener('mousedown', onDown, { passive: true });
-        window.addEventListener('mouseup', onUp, { passive: true });
         window.addEventListener('blur', onLeave);
         root.addEventListener('mouseleave', onLeave);
 
-        function tick() {
+        function tick(now: number) {
             try {
-                alpha += ((inside ? 1 : 0) - alpha) * 0.25;
+                const dt = Math.min(2, (now - last) / 16.7 || 1); last = now;
+                alpha += ((inside ? 1 : 0) - alpha) * 0.25 * Math.min(1.5, dt);
                 if (!inside && alpha < 0.02) alpha = 0;
-                warm += (warmT - warm) * 0.15;
-
+                warm += (warmT - warm) * 0.15 * Math.min(1.5, dt);
                 const text = mode === 'text';
                 const a = mode === 'native' ? 0 : alpha;
 
-                // spotlight: eased, faint, never covers content
-                gx += (mx - gx) * 0.14; gy += (my - gy) * 0.14;
-                const gs = 1 + warm * 0.25;
-                glow!.style.transform = `translate3d(${gx}px, ${gy}px, 0) scale(${gs.toFixed(3)})`;
-                glow!.style.opacity = String(text ? a * 0.5 : a * (0.75 + warm * 0.25));
+                ctx!.clearRect(0, 0, W, H);
 
-                // viewfinder target box
-                let tx = mx - 13, ty = my - 13, tw = 26, th = 26;
-                let snapped = false;
-                if (mode === 'link' && target) {
-                    const r = target.getBoundingClientRect();
-                    // very large link areas (whole cards) keep the small frame so nothing is boxed in awkwardly
-                    if (r.width > 0 && r.height > 0 && r.width < 520 && r.height < 200) {
-                        tx = r.left - 7; ty = r.top - 6; tw = r.width + 14; th = r.height + 12; snapped = true;
-                    }
+                // droplets from a click
+                for (let i = parts.length - 1; i >= 0; i--) {
+                    const q = parts[i];
+                    q.vy += 0.08 * dt; q.x += q.vx * dt; q.y += q.vy * dt; q.vx *= 0.985; q.life -= q.d * dt;
+                    if (q.life <= 0) { parts.splice(i, 1); continue; }
+                    ctx!.globalAlpha = q.life; ctx!.fillStyle = q.c;
+                    ctx!.beginPath(); ctx!.arc(q.x, q.y, q.r * (0.5 + q.life * 0.5), 0, 7); ctx!.fill();
                 }
-                if (down) { tx += 2; ty += 2; tw -= 4; th -= 4; }
-                const k = snapped ? 0.3 : 0.4;
-                fx += (tx - fx) * k; fy += (ty - fy) * k; fw += (tw - fw) * k; fh += (th - fh) * k;
-                frame!.style.width = `${Math.max(0, fw).toFixed(1)}px`;
-                frame!.style.height = `${Math.max(0, fh).toFixed(1)}px`;
-                frame!.style.transform = `translate3d(${fx}px, ${fy}px, 0)`;
-                fa += ((snapped ? 1 : 0) - fa) * 0.3;               // brackets show only while a link or button is under the pointer
-                frame!.style.opacity = String(text ? 0 : a * fa);
+                ctx!.globalAlpha = 1;
 
-                // sparkle sits exactly on the pointer
-                sparkT = down ? 0.8 : (mode === 'link' ? (snapped ? 0.75 : 1.35) : 1);
-                sparkScale += (sparkT - sparkScale) * 0.25;
-                spark!.style.transform = `translate3d(${mx}px, ${my}px, 0) scale(${sparkScale.toFixed(3)})`;
-                spark!.style.opacity = String(text ? 0 : a);
+                // shock ripple rings
+                for (let i = rings.length - 1; i >= 0; i--) {
+                    const r = rings[i];
+                    r.r += 0.9 * dt; if (r.r > 0) r.life -= 0.03 * dt;
+                    if (r.life <= 0) { rings.splice(i, 1); continue; }
+                    if (r.r <= 0) continue;
+                    ctx!.strokeStyle = r.c; ctx!.lineWidth = 1.2 * r.life + 0.3;
+                    ctx!.globalAlpha = r.life * 0.32; ctx!.beginPath(); ctx!.arc(r.x, r.y, r.r, 0, 7); ctx!.stroke();
+                }
+                ctx!.globalAlpha = 1;
+
+                // mist + round head
+                if (a > 0.01 && !text) {
+                    const t = reduce ? 0 : now / 1000;
+                    const sc = 1 + warm * 0.2;
+                    [[0, 0], [2.1, 2]].forEach(([ph, ci]) => {
+                        const ox = Math.cos(t * 1.6 + ph) * 15, oy = Math.sin(t * 1.9 + ph) * 15, R = 48 * sc;
+                        const g = ctx!.createRadialGradient(mx + ox, my + oy, 0, mx + ox, my + oy, R);
+                        g.addColorStop(0, rgba(col(ci), 0.4 * a)); g.addColorStop(1, rgba(col(ci), 0));
+                        ctx!.fillStyle = g; ctx!.beginPath(); ctx!.arc(mx + ox, my + oy, R, 0, 7); ctx!.fill();
+                    });
+                    ctx!.globalAlpha = a;
+                    ctx!.fillStyle = '#fff'; ctx!.beginPath(); ctx!.arc(mx, my, 5.8, 0, 7); ctx!.fill();
+                    ctx!.fillStyle = col(1); ctx!.beginPath(); ctx!.arc(mx, my, 4, 0, 7); ctx!.fill();
+                    ctx!.globalAlpha = 1;
+                }
 
                 bar!.style.transform = `translate3d(${mx}px, ${my}px, 0)`;
                 bar!.style.opacity = String(text ? a : 0);
 
                 if (alpha > 0.02 && !hidArrow) { root.classList.add('lrbc-cursor'); hidArrow = true; }
 
-                const settled =
-                    Math.abs(tx - fx) < 0.2 && Math.abs(ty - fy) < 0.2 && Math.abs(tw - fw) < 0.2 && Math.abs(th - fh) < 0.2 &&
-                    Math.abs(mx - gx) < 0.3 && Math.abs(my - gy) < 0.3 &&
-                    Math.abs(sparkT - sparkScale) < 0.004 && Math.abs((snapped ? 1 : 0) - fa) < 0.01 && Math.abs(warmT - warm) < 0.01 &&
-                    (inside ? alpha > 0.98 || mode === 'native' : alpha === 0);
-                still = settled ? still + 1 : 0;
-                if (still > 6) { running = false; return; }
+                // keep drawing while the pointer is in the page (the mist drifts) or anything is still fading
+                if (!inside && alpha === 0 && !parts.length && !rings.length) { running = false; return; }
             } catch (err) {
                 (window as unknown as { __cursorErr?: unknown }).__cursorErr = String(err);
             }
@@ -142,10 +168,10 @@ export default function CursorTrail() {
         return () => {
             cancelAnimationFrame(raf);
             root.classList.remove('lrbc-cursor');
+            window.removeEventListener('resize', resize);
             window.removeEventListener('mousemove', onMove);
             window.removeEventListener('mouseover', onMove);
             window.removeEventListener('mousedown', onDown);
-            window.removeEventListener('mouseup', onUp);
             window.removeEventListener('blur', onLeave);
             root.removeEventListener('mouseleave', onLeave);
         };
@@ -153,21 +179,7 @@ export default function CursorTrail() {
 
     return (
         <div aria-hidden="true" className="lrbc-cur" style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 2147483000, overflow: 'hidden' }}>
-            <div ref={glowRef} className="lrbc-cur-glow" />
-            <div ref={frameRef} className="lrbc-cur-frame"><i /><i /><i /><i /></div>
-            <div ref={sparkRef} className="lrbc-cur-spark">
-                <svg viewBox="0 0 24 24" width="26" height="26">
-                    <defs>
-                        <linearGradient id="lrbcSparkGrad" x1="0" y1="0" x2="1" y2="1">
-                            <stop offset="0" stopColor="#5227FF" />
-                            <stop offset="0.55" stopColor="#a855f7" />
-                            <stop offset="1" stopColor="#d946ef" />
-                        </linearGradient>
-                    </defs>
-                    <path d="M12 1 L14.6 9.4 L23 12 L14.6 14.6 L12 23 L9.4 14.6 L1 12 L9.4 9.4 Z"
-                          fill="url(#lrbcSparkGrad)" stroke="#fff" strokeWidth="1.3" strokeLinejoin="round" paintOrder="stroke" />
-                </svg>
-            </div>
+            <canvas ref={canvasRef} className="lrbc-cur-canvas" />
             <div ref={barRef} className="lrbc-cur-bar" />
         </div>
     );
