@@ -7,7 +7,6 @@ import { useEffect, useRef } from 'react';
  *  • a round brand-violet dot with a thin white edge sits exactly on the pointer,
  *  • two soft violet / pink colour clouds swirl slowly around it like a living mist,
  *  • reaching a link or button sends out a shock-ripple of two faint, short brand-coloured rings,
- *  • a click pops a small splash of brand-coloured droplets,
  *  • over text fields everything gives way to a slim text bar (the system cursor is never shown).
  * Touch / mobile devices get nothing at all (native behaviour).
  * The native arrow is hidden only after the first frame has really been drawn.
@@ -89,18 +88,9 @@ export default function CursorTrail() {
             wake();
         };
         const onLeave = () => { inside = false; wake(); };
-        const onDown = (e: MouseEvent) => {
-            if (mode === 'text' || mode === 'native' || reduce) return;
-            for (let i = 0; i < 8; i++) {
-                const a = rnd(0, Math.PI * 2), v = rnd(1.5, 5);
-                parts.push({ x: e.clientX, y: e.clientY, vx: Math.cos(a) * v, vy: Math.sin(a) * v, r: rnd(2.5, 6), life: 1, d: rnd(0.012, 0.022), c: col(i) });
-            }
-            wake();
-        };
 
         window.addEventListener('mousemove', onMove, { passive: true });
         window.addEventListener('mouseover', onMove, { passive: true });
-        window.addEventListener('mousedown', onDown, { passive: true });
         window.addEventListener('blur', onLeave);
         root.addEventListener('mouseleave', onLeave);
 
@@ -171,7 +161,6 @@ export default function CursorTrail() {
             window.removeEventListener('resize', resize);
             window.removeEventListener('mousemove', onMove);
             window.removeEventListener('mouseover', onMove);
-            window.removeEventListener('mousedown', onDown);
             window.removeEventListener('blur', onLeave);
             root.removeEventListener('mouseleave', onLeave);
         };
