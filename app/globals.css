@@ -815,9 +815,8 @@ button.lrbc-liquid-btn:not([data-slot="button"]) {
 .lr-play .lr-pain { animation: lr-rise .6s cubic-bezier(.2,.8,.2,1) calc(.5s + var(--i) * .1s) both,
                      lr-pain-fade .6s ease calc(1.8s + var(--i) * .22s) forwards; }
 .lr-pain-text { color: color-mix(in srgb, var(--foreground) 92%, transparent); }
-/* strike-through uses real text-decoration so it follows the text when a label wraps onto two lines */
-.lr-pain-text { text-decoration-line: line-through; text-decoration-thickness: 2px; text-decoration-color: transparent; text-decoration-skip-ink: none; }
-.lr-play .lr-pain-text { animation: lr-strike .45s ease calc(1.8s + var(--i) * .22s) forwards; }
+/* no strike-through line on the avoided items */
+.lr-pain-text { text-decoration: none; }
 .lr-beam { transform: scaleX(0); }
 .lr-play .lr-beam { animation: lr-beam .8s ease 3.2s forwards; }
 .lr-beam:first-child { transform-origin: right; }
@@ -829,7 +828,6 @@ button.lrbc-liquid-btn:not([data-slot="button"]) {
 
 @keyframes lr-card-in { from { opacity: 0; transform: translateY(28px) scale(.97); filter: blur(8px); } to { opacity: 1; transform: none; filter: none; } }
 @keyframes lr-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-@keyframes lr-strike { to { text-decoration-color: #e11d48; } }
 @keyframes lr-pain-fade { to { opacity: 1; } }
 @keyframes lr-beam { to { transform: scaleX(1); } }
 @keyframes lr-core { from { opacity: 0; transform: scale(.2) rotate(-90deg); } to { opacity: 1; transform: none; } }
@@ -846,7 +844,6 @@ button.lrbc-liquid-btn:not([data-slot="button"]) {
   .lr-check .lr-check-card, .lr-check .lr-check-sheen, .lr-check .lr-pain, .lr-check .lr-beam, .lr-check .lr-core, .lr-check .lr-gain, .lr-check .lr-gain-tick { animation: none !important; opacity: 1 !important; }
   .lr-check .lr-beam { transform: none; }
   .lr-check .lr-pain { opacity: 1 !important; }
-  .lr-check .lr-pain-text { text-decoration-color: #e11d48; animation: none; }
 }
 
 /* Custom cursor everywhere on the page (the normal arrow / I-beam is hidden; ours morphs instead) */
