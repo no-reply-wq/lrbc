@@ -103,7 +103,7 @@ export default function NewHeroSection({
           {badgeText && (
             <div
               ref={badgeRef}
-              className={`lrbc-eyebrow-row ${aside ? "lg:justify-start max-sm:hidden" : ""}`}
+              className={`lrbc-eyebrow-row ${aside ? "lg:!justify-start max-sm:hidden" : ""}`}
             >
               <span className="lrbc-eyebrow !inline-flex items-center gap-2">
                 <Image src="/images/icon.png" alt="LRBC" width={18} height={18} className="h-[18px] w-[18px] shrink-0 object-contain" />

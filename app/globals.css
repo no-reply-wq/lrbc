@@ -942,7 +942,10 @@ html.lrbc-cursor iframe, html.lrbc-cursor select, html.lrbc-cursor option { curs
   background: color-mix(in oklab, var(--primary) 8%, var(--background));
   box-shadow: 0 1px 2px rgba(82,39,255,.06), 0 8px 18px -12px rgba(82,39,255,.35);
   font-size: .75rem; font-weight: 600; line-height: 1; letter-spacing: .14em; text-transform: uppercase; white-space: nowrap;
-  color: var(--primary);
+  color: var(--primary); max-width: 100%; text-align: center;
+}
+@media (max-width: 520px) {
+  .lrbc-eyebrow { white-space: normal; letter-spacing: .1em; font-size: .7rem; line-height: 1.35; border-radius: 1.1rem; padding: .5rem .9rem; }
 }
 /* Call-to-action row: always centred under the section it belongs to */
 .lrbc-cta-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .75rem; width: 100%; margin-top: 2rem; }

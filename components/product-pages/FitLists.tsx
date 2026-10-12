@@ -35,7 +35,7 @@ export default function FitLists({
   }, []);
 
   return (
-    <div ref={ref} className={`lr-check mt-10 grid gap-4 md:grid-cols-2 ${play ? "lr-play" : ""}`}>
+    <div ref={ref} className={`lr-check mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 ${play ? "lr-play" : ""}`}>
       <div className="lrbc-tint-strong rounded-2xl p-5 sm:p-6">
         <Et as="h3" id={k("fitGoodTitle")} def="A good fit if…" className="text-xs font-semibold uppercase tracking-[0.18em] text-primary" />
         <ul className="mt-4 space-y-2.5">

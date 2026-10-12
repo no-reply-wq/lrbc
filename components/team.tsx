@@ -107,13 +107,13 @@ export default function TeamSection() {
     return (
         <Hide id="team.sec">
         <section ref={sectionRef} className="bg-gray-50 py-8 dark:bg-transparent md:py-12">
-            <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-15">
+            <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                 <div className="lrbc-eyebrow-row sm:!justify-start">
                     <Et as="div" id="team.badge" def="Team" className="lrbc-eyebrow" />
                 </div>
-                <div ref={headerRef} className="mt-8 gap-4 sm:grid sm:grid-cols-2 sm:items-start md:mt-10">
-                    <div className="sm:pr-6">
-                        <Et as="h2" id="team.heading" def="Meet the team" className="text-3xl font-bold sm:text-4xl lrbc-clip-safe" />
+                <div ref={headerRef} className="mt-8 gap-4 sm:grid sm:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] sm:items-start sm:gap-8 md:mt-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,780px)]">
+                    <div>
+                        <Et as="h2" id="team.heading" def="Meet the team" className="text-3xl font-bold sm:whitespace-nowrap sm:text-4xl lrbc-clip-safe" />
                     </div>
                     <div className="mt-6 sm:mt-0">
                         <Et
@@ -122,7 +122,7 @@ export default function TeamSection() {
                             reload
                             id="team.intro"
                             def="We involve our clients at every stage of the tailoring process, conducting regular fittings to ensure the suit fits perfectly and reflects their personal preferences."
-                            className="text-base leading-relaxed sm:text-lg"
+                            className="text-base leading-relaxed"
                         />
                     </div>
                 </div>

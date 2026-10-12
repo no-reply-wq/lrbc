@@ -103,12 +103,14 @@ export default function FooterSection() {
           className="
             relative
             z-20
-            rounded-[2rem]
+            rounded-3xl
             border
             border-primary/15
             bg-background/70
-            px-6
-            py-9
+            px-4
+            py-7
+            sm:px-6
+            sm:py-9
             shadow-xl
             shadow-primary/10
             backdrop-blur-md
@@ -120,7 +122,8 @@ export default function FooterSection() {
             className="
               grid
               grid-cols-1
-              gap-10
+              gap-8
+              md:gap-10
               md:grid-cols-[1fr_3fr]
               md:gap-x-10
               lg:gap-x-16
@@ -152,7 +155,7 @@ export default function FooterSection() {
                 "
               >
                 {/* Existing LRBC Logo Component */}
-                <Logo className="!h-9 !w-[180px]" />
+                <Logo />
               </Link>
 
               {/* Company Description */}
@@ -167,23 +170,24 @@ export default function FooterSection() {
               className="
                 grid
                 grid-cols-2
-                gap-x-6 sm:gap-x-8
-                gap-y-9
+                gap-3 sm:gap-x-8
+                sm:gap-y-9
                 sm:grid-cols-4
               "
             >
               {links.map((link, gi) => (
                 <Hide key={link.group} id={`footer.col.${gi}`}>
                 <div
-                  className="space-y-5 text-sm"
+                  className="h-full space-y-3 text-sm max-sm:rounded-2xl max-sm:border max-sm:border-primary/10 max-sm:bg-primary/[0.04] max-sm:p-4 sm:space-y-5"
                 >
                   {/* Section Title */}
                   <span className="block font-mono text-xs font-semibold uppercase tracking-[0.16em] text-foreground">
                     <Et id={`footer.col.${gi}.title`} def={link.group} />
+                    <span aria-hidden className="mt-2 block h-0.5 w-6 rounded-full bg-gradient-to-r from-[#5227FF] to-[#d946ef]" />
                   </span>
 
                   {/* Section Links */}
-                  <div className="space-y-3.5">
+                  <div className="space-y-0.5 sm:space-y-3.5">
                     {link.items.map((item, ii) => (
                       <Hide key={item.title} id={`footer.col.${gi}.item.${ii}`}>
                       <Lnk
@@ -193,6 +197,9 @@ export default function FooterSection() {
                         label={item.title}
                         className="
                           block
+                          py-1
+                          leading-snug
+                          sm:py-0
                           text-muted-foreground
                           transition-all
                           duration-200
@@ -219,11 +226,12 @@ export default function FooterSection() {
             mt-6
             flex
             flex-col
-            gap-5
+            items-center
+            gap-4
             border-t
             border-border/50
             pb-2
-            pt-6
+            pt-5
             md:flex-row
             md:items-center
             md:justify-between

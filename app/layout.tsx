@@ -7,7 +7,6 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import FooterSection from "@/components/footer-section";
-import CursorTrail from "@/components/CursorTrail";
 import MagneticAll from "@/components/MagneticAll";
 import WhatsAppFloat from "@/components/whatsapp-float";
 import ContentProvider from "@/components/cms/ContentProvider";
@@ -151,7 +150,6 @@ export default async function RootLayout({
           storageKey="lrbc-theme-v2"
           disableTransitionOnChange
         >
-          <CursorTrail />
           <MagneticAll />
 
           <WhatsAppFloat />
