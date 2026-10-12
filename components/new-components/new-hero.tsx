@@ -6,6 +6,7 @@ import Link from "next/link";
 import { type LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Et } from "@/components/cms/editable";
+import Image from "next/image";
 import MoltenMetal from "./MoltenMetal";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -104,7 +105,8 @@ export default function NewHeroSection({
               ref={badgeRef}
               className={`lrbc-eyebrow-row ${aside ? "lg:justify-start max-sm:hidden" : ""}`}
             >
-              <span className="lrbc-eyebrow">
+              <span className="lrbc-eyebrow !inline-flex items-center gap-2">
+                <Image src="/images/icon.png" alt="LRBC" width={18} height={18} className="h-[18px] w-[18px] shrink-0 object-contain" />
                 {cmsId ? <Et id={`${cmsId}.badge`} def={badgeText} /> : badgeText}
               </span>
             </div>

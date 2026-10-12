@@ -11,7 +11,7 @@ import { AnimatedGroup } from "@/components/ui/animated-group";
 import WorkPilotMini from "@/components/workpilot-mini";
 import MagneticButton from "@/components/MagneticButton";
 import ContactFormModal from "@/components/ContactFormModal";
-import { CheckCircle2 } from "lucide-react";
+import { Check, CheckCircle2 } from "lucide-react";
 import { Et, Hide, Lnk, useVal } from "@/components/cms/editable";
 import { padMasks, REVEAL_Y } from "@/lib/split-safe";
 
@@ -110,7 +110,7 @@ export default function WorkPilotHero() {
                   <div
                     className="flex items-center gap-2 rounded-xl border bg-background/80 px-4 py-3 text-sm shadow-sm transition-all duration-200 hover:border-primary/30 hover:shadow-md"
                   >
-                    <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#5227FF] to-[#a855f7] text-white"><Check className="h-3 w-3" strokeWidth={3.5} /></span>
                     <Et id={`workpilot.hero.feature.${i}.text`} def={f} />
                   </div>
                   </Hide>

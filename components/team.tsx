@@ -61,7 +61,7 @@ const members = [
 export default function TeamSection() {
     const sectionRef = useRef<HTMLElement>(null);
     const headerRef = useRef<HTMLDivElement>(null);
-    const quoteRef = useScrollFadeWords<HTMLParagraphElement>();
+    const quoteRef = useScrollFadeWords<HTMLParagraphElement>("lrbc-grad-word");
     const gridRef = useRef<HTMLDivElement>(null);
 
     useGSAP(
@@ -112,7 +112,7 @@ export default function TeamSection() {
                     <Et as="div" id="team.badge" def="Team" className="lrbc-eyebrow" />
                 </div>
                 <div ref={headerRef} className="mt-8 gap-4 sm:grid sm:grid-cols-2 sm:items-start md:mt-10">
-                    <div className="sm:w-2/5">
+                    <div className="sm:pr-6">
                         <Et as="h2" id="team.heading" def="Meet the team" className="text-3xl font-bold sm:text-4xl lrbc-clip-safe" />
                     </div>
                     <div className="mt-6 sm:mt-0">
@@ -122,7 +122,7 @@ export default function TeamSection() {
                             reload
                             id="team.intro"
                             def="We involve our clients at every stage of the tailoring process, conducting regular fittings to ensure the suit fits perfectly and reflects their personal preferences."
-                            className="text-balance text-base leading-relaxed text-foreground sm:text-lg"
+                            className="text-base leading-relaxed sm:text-lg"
                         />
                     </div>
                 </div>

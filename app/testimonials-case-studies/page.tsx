@@ -692,15 +692,13 @@ function CaseStudyCard({ cs, index }: { cs: typeof CASE_STUDIES[0]; index: numbe
   const carousel = isOpen ? (
     <ImageCarousel images={cs.images} idx={idx} setIdx={setIdx} onOpen={() => setOpen(true)} />
   ) : (
-    <div className="relative overflow-hidden rounded-2xl">
-      <div aria-hidden className="pointer-events-none select-none blur-xl saturate-50 scale-105">
-        <ImageCarousel images={cs.images.slice(0, 1)} idx={0} setIdx={() => {}} onOpen={() => {}} />
-      </div>
-      <button type="button" onClick={() => ask(cs.client)} className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-background/40 p-4 text-center">
-        <span className="grid h-11 w-11 place-items-center rounded-full bg-gradient-to-br from-[#5227FF] to-[#a855f7] text-white shadow-lg shadow-primary/30"><Lock className="h-5 w-5" /></span>
-        <span className="text-sm font-semibold">Enter your email to view the screenshots</span>
-      </button>
-    </div>
+    <button type="button" onClick={() => ask(cs.client)} className="relative block h-32 w-full overflow-hidden rounded-2xl text-center sm:h-36">
+      <img aria-hidden src={cs.images[0]} alt="" draggable={false} className="absolute inset-0 h-full w-full scale-110 object-cover blur-xl saturate-50" />
+      <span className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-background/45 p-3">
+        <span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-[#5227FF] to-[#a855f7] text-white shadow-lg shadow-primary/30"><Lock className="h-4 w-4" /></span>
+        <span className="text-sm font-semibold">Unlock real-result images</span>
+      </span>
+    </button>
   );
   return (
     <div className="lrbc-anim relative rounded-3xl border border-border bg-card/60 shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md hover:border-primary/30">

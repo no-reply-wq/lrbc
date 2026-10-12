@@ -18,14 +18,14 @@ gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText);
  * Pass `reload` on the Et so the backend editor re-renders it after a text edit.
  * Does nothing when the visitor prefers reduced motion.
  */
-export function useScrollFadeWords<T extends HTMLElement = HTMLElement>() {
+export function useScrollFadeWords<T extends HTMLElement = HTMLElement>(wordsClass?: string) {
   const ref = useRef<T>(null);
   useGSAP(
     () => {
       const el = ref.current;
       if (!el) return;
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      const split = SplitText.create(el, { type: "words" });
+      const split = SplitText.create(el, { type: "words", ...(wordsClass ? { wordsClass } : {}) });
       gsap.set(split.words, { opacity: 0.35 });
       gsap.to(split.words, {
         opacity: 1,
