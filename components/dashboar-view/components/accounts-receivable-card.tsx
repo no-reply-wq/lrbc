@@ -32,12 +32,12 @@ function CustomTooltip({ active, payload }: any) {
   if (!active || !payload?.length) return null;
 
   return (
-    <div className="rounded-xl border border-zinc-700 bg-[#151821] px-4 py-3 shadow-xl">
-      <p className="text-white text-sm">
+    <div className="rounded-xl border border-primary/25 bg-popover px-4 py-3 shadow-xl">
+      <p className="text-foreground text-sm">
         {payload[0].payload.month}
       </p>
 
-      <p className="mt-1 font-semibold text-violet-400">
+      <p className="mt-1 font-semibold text-primary">
         ₹ {payload[0].value}M
       </p>
     </div>
@@ -51,11 +51,11 @@ export default function AccountsReceivableCard() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
     >
-      <Card className="h-full rounded-2xl border border-[#293041] bg-[#191c24] hover:border-violet-500/40 transition-all duration-300">
+      <Card className="h-full rounded-2xl border border-primary/25 bg-[color-mix(in_oklab,var(--primary)_6%,var(--background))] transition-all duration-300 hover:border-primary/50 hover:shadow-[0_0_45px_rgba(124,58,237,.15)] dark:border-[#3a3399]/70 dark:bg-[#15123a]">
 
         <CardHeader>
 
-          <CardTitle className="text-white">
+          <CardTitle className="text-foreground">
             Accounts Receivable
           </CardTitle>
 
@@ -71,17 +71,17 @@ export default function AccountsReceivableCard() {
 
             <div>
 
-              <p className="text-zinc-400 text-sm">
+              <p className="text-muted-foreground text-sm">
                 Outstanding
               </p>
 
-              <h2 className="text-4xl font-bold text-white">
+              <h2 className="text-4xl font-bold text-foreground">
                 ₹15.2M
               </h2>
 
             </div>
 
-            <div className="rounded-xl bg-emerald-500/15 px-4 py-2 text-emerald-400">
+            <div className="rounded-xl bg-primary/15 px-4 py-2 font-medium text-primary">
 
               +8.2%
 
@@ -99,9 +99,9 @@ export default function AccountsReceivableCard() {
 
                   <linearGradient id="receivable">
 
-                    <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.6} />
+                    <stop offset="0%" stopColor="#7c5cf6" stopOpacity={0.6} />
 
-                    <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0} />
+                    <stop offset="100%" stopColor="#7c5cf6" stopOpacity={0} />
 
                   </linearGradient>
 
@@ -109,7 +109,7 @@ export default function AccountsReceivableCard() {
 
                 <CartesianGrid
                   vertical={false}
-                  stroke="#2d3342"
+                  stroke="var(--border)"
                   strokeDasharray="3 3"
                 />
 
@@ -117,13 +117,13 @@ export default function AccountsReceivableCard() {
                   dataKey="month"
                   tickLine={false}
                   axisLine={false}
-                  tick={{ fill: "#9ca3af" }}
+                  tick={{ fill: "var(--muted-foreground)" }}
                 />
 
                 <YAxis
                   tickLine={false}
                   axisLine={false}
-                  tick={{ fill: "#9ca3af" }}
+                  tick={{ fill: "var(--muted-foreground)" }}
                 />
 
                 <Tooltip content={<CustomTooltip />} />
@@ -131,7 +131,7 @@ export default function AccountsReceivableCard() {
                 <Area
                   type="monotone"
                   dataKey="value"
-                  stroke="#8b5cf6"
+                  stroke="#5227FF"
                   strokeWidth={3}
                   fill="url(#receivable)"
                   animationDuration={1800}

@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
+import { padMasks } from "@/lib/split-safe";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
@@ -27,12 +28,12 @@ export default function BeliefsSection() {
         () => {
             const heading = SplitText.create(headingRef.current, {
                 type: "lines",
-                mask: "lines",
+                mask: "lines", onSplit: padMasks,
             });
 
             const subtitle = SplitText.create(subtitleRef.current, {
                 type: "lines",
-                mask: "lines",
+                mask: "lines", onSplit: padMasks,
             });
 
             gsap.from(heading.lines, {

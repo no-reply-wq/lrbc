@@ -74,6 +74,7 @@ export function ContactForm({ source = "Website contact form" }: { source?: stri
   const lastPartialRef = useRef("");
   const idleRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const latest = useRef({ phone: "", dial: "", min: 7, max: 15, cityChoice: "" });
+  const [firstName, setFirstName] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errors, setErrors] = useState<Errors>({});
   const [cityChoice, setCityChoice] = useState("");
@@ -226,7 +227,6 @@ export function ContactForm({ source = "Website contact form" }: { source?: stri
     const cityValue = cityChoice === OTHER_CITY ? val("cityOther") : cityChoice;
     if (!cityChoice) next.city = "Please select your city.";
     else if (!cityValue) next.city = "Please type your city name.";
-    if (!val("industry")) next.industry = "Please enter your industry.";
 
     setErrors(next);
     if (Object.keys(next).length > 0) {
@@ -248,7 +248,16 @@ export function ContactForm({ source = "Website contact form" }: { source?: stri
     formData.set("industry", val("industry"));
     try {
       const res = await fetch("https://api.web3forms.com/submit", { method: "POST", body: formData });
-      if (res.ok) { submittedRef.current = true; clearTimeout(idleRef.current); }
+      if (res.ok) {
+        submittedRef.current = true; clearTimeout(idleRef.current);
+        setFirstName(val("contactPerson").split(/\s+/)[0] || "");
+        // Best-effort confirmation email to the customer; never blocks the thank-you screen
+        fetch("/api/enquiry-confirmation", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: val("contactPerson"), email: val("businessEmail"), company: val("companyName"), source }),
+        }).catch(() => {});
+      }
       setStatus(res.ok ? "success" : "error");
     } catch { setStatus("error"); }
   };
@@ -265,9 +274,9 @@ export function ContactForm({ source = "Website contact form" }: { source?: stri
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-500">
             <CheckCircle2 className="h-10 w-10" />
           </div>
-          <h3 className="text-2xl font-bold tracking-tight">Request Sent!</h3>
+          <h3 className="text-2xl font-bold tracking-tight">Thank you{firstName ? `, ${firstName}` : ""}!</h3>
           <p className="text-muted-foreground text-lg max-w-sm">
-            Thank you for reaching out. Our team will get back to you shortly.
+            We&apos;ve received your request and our team will get back to you shortly. A confirmation has been sent to your email.
           </p>
         </div>
       ) : (
@@ -278,7 +287,7 @@ export function ContactForm({ source = "Website contact form" }: { source?: stri
             <Label htmlFor="companyName">Company Name *</Label>
             <div className="relative">
               <Building2 className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input id="companyName" name="companyName" autoComplete="organization" placeholder="e.g. ACD Pvt. Ltd." className={fieldCls("companyName")} onChange={() => clearError("companyName")} required />
+              <Input id="companyName" name="companyName" autoComplete="organization" className={fieldCls("companyName")} onChange={() => clearError("companyName")} required />
             </div>
             <ErrorMsg k="companyName" />
           </div>
@@ -288,7 +297,7 @@ export function ContactForm({ source = "Website contact form" }: { source?: stri
             <Label htmlFor="contactPerson">Contact Name *</Label>
             <div className="relative">
               <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input id="contactPerson" name="contactPerson" autoComplete="name" placeholder="e.g. Laksh Gupta" className={fieldCls("contactPerson")} onChange={() => clearError("contactPerson")} required />
+              <Input id="contactPerson" name="contactPerson" autoComplete="name" className={fieldCls("contactPerson")} onChange={() => clearError("contactPerson")} required />
             </div>
             <ErrorMsg k="contactPerson" />
           </div>
@@ -298,7 +307,7 @@ export function ContactForm({ source = "Website contact form" }: { source?: stri
             <Label htmlFor="businessEmail">Email *</Label>
             <div className="relative">
               <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input id="businessEmail" name="businessEmail" type="email" autoComplete="email" placeholder="e.g. laksh@company.com" className={fieldCls("businessEmail")} onChange={() => clearError("businessEmail")} required />
+              <Input id="businessEmail" name="businessEmail" type="email" autoComplete="email" className={fieldCls("businessEmail")} onChange={() => clearError("businessEmail")} required />
             </div>
             <ErrorMsg k="businessEmail" />
           </div>
@@ -337,8 +346,7 @@ export function ContactForm({ source = "Website contact form" }: { source?: stri
                 value={phoneNumber}
                 onChange={handlePhoneChange}
                 maxLength={activePhoneRule.max}
-                placeholder={`e.g. ${activePhoneRule.placeholder}`}
-                className="h-full min-w-0 flex-1 bg-transparent px-3 text-base focus:outline-none sm:text-sm"
+                                className="h-full min-w-0 flex-1 bg-transparent px-3 text-base focus:outline-none sm:text-sm"
                 required
               />
             </div>
@@ -358,7 +366,7 @@ export function ContactForm({ source = "Website contact form" }: { source?: stri
                 className={`${SELECT_CLS} pl-10 ${errors.city ? "border-red-500" : ""} ${cityChoice ? "" : "text-muted-foreground"}`}
                 required
               >
-                <option value="" disabled>Select your city</option>
+                <option value="" disabled></option>
                 {CITIES.map((c) => (
                   <option key={c} value={c}>{c}</option>
                 ))}
@@ -367,17 +375,17 @@ export function ContactForm({ source = "Website contact form" }: { source?: stri
               <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             </div>
             {cityChoice === OTHER_CITY && (
-              <Input name="cityOther" placeholder="e.g. Nellore" className="h-12 rounded-xl" onChange={() => clearError("city")} />
+              <Input name="cityOther" className="h-12 rounded-xl" onChange={() => clearError("city")} />
             )}
             <ErrorMsg k="city" />
           </div>
 
           {/* Industry — free text */}
           <div className="space-y-2">
-            <Label htmlFor="industry">Industry *</Label>
+            <Label htmlFor="industry">Industry</Label>
             <div className="relative">
               <Factory className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input id="industry" name="industry" placeholder="e.g. Manufacturing, Retail, Healthcare" className={fieldCls("industry")} onChange={() => clearError("industry")} required />
+              <Input id="industry" name="industry" className={fieldCls("industry")} onChange={() => clearError("industry")} />
             </div>
             <ErrorMsg k="industry" />
           </div>
@@ -395,10 +403,10 @@ export function ContactForm({ source = "Website contact form" }: { source?: stri
           >
             {status === "submitting" ? (
               <><Loader2 className="h-4 w-4 animate-spin" /> Sending…</>
-            ) : "Schedule a Consultation"}
+            ) : "Let's Explore Solution"}
           </button>
           <p className="text-center text-[11px] leading-snug text-muted-foreground">
-            By sending this you agree that LRBC may contact you about your enquiry. We may also keep the contact details you enter, even if you don&apos;t submit.
+            By sending this you agree that LRBC may contact you about your enquiry.
           </p>
         </form>
       )}

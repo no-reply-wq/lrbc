@@ -2,6 +2,7 @@
 
 import { Et, Hide } from "@/components/cms/editable";
 import { useEffect, useRef, useState } from "react";
+import { useScrollFadeWords } from "@/components/ui/use-scroll-fade";
 import { Hourglass, TrendingDown } from "lucide-react";
 
 /** LekhaSetu page — what disconnected account data quietly costs a business. */
@@ -38,6 +39,8 @@ function CountUp({ to, run, suffix = "" }: { to: number; run: boolean; suffix?: 
 
 export default function LekhaSetuLoss() {
   const [ref, seen] = useInView<HTMLElement>();
+  const fade = useScrollFadeWords<HTMLParagraphElement>();
+  const fade2 = useScrollFadeWords<HTMLParagraphElement>();
   const weeks = Array.from({ length: 52 }, (_, i) => i);
 
   return (
@@ -50,13 +53,15 @@ export default function LekhaSetuLoss() {
 
       <div className="mx-auto max-w-5xl">
         <div className="mx-auto max-w-3xl text-center">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-500/25 bg-rose-500/10 px-3 py-1 text-xs font-semibold text-rose-600">
-            <TrendingDown className="h-3.5 w-3.5" /> <Et id="lekha.loss.badge" def="The hidden cost" />
-          </span>
+          <div className="lrbc-eyebrow-row">
+            <span className="lrbc-eyebrow">
+              <TrendingDown className="h-3.5 w-3.5" /> <Et id="lekha.loss.badge" def="The hidden cost" />
+            </span>
+          </div>
           <h2 id="loss-h" className="mt-5 text-balance text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
-            <Et id="lekha.loss.title1" def="Time that quietly " /><Et id="lekha.loss.title2" def="disappears" className="bg-gradient-to-r from-rose-500 to-orange-500 bg-clip-text text-transparent" />
+            <Et id="lekha.loss.title1" def="Time that quietly " /><Et id="lekha.loss.title2" def="disappears" className="bg-gradient-to-r from-rose-500 to-fuchsia-500 bg-clip-text text-transparent" />
           </h2>
-          <Et as="p" id="lekha.loss.text" def="A mid-sized business with multiple branches, warehouses, or disjointed systems (like CRM/E-commerce operating separately from accounting) loses between 1.5 to 3 hours per day due to a lack of automated data synchronization." className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg" />
+          <Et as="p" ref={fade} reload id="lekha.loss.text" def="A mid-sized business with multiple branches, warehouses, or disjointed systems (like CRM/E-commerce operating separately from accounting) loses between 1.5 to 3 hours per day due to a lack of automated data synchronization." className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg" />
         </div>
 
         {/* big numbers */}
@@ -86,13 +91,13 @@ export default function LekhaSetuLoss() {
               return (
                 <span
                   key={w}
-                  className={`aspect-square rounded-md sm:rounded-lg ${lost ? "bg-gradient-to-br from-rose-500 to-orange-500 shadow-md shadow-rose-500/40" : "bg-primary/15"} ${seen ? "lk-week" : "opacity-0"}`}
+                  className={`aspect-square rounded-md sm:rounded-lg ${lost ? "bg-gradient-to-br from-rose-500 to-fuchsia-500 shadow-md shadow-rose-500/40" : "bg-primary/15"} ${seen ? "lk-week" : "opacity-0"}`}
                   style={{ animationDelay: `${w * 18}ms` }}
                 />
               );
             })}
           </div>
-          <p className="mt-6 text-center text-base leading-relaxed text-foreground sm:text-lg">
+          <p ref={fade2} className="mt-6 text-center text-base leading-relaxed text-foreground sm:text-lg">
             <Et id="lekha.loss.summary.1" def="Annually, this translates to " /><strong><Et id="lekha.loss.summary.2" def="1,000+ hours" /></strong><Et id="lekha.loss.summary.3" def=" of wasted productivity — amounting to roughly " /><strong><Et id="lekha.loss.summary.4" def="3 to 4 weeks" /></strong><Et id="lekha.loss.summary.5" def=" of completely lost time per employee involved in the process." />
           </p>
         </div>

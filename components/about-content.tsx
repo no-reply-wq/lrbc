@@ -4,10 +4,10 @@ import { Et, Hide } from "@/components/cms/editable";
 import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SplitText } from "gsap/SplitText";
+import { useScrollFadeWords } from "@/components/ui/use-scroll-fade";
 import { useGSAP } from "@gsap/react";
 
-gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText);
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 const WHY_ERP_FEATURES = [
     { icon: Mail, text: "Built around your unique workflows" },
@@ -18,33 +18,11 @@ const WHY_ERP_FEATURES = [
 
 export default function AboutUsContent() {
     const sectionRef = useRef<HTMLElement>(null);
-    const headingRef = useRef<HTMLParagraphElement>(null);
+    const headingRef = useScrollFadeWords<HTMLParagraphElement>();
     const featuresRef = useRef<HTMLUListElement>(null);
 
     useGSAP(
         () => {
-            if (!headingRef.current) return;
-
-            const split = SplitText.create(headingRef.current, {
-                type: "words",
-            });
-
-            gsap.set(split.words, {
-                opacity: 0.4,
-            });
-
-            gsap.to(split.words, {
-                opacity: 1,
-                ease: "none",
-                stagger: 0.15,
-                scrollTrigger: {
-                    trigger: headingRef.current,
-                    start: "top 80%",
-                    end: "+=500",
-                    scrub: true,
-                },
-            });
-
             const items = featuresRef.current?.querySelectorAll("li") ?? [];
             gsap.set(items, { opacity: 0, y: 30 });
 
@@ -61,9 +39,6 @@ export default function AboutUsContent() {
                 },
             });
 
-            return () => {
-                split.revert();
-            };
         },
         { scope: sectionRef }
     );
@@ -71,7 +46,7 @@ export default function AboutUsContent() {
     return (
         <section ref={sectionRef} className="py-6 md:py-14">
             <div className="mx-auto max-w-5xl space-y-8 px-4 sm:px-6 md:space-y-12">
-                <Et as="div" id="about.content.badge" def="Our Story" className={["mx-auto w-fit rounded-full border border-primary/20","bg-primary/5 px-4 py-1.5 text-xs font-semibold","uppercase tracking-widest text-primary",""].join(" ")} />
+                <div className="lrbc-eyebrow-row"><Et as="div" id="about.content.badge" def="Our Story" className="lrbc-eyebrow" /></div>
             </div>
 
             {/* ── Why Businesses Choose Our ERP  |  Our Story quote ── */}

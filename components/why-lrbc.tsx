@@ -7,7 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
 import { ArrowRight, Quote } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useScrollFadeWords } from "@/components/ui/use-scroll-fade";
 
 
 gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
@@ -15,20 +15,20 @@ gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
 const NARRATIVE = [
   {
     label: "Situation",
-    labelColor: "text-amber-500",
-    dotColor: "bg-amber-500",
+    labelColor: "text-muted-foreground",
+    dotColor: "bg-muted-foreground",
     text: "Every growing business eventually runs on the same fuel: a handful of key people who hold the process in their heads. Founders, floor managers, and senior staff become the system — tracking orders on WhatsApp, chasing approvals over phone calls, and reconciling numbers in scattered spreadsheets. It works, until it doesn't.",
   },
   {
     label: "Complication",
-    labelColor: "text-red-500",
-    dotColor: "bg-red-500",
+    labelColor: "text-rose-500",
+    dotColor: "bg-rose-500",
     text: "As the business scales, this person-dependency becomes the ceiling on growth. One employee leaves, and a process disappears with them. Off-the-shelf software promises a fix — but it forces your business to bend around its workflow, not the other way around. Expensive licenses sit half-used because they were never built for how your floor, your vendors, or your teams actually operate.",
   },
   {
     label: "Resolution",
-    labelColor: "text-emerald-500",
-    dotColor: "bg-emerald-500",
+    labelColor: "text-primary",
+    dotColor: "bg-primary",
     text: "We does not sell software. We architect systems around your existing physical and operational reality — then get on the ground to make sure your workforce actually adopts them. Every dashboard, workflow, and accountability engine we build is designed to convert institutional knowledge into institutional infrastructure — so the business runs on process, not on any one person.",
   },
 ];
@@ -36,6 +36,7 @@ const NARRATIVE = [
 export default function WhyLRBC() {
   const sectionRef = useRef<HTMLElement>(null);
   const taglineRef = useRef<HTMLHeadingElement>(null);
+  const quoteRef = useScrollFadeWords<HTMLParagraphElement>();
 
   useGSAP(() => {
     const tagline = SplitText.create(taglineRef.current, { type: "words" });
@@ -110,7 +111,7 @@ export default function WhyLRBC() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
 
         <div className="text-center mb-12">
-          <Et as="p" id="why.main.eyebrow" def="Why LRBC" className="text-xs font-semibold uppercase tracking-widest text-primary mb-3" />
+          <div className="lrbc-eyebrow-row"><Et as="div" id="why.main.eyebrow" def="Why LRBC" className="lrbc-eyebrow" /></div>
         </div>
 
         <div className="text-center mb-8 md:mb-20">
@@ -143,20 +144,16 @@ export default function WhyLRBC() {
         <div className="mt-10 md:mt-20 relative">
           <Quote className="why-quote-mark absolute -top-4 -left-2 h-12 w-12 text-primary/20" />
           <blockquote className="pl-8">
-            <Et as="p" id="why.main.quote" def="A company that scales predictably, protects its margins, and does not depend on any single individual to function." className="text-xl md:text-2xl font-medium text-foreground leading-relaxed max-w-3xl" />
+            <Et as="p" ref={quoteRef} reload id="why.main.quote" def="A company that scales predictably, protects its margins, and does not depend on any single individual to function." className="text-xl md:text-2xl font-medium text-foreground leading-relaxed max-w-3xl" />
             <Et as="footer" id="why.main.quoteFooter" def={'That is what "Systems Create Organizations" means in practice.'} className="mt-4 text-sm text-muted-foreground" />
           </blockquote>
         </div>
 
-        <div className="mt-8 flex flex-col sm:flex-row items-center gap-3 justify-center">
-          <Button asChild size="lg" className="rounded-full px-6 w-full sm:w-auto">
-            <Lnk id="why.main.cta1.href" href="/contact?openForm=true" labelId="why.main.cta1" label="Start with a discovery call">
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Lnk>
-          </Button>
-          <Button asChild variant="ghost" size="lg" className="rounded-full px-6 w-full sm:w-auto">
-            <Lnk id="why.main.cta2.href" href="/testimonials-case-studies" labelId="why.main.cta2" label="See real results" />
-          </Button>
+        <div className="lrbc-cta-row">
+          <Lnk id="why.main.cta1.href" href="/contact?openForm=true" labelId="why.main.cta1" label="Start with a discovery call" className="lrbc-btn lrbc-btn-primary">
+            <ArrowRight className="h-4 w-4" />
+          </Lnk>
+          <Lnk id="why.main.cta2.href" href="/testimonials-case-studies" labelId="why.main.cta2" label="See real results" className="lrbc-btn lrbc-btn-secondary" />
         </div>
       </div>
     </section>

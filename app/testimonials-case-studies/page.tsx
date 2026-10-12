@@ -20,7 +20,7 @@ import { useFadeUp } from '@/components/ui/use-scroll-animation';
 // The layout (alternating image position, blur effect, load-more) is automatic.
 // =============================================================================
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, createContext, useContext } from "react";
 import { HeroHeader } from "@/components/header";
 import FooterSection from "@/components/footer-section";
 import NewHeroSection from "@/components/new-components/new-hero";
@@ -29,7 +29,9 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Et, Hide, Lnk } from "@/components/cms/editable";
+import { Et, Hide, Lnk, useVal } from "@/components/cms/editable";
+import { useCms } from "@/components/cms/ContentProvider";
+import { Lock, Loader2, CheckCircle2 } from "lucide-react";
 
 // =============================================================================
 // ✏️  EDIT YOUR CASE STUDIES HERE
@@ -406,6 +408,80 @@ const REVIEWS = [
 
 const CS_PAGE = 2;
 
+// ── Email gate: visitors see a one-line preview; the full story + screenshots unlock with an email ──
+const UNLOCK_KEY = "lrbc-cs-unlocked";
+const WEB3FORMS_KEY = "d7597fd4-4c3b-40d2-ad55-710160cd9abd";
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const UnlockCtx = createContext<{ unlocked: boolean; ask: (client: string) => void }>({ unlocked: true, ask: () => {} });
+
+/** Full text when unlocked (or in the editor); otherwise just the first sentence on a single line. */
+function CsText({ id, def }: { id: string; def: string }) {
+  const { unlocked } = useContext(UnlockCtx);
+  const { editing } = useCms();
+  const v = useVal(id, def);
+  if (unlocked || editing) return <Et as="p" id={id} def={def} className="text-sm text-foreground/80 leading-6" />;
+  const first = v.split(/(?<=[.!?])\s+/)[0];
+  return <p className="line-clamp-1 text-sm text-foreground/80 leading-6">{first}</p>;
+}
+
+function CaseGateModal({ client, onClose, onUnlocked }: { client: string; onClose: () => void; onUnlocked: () => void }) {
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [err, setErr] = useState("");
+  const [busy, setBusy] = useState(false);
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!EMAIL_RE.test(email.trim())) { setErr("Please enter a valid email address."); return; }
+    setErr(""); setBusy(true);
+    const fd = new FormData();
+    fd.append("access_key", WEB3FORMS_KEY);
+    fd.append("subject", `Case study unlocked — ${client}`);
+    fd.append("source", "Case studies — full details unlock");
+    fd.append("businessEmail", email.trim());
+    if (name.trim()) fd.append("contactPerson", name.trim());
+    fd.append("case_study", client);
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", { method: "POST", body: fd });
+      if (!res.ok) throw new Error("fail");
+      fetch("/api/enquiry-confirmation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kind: "case-study", name: name.trim(), email: email.trim(), company: client }),
+      }).catch(() => {});
+      try { localStorage.setItem(UNLOCK_KEY, "1"); } catch {}
+      onUnlocked();
+    } catch {
+      setErr("Something went wrong. Please try again."); setBusy(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/70 p-4 backdrop-blur-sm" onClick={onClose} role="dialog" aria-modal="true" aria-label="Unlock case study">
+      <form onSubmit={submit} onClick={(e) => e.stopPropagation()} noValidate className="relative w-full max-w-md rounded-3xl border border-primary/20 bg-card p-6 shadow-2xl sm:p-8">
+        <button type="button" onClick={onClose} aria-label="Close" className="absolute right-4 top-4 rounded-full p-1.5 text-muted-foreground hover:bg-muted"><X className="h-4 w-4" /></button>
+        <span className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-[#5227FF] to-[#a855f7] text-white shadow-lg shadow-primary/30"><Lock className="h-5 w-5" /></span>
+        <h3 className="mt-4 text-xl font-semibold">See the full case study</h3>
+        <p className="mt-1 text-sm text-muted-foreground">Enter your email to unlock the complete problem, solution, result and screenshots for every case study.</p>
+        <label htmlFor="cs-name" className="mt-5 block text-sm font-medium">Name <span className="font-normal text-muted-foreground">(optional)</span></label>
+        <input id="cs-name" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" className="mt-1.5 h-12 w-full rounded-xl border border-input bg-background px-3 text-base outline-none focus-visible:ring-2 focus-visible:ring-ring sm:text-sm" />
+        <label htmlFor="cs-email" className="mt-4 block text-sm font-medium">Email *</label>
+        <input id="cs-email" type="email" value={email} onChange={(e) => { setEmail(e.target.value); setErr(""); }} autoComplete="email" autoFocus className={`mt-1.5 h-12 w-full rounded-xl border bg-background px-3 text-base outline-none focus-visible:ring-2 focus-visible:ring-ring sm:text-sm ${err ? "border-red-500" : "border-input"}`} />
+        {err && <p role="alert" className="mt-1.5 text-xs text-red-500">{err}</p>}
+        <button type="submit" disabled={busy} className="lrbc-btn lrbc-btn-primary mt-6 w-full disabled:opacity-60">
+          {busy ? <><Loader2 className="h-4 w-4 animate-spin" /> Unlocking…</> : "Unlock full details"}
+        </button>
+        <p className="mt-3 text-center text-[11px] leading-snug text-muted-foreground">By continuing you agree that LRBC may contact you about your interest.</p>
+      </form>
+    </div>
+  );
+}
+
 function ImageCarousel({ images, idx, setIdx, onOpen }: { images: string[]; idx: number; setIdx: (n: number) => void; onOpen: () => void }) {
   const prev = () => setIdx((idx - 1 + images.length) % images.length);
   const next = () => setIdx((idx + 1) % images.length);
@@ -610,7 +686,22 @@ function CaseStudyCard({ cs, index }: { cs: typeof CASE_STUDIES[0]; index: numbe
   const k = CASE_STUDIES.indexOf(cs); // stable id index (position in the data array, not the shuffled order)
   const [idx, setIdx] = useState(0);
   const [open, setOpen] = useState(false);
-  const carousel = <ImageCarousel images={cs.images} idx={idx} setIdx={setIdx} onOpen={() => setOpen(true)} />;
+  const { unlocked, ask } = useContext(UnlockCtx);
+  const { editing } = useCms();
+  const isOpen = unlocked || editing;
+  const carousel = isOpen ? (
+    <ImageCarousel images={cs.images} idx={idx} setIdx={setIdx} onOpen={() => setOpen(true)} />
+  ) : (
+    <div className="relative overflow-hidden rounded-2xl">
+      <div aria-hidden className="pointer-events-none select-none blur-xl saturate-50 scale-105">
+        <ImageCarousel images={cs.images.slice(0, 1)} idx={0} setIdx={() => {}} onOpen={() => {}} />
+      </div>
+      <button type="button" onClick={() => ask(cs.client)} className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-background/40 p-4 text-center">
+        <span className="grid h-11 w-11 place-items-center rounded-full bg-gradient-to-br from-[#5227FF] to-[#a855f7] text-white shadow-lg shadow-primary/30"><Lock className="h-5 w-5" /></span>
+        <span className="text-sm font-semibold">Enter your email to view the screenshots</span>
+      </button>
+    </div>
+  );
   return (
     <div className="lrbc-anim relative rounded-3xl border border-border bg-card/60 shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md hover:border-primary/30">
       <div className="h-1 w-full bg-gradient-to-r from-primary via-purple-400 to-pink-400" />
@@ -655,15 +746,15 @@ function CaseStudyCard({ cs, index }: { cs: typeof CASE_STUDIES[0]; index: numbe
             <div className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-4">
               <div className="order-1 md:order-1 rounded-2xl bg-muted/40 p-4 sm:p-5">
                 <Et as="p" id="cases.cs.label.problem" def="Problem" className="text-xs font-semibold uppercase tracking-wider mb-2 text-red-500" />
-                <Et as="p" id={`cases.cs.${k}.problem`} def={cs.problem} className="text-sm text-foreground/80 leading-6" />
+                <CsText id={`cases.cs.${k}.problem`} def={cs.problem} />
               </div>
               <div className="order-3 md:order-2 rounded-2xl bg-muted/40 p-4 sm:p-5">
                 <Et as="p" id="cases.cs.label.result" def="Result" className="text-xs font-semibold uppercase tracking-wider mb-2 text-green-500" />
-                <Et as="p" id={`cases.cs.${k}.result`} def={cs.result} className="text-sm text-foreground/80 leading-6" />
+                <CsText id={`cases.cs.${k}.result`} def={cs.result} />
               </div>
               <div className="order-2 md:order-3 rounded-2xl bg-muted/40 p-4 sm:p-5">
                 <Et as="p" id="cases.cs.label.solution" def="Solution" className="text-xs font-semibold uppercase tracking-wider mb-2 text-blue-500" />
-                <Et as="p" id={`cases.cs.${k}.solution`} def={cs.solution} className="text-sm text-foreground/80 leading-6" />
+                <CsText id={`cases.cs.${k}.solution`} def={cs.solution} />
               </div>
               <div className="order-4 md:order-4 rounded-2xl overflow-hidden">
                 {carousel}
@@ -673,15 +764,15 @@ function CaseStudyCard({ cs, index }: { cs: typeof CASE_STUDIES[0]; index: numbe
             <div className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-4">
               <div className="order-1 md:order-2 rounded-2xl bg-muted/40 p-4 sm:p-5">
                 <Et as="p" id="cases.cs.label.problem" def="Problem" className="text-xs font-semibold uppercase tracking-wider mb-2 text-red-500" />
-                <Et as="p" id={`cases.cs.${k}.problem`} def={cs.problem} className="text-sm text-foreground/80 leading-6" />
+                <CsText id={`cases.cs.${k}.problem`} def={cs.problem} />
               </div>
               <div className="order-3 md:order-1 rounded-2xl bg-muted/40 p-4 sm:p-5">
                 <Et as="p" id="cases.cs.label.result" def="Result" className="text-xs font-semibold uppercase tracking-wider mb-2 text-green-500" />
-                <Et as="p" id={`cases.cs.${k}.result`} def={cs.result} className="text-sm text-foreground/80 leading-6" />
+                <CsText id={`cases.cs.${k}.result`} def={cs.result} />
               </div>
               <div className="order-2 md:order-4 rounded-2xl bg-muted/40 p-4 sm:p-5">
                 <Et as="p" id="cases.cs.label.solution" def="Solution" className="text-xs font-semibold uppercase tracking-wider mb-2 text-blue-500" />
-                <Et as="p" id={`cases.cs.${k}.solution`} def={cs.solution} className="text-sm text-foreground/80 leading-6" />
+                <CsText id={`cases.cs.${k}.solution`} def={cs.solution} />
               </div>
               <div className="order-4 md:order-3 rounded-2xl overflow-hidden">
                 {carousel}
@@ -689,6 +780,13 @@ function CaseStudyCard({ cs, index }: { cs: typeof CASE_STUDIES[0]; index: numbe
             </div>
           )
         }
+        {!isOpen && (
+          <div className="lrbc-cta-row !mt-1">
+            <button type="button" onClick={() => ask(cs.client)} className="lrbc-btn lrbc-btn-primary sm:w-auto">
+              <Lock className="h-4 w-4" /> Unlock full case study
+            </button>
+          </div>
+        )}
       </div>
       {open && cs.images.length > 0 && <ImageStage cs={cs} idx={idx} setIdx={setIdx} onClose={() => setOpen(false)} />}
     </div>
@@ -699,6 +797,9 @@ function CaseStudyCard({ cs, index }: { cs: typeof CASE_STUDIES[0]; index: numbe
 export default function CaseStudiesPage() {
   const sectionRef = useFadeUp();
   const [csVisible, setCsVisible] = useState(CS_PAGE);
+  const [unlocked, setUnlocked] = useState(false);
+  const [gate, setGate] = useState<string | null>(null);
+  useEffect(() => { try { if (localStorage.getItem(UNLOCK_KEY) === "1") setUnlocked(true); } catch {} }, []);
 
   // shuffle only after mount, so server and browser render the same HTML
   const [shuffled, setShuffled] = useState(CASE_STUDIES);
@@ -716,6 +817,7 @@ export default function CaseStudiesPage() {
   const moreCs  = CASE_STUDIES.length - csVisible;
 
   return (
+    <UnlockCtx.Provider value={{ unlocked, ask: (c) => setGate(c) }}>
     <div className="mx-auto min-w-full max-w-full overflow-x-hidden">
       <HeroHeader />
 
@@ -785,7 +887,9 @@ export default function CaseStudiesPage() {
       </Hide>
 
       <FooterSection />
+      {gate && <CaseGateModal client={gate} onClose={() => setGate(null)} onUnlocked={() => { setUnlocked(true); setGate(null); }} />}
     </div>
+    </UnlockCtx.Provider>
   );
 }
  

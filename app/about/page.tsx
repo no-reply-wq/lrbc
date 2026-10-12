@@ -18,8 +18,8 @@ export default function LandingPage() {
     
       
       <NewHeroSection title={ <h1 className="mx-auto max-w-5xl flex flex-col text-center text-4xl max-md:font-bold md:text-5xl l xl:text-[5.25rem]">
-                                        <Et id="about.hero.title1" def="Building Technology" reload className="overflow-hidden" />
-                                        <Et id="about.hero.title2" def="Around People," reload className="overflow-hidden" />
+                                        <Et id="about.hero.title1" def="Building Technology" reload className="overflow-hidden lrbc-clip-safe" />
+                                        <Et id="about.hero.title2" def="Around People," reload className="overflow-hidden lrbc-clip-safe" />
                                         <Et id="about.hero.title3" def="Not Processes." reload />
                                     </h1>}
                       subtitle={<Et as="p" id="about.hero.subtitle" def="Every growing business deserves software that's simple, reliable, and built around the way it works." reload className="mx-auto max-w-2xl text-center text-lg" />}

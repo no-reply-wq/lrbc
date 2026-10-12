@@ -57,42 +57,42 @@ export default function TeamPerformanceCard() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
     >
-      <Card className="flex h-full w-full flex-col rounded-2xl border border-[#293041] bg-[#191c24] transition-all duration-300 hover:border-violet-500/40">
+      <Card className="flex h-full w-full flex-col rounded-2xl border border-primary/25 bg-[color-mix(in_oklab,var(--primary)_6%,var(--background))] transition-all duration-300 hover:border-primary/50 hover:shadow-[0_0_45px_rgba(124,58,237,.15)] dark:border-[#3a3399]/70 dark:bg-[#15123a]">
         <CardHeader className="shrink-0">
-          <CardTitle className="text-white">
+          <CardTitle className="text-foreground">
             Sales Team Performance
           </CardTitle>
         </CardHeader>
 
         <CardContent className="flex min-h-0 flex-1 flex-col">
           {/* Stats */}
-          <div className="mb-6 grid shrink-0 grid-cols-3 gap-4 bg-[#202430]">
-            <div className="rounded-xl bg-[#202430] p-4">
-              <p className="text-xs text-zinc-400">
+          <div className="mb-6 grid shrink-0 grid-cols-3 gap-4">
+            <div className="rounded-xl bg-primary/10 dark:bg-white/5 p-4">
+              <p className="text-xs text-muted-foreground">
                 Avg Target
               </p>
 
-              <h3 className="text-2xl font-bold text-white">
+              <h3 className="text-2xl font-bold text-foreground">
                 85%
               </h3>
             </div>
 
-            <div className="rounded-xl bg-[#202430] p-4">
-              <p className="text-xs text-zinc-400">
+            <div className="rounded-xl bg-primary/10 dark:bg-white/5 p-4">
+              <p className="text-xs text-muted-foreground">
                 Avg Achieved
               </p>
 
-              <h3 className="text-2xl font-bold text-white">
+              <h3 className="text-2xl font-bold text-foreground">
                 87%
               </h3>
             </div>
 
-            <div className="rounded-xl bg-[#202430] p-4">
-              <p className="text-xs text-zinc-400">
+            <div className="rounded-xl bg-primary/10 dark:bg-white/5 p-4">
+              <p className="text-xs text-muted-foreground">
                 Top Performer
               </p>
 
-              <h3 className="text-xl font-bold text-white">
+              <h3 className="text-xl font-bold text-foreground">
                 Mary
               </h3>
             </div>
@@ -112,19 +112,19 @@ export default function TeamPerformanceCard() {
               >
                 <CartesianGrid
                   vertical={false}
-                  stroke="#2d3342"
+                  stroke="var(--border)"
                   strokeDasharray="3 3"
                 />
 
                 <XAxis
                   dataKey="rep"
-                  tick={{ fill: "#9ca3af" }}
+                  tick={{ fill: "var(--muted-foreground)" }}
                   axisLine={false}
                   tickLine={false}
                 />
 
                 <YAxis
-                  tick={{ fill: "#9ca3af" }}
+                  tick={{ fill: "var(--muted-foreground)" }}
                   axisLine={false}
                   tickLine={false}
                 />
@@ -141,7 +141,7 @@ export default function TeamPerformanceCard() {
                   {data.map((_, i) => (
                     <Cell
                       key={i}
-                      fill="#475569"
+                      fill="#a5b4fc"
                     />
                   ))}
                 </Bar>
@@ -154,7 +154,7 @@ export default function TeamPerformanceCard() {
                   {data.map((_, i) => (
                     <Cell
                       key={i}
-                      fill="#8b5cf6"
+                      fill="#5227FF"
                     />
                   ))}
                 </Bar>
@@ -170,11 +170,11 @@ export default function TeamPerformanceCard() {
 const legendItems = [
   {
     value: "Target",
-    color: "#475569",
+    color: "#a5b4fc",
   },
   {
     value: "Achieved",
-    color: "#8b5cf6",
+    color: "#5227FF",
   },
 ];
 
@@ -191,7 +191,7 @@ function CustomLegend() {
             style={{ backgroundColor: item.color }}
           />
 
-          <span className="text-sm text-zinc-400">
+          <span className="text-sm text-muted-foreground">
             {item.value}
           </span>
         </div>

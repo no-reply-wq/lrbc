@@ -16,8 +16,8 @@ export default function WhyLRBCPage() {
       <NewHeroSection
         title={
           <h1 className="mx-auto max-w-5xl flex flex-col text-center text-4xl max-md:font-bold md:text-5xl xl:text-[5.25rem]">
-            <Et id="why.hero.title1" def="Why Businesses" reload className="overflow-hidden" />
-            <Et id="why.hero.title2" def="Choose LRBC." reload className="overflow-hidden" />
+            <Et id="why.hero.title1" def="Why Businesses" reload className="overflow-hidden lrbc-clip-safe" />
+            <Et id="why.hero.title2" def="Choose LRBC." reload className="overflow-hidden lrbc-clip-safe" />
           </h1>
         }
         subtitle={

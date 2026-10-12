@@ -740,7 +740,7 @@ button.lrbc-liquid-btn:not([data-slot="button"]) {
 @keyframes ps-fade   { from { opacity: 0; } to { opacity: 1; } }
 @keyframes ps-up     { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes ps-spin   { to { transform: rotate(360deg); } }
-@keyframes ps-pulse  { 0%,100% { box-shadow: 0 0 0 0 rgba(16,185,129,.55); } 50% { box-shadow: 0 0 0 5px rgba(16,185,129,0); } }
+@keyframes ps-pulse  { 0%,100% { box-shadow: 0 0 0 0 rgba(124,92,246,.55); } 50% { box-shadow: 0 0 0 5px rgba(124,92,246,0); } }
 @keyframes ps-ring   { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 13; } }
 @keyframes ps-bar    { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes ps-nudge  { 0%,100% { transform: translateX(0); } 50% { transform: translateX(4px); } }
@@ -931,6 +931,26 @@ html.lrbc-cursor iframe, html.lrbc-cursor select, html.lrbc-cursor option { curs
 .lrbc-btn-light:hover { background: rgba(255,255,255,.92); }
 @media (max-width: 639px) { .lrbc-btn { width: 100%; } }
 @media (prefers-reduced-motion: reduce) { .lrbc-btn { transition: none; } .lrbc-btn:hover { transform: none; } }
+
+/* ── Shared primitives (same look on every page except the case-study page) ── */
+/* Eyebrow pill: the small label above a heading. Solid tint (no glass), identical in light and dark. */
+.lrbc-eyebrow-row { display: flex; justify-content: center; }
+.lrbc-eyebrow {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem; width: fit-content;
+  padding: .45rem 1rem; border-radius: 9999px;
+  border: 1px solid color-mix(in oklab, var(--primary) 24%, var(--border));
+  background: color-mix(in oklab, var(--primary) 8%, var(--background));
+  box-shadow: 0 1px 2px rgba(82,39,255,.06), 0 8px 18px -12px rgba(82,39,255,.35);
+  font-size: .75rem; font-weight: 600; line-height: 1; letter-spacing: .14em; text-transform: uppercase; white-space: nowrap;
+  color: var(--primary);
+}
+/* Call-to-action row: always centred under the section it belongs to */
+.lrbc-cta-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .75rem; width: 100%; margin-top: 2rem; }
+/* Soft brand tints for cards (replaces ad-hoc green / red / black cards) */
+.lrbc-tint        { background: color-mix(in oklab, var(--primary) 5%, var(--background)); border: 1px solid color-mix(in oklab, var(--primary) 20%, var(--border)); }
+.lrbc-tint-strong { background: color-mix(in oklab, var(--primary) 10%, var(--background)); border: 1px solid color-mix(in oklab, var(--primary) 32%, var(--border)); }
+/* Descender-safe: lets "g", "y", "p" breathe inside masked / overflow-hidden headings */
+.lrbc-clip-safe { padding-bottom: .16em; margin-bottom: -.16em; }
 
 /* Legal pages (Privacy Policy / Terms of Use) */
 .legal-prose { font-size: .95rem; line-height: 1.75; color: var(--muted-foreground); overflow-wrap: anywhere; }

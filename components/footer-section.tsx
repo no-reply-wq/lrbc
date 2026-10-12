@@ -3,6 +3,7 @@ import React from "react";
 
 import { Logo } from "@/components/logo";
 import Link from "next/link"
+import MoltenMetal from "@/components/new-components/MoltenMetal";
 import MagneticButton from "@/components/MagneticButton"
 import SpotlightIcon from "@/components/SpotlightIcon";
 import { Et, Lnk, Hide } from "@/components/cms/editable";
@@ -55,19 +56,16 @@ export default function FooterSection() {
           ========================================================= */}
 
       <div className="absolute inset-x-0 top-0 h-[620px] overflow-hidden" style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '400px', overflow: 'hidden' }}>
-        {/* Video only in dark mode */}
-        <video
-          src="/videos/hero-vid.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          className="hidden dark:block"
-          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-        />
-        {/* Light mode: clean white-to-muted gradient */}
-        <div className="absolute inset-0 dark:hidden bg-gradient-to-b from-background via-background to-background" />
+        {/* Same animated background as the landing-page hero, light + dark */}
+        <div className="absolute inset-0">
+          <MoltenMetal
+            color1="#5227FF" color2="#FF9FFC" color3="#FFFFFF"
+            speed={0.35} scale={4} detail={3} glow={1.6} coreSize={0.1}
+            swirl={1} fold={-0.2} blackPoint={0.05} brightness={1.3}
+            colorMode="molten" grain grainIntensity={0.05}
+            mouseInteraction={false} opacity={1}
+          />
+        </div>
 
         {/* Gradient / fade over video in dark */}
         <div

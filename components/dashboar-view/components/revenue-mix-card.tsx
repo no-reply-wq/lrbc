@@ -19,7 +19,7 @@ const data = [
   {
     name: "CRR",
     value: 20,
-    color: "#3b82f6",
+    color: "#d946ef",
   },
 ];
 
@@ -37,7 +37,7 @@ export default function RevenueMixCard() {
         hover:shadow-[0_0_40px_rgba(124,58,237,.15)]">
 
         <CardHeader className="pb-0">
-          <CardTitle className="text-white text-lg font-semibold">
+          <CardTitle className="text-foreground text-lg font-semibold">
             Revenue Mix: NBD vs CRR
           </CardTitle>
         </CardHeader>
@@ -60,9 +60,9 @@ export default function RevenueMixCard() {
 
                 <linearGradient id="blueGradient">
 
-                  <stop offset="0%" stopColor="#60a5fa" />
+                  <stop offset="0%" stopColor="#e879f9" />
 
-                  <stop offset="100%" stopColor="#2563eb" />
+                  <stop offset="100%" stopColor="#c026d3" />
 
                 </linearGradient>
 
@@ -71,10 +71,10 @@ export default function RevenueMixCard() {
               <Tooltip
                 cursor={false}
                 contentStyle={{
-                  background: "#111827",
-                  border: "1px solid #374151",
+                  background: "var(--popover)",
+                  border: "1px solid var(--border)",
                   borderRadius: 10,
-                  color: "white",
+                  color: "var(--popover-foreground)",
                 }}
               />
 
@@ -99,11 +99,11 @@ export default function RevenueMixCard() {
 
           <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
 
-            <h2 className="text-5xl font-bold text-white">
+            <h2 className="text-5xl font-bold text-foreground">
               80%
             </h2>
 
-            <p className="mt-2 text-sm text-zinc-400">
+            <p className="mt-2 text-sm text-muted-foreground">
               New Business
             </p>
 

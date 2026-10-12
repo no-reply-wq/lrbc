@@ -21,8 +21,8 @@ export default function LandingPage() {
       <NewHeroSection
         title={
           <h1 className="mx-auto max-w-5xl flex flex-col text-center lg:text-left text-4xl max-md:font-bold md:text-5xl xl:text-6xl">
-            <span className="overflow-hidden"><Et id="home.hero.l1" def="Better Systems." reload /></span>
-            <span className="overflow-hidden"><Et id="home.hero.l2" def="Better Business." reload /></span>
+            <span className="overflow-hidden lrbc-clip-safe"><Et id="home.hero.l1" def="Better Systems." reload /></span>
+            <span className="overflow-hidden lrbc-clip-safe"><Et id="home.hero.l2" def="Better Business." reload /></span>
           </h1>
         }
         subtitle={

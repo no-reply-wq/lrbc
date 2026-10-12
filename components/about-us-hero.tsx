@@ -15,6 +15,7 @@ import Link from 'next/link'
 import { ArrowRight, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 import { AnimatedGroup } from '@/components/ui/animated-group'
+import { padMasks, REVEAL_Y } from "@/lib/split-safe";
 
 
 
@@ -34,11 +35,13 @@ export default function AboutUsHero() {
       const heading = SplitText.create(headingRef.current, {
         type: "lines",
         mask: "lines",
+        onSplit: padMasks,
       });
 
       const subtitle = SplitText.create(subtitleRef.current, {
         type: "lines",
         mask: "lines",
+        onSplit: padMasks,
       });
 
       gsap.set(
@@ -64,7 +67,7 @@ export default function AboutUsHero() {
       tl.from(
         heading.lines,
         {
-          yPercent: 100,
+          yPercent: REVEAL_Y,
           duration: 0.8,
           ease: "power3.out",
           stagger: 0.1,
@@ -74,7 +77,7 @@ export default function AboutUsHero() {
         .from(
           subtitle.lines,
           {
-            yPercent: 100,
+            yPercent: REVEAL_Y,
             opacity: 0,
             duration: 0.8,
             ease: "power3.out",
@@ -170,24 +173,18 @@ export default function AboutUsHero() {
                         <div className="mx-auto max-w-7xl px-6">
                             <div className="text-center sm:mx-auto lg:mr-auto lg:mt-0">
 
-                                <div
-                                    
-                                    className="hover:bg-background overflow-hidden dark:hover:border-t-border bg-muted group mx-auto flex w-fit items-center gap-4 rounded-full border p-1 pl-4 shadow-md shadow-zinc-950/5 transition-colors duration-300 dark:border-t-white/5 dark:shadow-zinc-950">
-                                    <span ref={quoteRef} className="text-foreground text-sm">About Us
-                                    </span>
-                                    <span className="dark:border-background block h-4 w-0.5 border-l bg-white dark:bg-zinc-700"></span>
-
-                                    
+                                <div className="lrbc-eyebrow-row">
+                                    <span ref={quoteRef} className="lrbc-eyebrow">About Us</span>
                                 </div>
 
-                                <div className="overflow-hidden">
-                                    <h1 ref={headingRef} className="mx-auto mt-8 max-w-5xl flex flex-col text-center text-4xl max-md:font-bold md:text-5xl lg:mt-16 xl:text-[5.25rem]">
-                                        <span className="overflow-hidden">Building Technology</span>
-                                        <span className="overflow-hidden">Around People,</span>
+                                <div className="overflow-hidden lrbc-clip-safe">
+                                    <h1 ref={headingRef} className="overflow-hidden lrbc-clip-safe mx-auto mt-8 max-w-5xl flex flex-col text-center text-4xl max-md:font-bold md:text-5xl lg:mt-16 xl:text-[5.25rem]">
+                                        <span className="overflow-hidden lrbc-clip-safe">Building Technology</span>
+                                        <span className="overflow-hidden lrbc-clip-safe">Around People,</span>
                                         <span>Not Processes.</span>
                                     </h1>
                                 </div>
-                                <div className="overflow-hidden">
+                                <div className="overflow-hidden lrbc-clip-safe">
                                     <p className="mx-auto mt-8 max-w-2xl text-center text-lg" ref={subtitleRef}>
                                         Every growing business deserves software that's simple, reliable, and built around the way it works.
 

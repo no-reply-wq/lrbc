@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Download, Mail, X, CheckCircle2, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 const WEB3FORMS_KEY = "d7597fd4-4c3b-40d2-ad55-710160cd9abd";
@@ -70,7 +69,7 @@ export default function BrochureDownload({ source = "Home hero" }: { source?: st
 
         {status === "done" ? (
           <div className="text-center">
-            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600"><CheckCircle2 className="h-7 w-7" /></span>
+            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary"><CheckCircle2 className="h-7 w-7" /></span>
             <h3 className="mt-5 text-xl font-semibold text-foreground">Thank you!</h3>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Your brochure is downloading now. If nothing happens, use the button below.</p>
             <div className="mt-6 flex flex-col gap-3">
@@ -107,9 +106,9 @@ export default function BrochureDownload({ source = "Home hero" }: { source?: st
 
   return (
     <>
-      <Button size="lg" variant="ghost" className="rounded-xl px-5 w-full sm:w-auto" onClick={() => setOpen(true)}>
-        <span className="text-nowrap">Download Brochure</span>
-      </Button>
+      <button type="button" className="lrbc-btn lrbc-btn-secondary" onClick={() => setOpen(true)}>
+        Download Brochure
+      </button>
       {mounted && createPortal(modal, document.body)}
     </>
   );

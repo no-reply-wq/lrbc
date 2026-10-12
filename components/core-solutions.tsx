@@ -5,8 +5,10 @@ import { Et, Hide, Img } from "@/components/cms/editable";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
+import { padMasks } from "@/lib/split-safe";
 import { useGSAP } from "@gsap/react";
-import { Workflow, BarChart3, Building2, CheckCircle2, TrendingUp } from "lucide-react";
+import { LrReveal } from "@/components/ui/lr-reveal";
+import { Workflow, BarChart3, Building2, Check, TrendingUp } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
 
@@ -86,10 +88,6 @@ function SolutionPanel({ s, index }: { s: typeof SOLUTIONS[0]; index: number }) 
     tl.fromTo(textRef.current, s.flip ? fromRight : fromLeft, toProps)
       .fromTo(imgRef.current,  s.flip ? fromLeft  : fromRight, toProps, "-=0.6");
 
-    const items = panelRef.current?.querySelectorAll(".cs-highlight");
-    if (items && items.length) {
-      tl.from(items, { x: -20, opacity: 0, duration: 0.4, stagger: 0.1, ease: "power2.out" }, "-=0.4");
-    }
   }, { scope: panelRef });
 
   return (
@@ -99,26 +97,31 @@ function SolutionPanel({ s, index }: { s: typeof SOLUTIONS[0]; index: number }) 
       <div className={"relative grid gap-8 lg:grid-cols-2 lg:gap-12 items-center px-5 py-10 sm:px-8 md:px-10 md:py-14 " + (s.flip ? "lg:[&>*:first-child]:order-2" : "")}>
 
         <div ref={textRef} className="flex flex-col gap-6">
-          <div className="flex items-center gap-3">
-            <div className={"flex h-10 w-10 items-center justify-center rounded-xl " + s.iconBg}>
+          <div className="flex flex-wrap items-center gap-3">
+            <div className={"flex h-10 w-10 shrink-0 items-center justify-center rounded-xl " + s.iconBg}>
               <Icon className={"h-5 w-5 " + s.iconColor} />
             </div>
-            <Et id={`why.core.item.${index}.eyebrow`} def={s.eyebrow} className={"text-xs font-semibold uppercase tracking-widest " + s.iconColor} />
+            <Et id={`why.core.item.${index}.eyebrow`} def={s.eyebrow} className="lrbc-eyebrow max-w-full whitespace-normal! text-left" />
           </div>
 
           <Et as="h3" id={`why.core.item.${index}.title`} def={s.title} className="text-xl font-semibold leading-tight sm:text-2xl lg:text-3xl" />
           <Et as="p" id={`why.core.item.${index}.body`} def={s.body} className="text-muted-foreground leading-6 text-sm" />
 
-          <ul className="flex flex-col gap-3 mt-2">
+          <LrReveal><ul className="flex flex-col gap-2.5 mt-2">
             {s.highlights.map((h, j) => (
               <Hide key={j} id={`why.core.item.${index}.hl.${j}`}>
-              <li className="cs-highlight flex items-start gap-3">
-                <CheckCircle2 className={"h-5 w-5 shrink-0 mt-0.5 " + s.iconColor} />
-                <Et id={`why.core.item.${index}.hl.${j}.text`} def={h} className="text-sm text-foreground/80" />
+              <li
+                style={{ ["--i" as string]: j, animationDelay: "calc(var(--i) * .12s)" }}
+                className="lr-gain flex items-center gap-2.5 rounded-xl border border-primary/25 bg-gradient-to-br from-primary/10 to-fuchsia-500/10 px-3 py-2.5"
+              >
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#5227FF] to-[#a855f7] text-white">
+                  <Check className="h-3 w-3" strokeWidth={3.5} />
+                </span>
+                <Et id={`why.core.item.${index}.hl.${j}.text`} def={h} className="text-sm font-medium text-foreground" />
               </li>
               </Hide>
             ))}
-          </ul>
+          </ul></LrReveal>
         </div>
 
         <div ref={imgRef} className="relative max-w-md mx-auto lg:max-w-full">
@@ -152,8 +155,8 @@ export default function CoreSolutions() {
   const subRef     = useRef<HTMLParagraphElement>(null);
 
   useGSAP(() => {
-    const heading = SplitText.create(headingRef.current, { type: "lines", mask: "lines" });
-    const sub     = SplitText.create(subRef.current,     { type: "lines", mask: "lines" });
+    const heading = SplitText.create(headingRef.current, { type: "lines", mask: "lines", onSplit: padMasks });
+    const sub     = SplitText.create(subRef.current,     { type: "lines", mask: "lines", onSplit: padMasks });
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -173,11 +176,11 @@ export default function CoreSolutions() {
       <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
 
         <div className="text-center mb-10 md:mb-20">
-          <Et as="p" id="why.core.eyebrow" def="Core Solutions" className="text-xs font-semibold uppercase tracking-widest text-primary mb-3" />
+          <div className="lrbc-eyebrow-row mb-5"><Et as="div" id="why.core.eyebrow" def="Core Solutions" className="lrbc-eyebrow" /></div>
           <div className="overflow-hidden">
             <Et as="h2" ref={headingRef} id="why.core.title" reload def="Three systems. Every business need." className="text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl xl:text-6xl" />
           </div>
-          <div className="overflow-hidden mt-5">
+          <div className="overflow-hidden lrbc-clip-safe mt-5">
             <Et as="p" ref={subRef} id="why.core.subtitle" reload def="Mutually exclusive by function, collectively exhaustive of what a business needs to become fully system-driven." className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto leading-relaxed" />
           </div>
         </div>

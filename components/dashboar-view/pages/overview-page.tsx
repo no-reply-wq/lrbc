@@ -40,8 +40,8 @@ export default function OverviewPage() {
               value={120}
               description="+20% vs Last Month"
               icon={Filter}
-              iconColor="text-blue-500"
-              iconBg="bg-blue-500/10"
+              iconColor="text-primary"
+              iconBg="bg-primary/10"
             />
 
             <StatCard
@@ -59,8 +59,8 @@ export default function OverviewPage() {
               value="₹2.4L"
               description="Scaled by LHF Strategy"
               icon={IndianRupee}
-              iconColor="text-emerald-500"
-              iconBg="bg-emerald-500/10"
+              iconColor="text-primary"
+              iconBg="bg-primary/10"
             />
 
             <StatCard
@@ -68,8 +68,8 @@ export default function OverviewPage() {
               value="₹15.2L"
               description="3 Accounts > 60 Days"
               icon={FileText}
-              iconColor="text-red-500"
-              iconBg="bg-red-500/10"
+              iconColor="text-primary"
+              iconBg="bg-primary/10"
             />
 
           </div>

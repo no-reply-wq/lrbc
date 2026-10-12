@@ -5,6 +5,7 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
+  LabelList,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -18,20 +19,21 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+// Brand ramp: deep violet (healthy) -> fuchsia (critical), slate for disputed
 const data = [
-  { bucket: "<30", value: 25, color: "#22c55e" },   // Healthy - green
-  { bucket: "30-60", value: 12, color: "#eab308" }, // Watch - yellow
-  { bucket: "60-90", value: 6, color: "#f97316" },  // High Risk - orange
-  { bucket: ">90", value: 2, color: "#ef4444" },    // Critical - red
-  { bucket: "Disp", value: 1, color: "#9ca3af" },   // Disputed - gray
+  { bucket: "<30", value: 25, color: "#5227FF" },   // Healthy
+  { bucket: "30-60", value: 12, color: "#7c5cf6" }, // Watch
+  { bucket: "60-90", value: 6, color: "#a855f7" },  // High Risk
+  { bucket: ">90", value: 2, color: "#d946ef" },    // Critical
+  { bucket: "Disp", value: 1, color: "#94a3b8" },   // Disputed
 ];
 
 const LEGEND = [
-  { label: "Healthy", color: "bg-green-500" },
-  { label: "Watch", color: "bg-yellow-500" },
-  { label: "High Risk", color: "bg-orange-500" },
-  { label: "Critical", color: "bg-red-500" },
-  { label: "Disputed", color: "bg-gray-400" },
+  { label: "Healthy", color: "#5227FF" },
+  { label: "Watch", color: "#7c5cf6" },
+  { label: "High Risk", color: "#a855f7" },
+  { label: "Critical", color: "#d946ef" },
+  { label: "Disputed", color: "#94a3b8" },
 ];
 
 export default function ReceivablesAgingChart() {
@@ -62,13 +64,13 @@ export default function ReceivablesAgingChart() {
                 interval={0}
                 tickLine={false}
                 axisLine={false}
-                tick={{ fontSize: 11 }}
+                tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
               />
 
               <YAxis
                 tickLine={false}
                 axisLine={false}
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
               />
 
               <Tooltip
@@ -91,6 +93,12 @@ export default function ReceivablesAgingChart() {
                 dataKey="value"
                 radius={[8, 8, 0, 0]}
               >
+                <LabelList
+                  dataKey="value"
+                  position="top"
+                  offset={6}
+                  style={{ fontSize: 11, fontWeight: 600, fill: "var(--foreground)" }}
+                />
                 {data.map((entry) => (
                   <Cell
                     key={entry.bucket}
@@ -107,7 +115,7 @@ export default function ReceivablesAgingChart() {
         <div className="mt-6 flex flex-wrap justify-center gap-5 text-sm">
           {LEGEND.map((item) => (
             <div key={item.label} className="flex items-center gap-2">
-              <div className={`h-3 w-3 rounded-full ${item.color}`} />
+              <div className="h-3 w-3 rounded-full" style={{ backgroundColor: item.color }} />
               <span className="text-muted-foreground">
                 {item.label}
               </span>

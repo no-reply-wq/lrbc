@@ -90,9 +90,9 @@ export default function StatCard({
 
           <div className="flex items-center gap-2 text-xs">
 
-            <TrendingUp className="h-4 w-4 text-emerald-400" />
+            <TrendingUp className="h-4 w-4 text-primary" />
 
-            <span className="text-emerald-400">
+            <span className="text-primary">
               {description}
             </span>
 

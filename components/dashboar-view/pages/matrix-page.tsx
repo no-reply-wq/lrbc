@@ -31,8 +31,8 @@ export default function MatrixPage() {
           value="25:75"
           description="Progressing to 50:50"
           icon={Scale}
-          iconColor="text-blue-500"
-          iconBg="bg-blue-500/10"
+          iconColor="text-primary"
+          iconBg="bg-primary/10"
         />
 
         <StatCard
@@ -58,8 +58,8 @@ export default function MatrixPage() {
           value="₹42.5L"
           description="Target ₹50L"
           icon={Wallet}
-          iconColor="text-emerald-500"
-          iconBg="bg-emerald-500/10"
+          iconColor="text-primary"
+          iconBg="bg-primary/10"
         />
 
       </div>

@@ -4,6 +4,7 @@ import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
+import { padMasks } from "@/lib/split-safe";
 import { useGSAP } from "@gsap/react";
 import { ProductCard } from "./product-card";
 
@@ -67,7 +68,7 @@ export default function ProductsSection() {
         if (!headingRef.current) return;
 
         const heading  = SplitText.create(headingRef.current,  { type: "chars", mask: "chars" });
-        const subtitle = SplitText.create(subtitleRef.current, { type: "lines", mask: "lines" });
+        const subtitle = SplitText.create(subtitleRef.current, { type: "lines", mask: "lines", onSplit: padMasks });
 
         const textl = gsap.timeline({
             scrollTrigger: {

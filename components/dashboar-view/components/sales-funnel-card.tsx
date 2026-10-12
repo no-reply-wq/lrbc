@@ -29,23 +29,23 @@ const data = [
 ];
 
 const colors = [
+  "#5227FF",
+  "#6d4cf6",
   "#8b5cf6",
-  "#7c3aed",
-  "#6d28d9",
-  "#5b21b6",
-  "#4c1d95",
+  "#a855f7",
+  "#d946ef",
 ];
 
 function CustomTooltip({ active, payload }: any) {
   if (!active || !payload?.length) return null;
 
   return (
-    <div className="rounded-xl border border-zinc-700 bg-[#151821] px-4 py-3 shadow-xl">
-      <p className="text-sm font-medium text-white">
+    <div className="rounded-xl border border-primary/25 bg-popover px-4 py-3 shadow-xl">
+      <p className="text-sm font-medium text-foreground">
         {payload[0].payload.stage}
       </p>
 
-      <p className="mt-1 text-violet-400 font-semibold">
+      <p className="mt-1 text-primary font-semibold">
         {payload[0].value} opportunities
       </p>
     </div>
@@ -61,13 +61,13 @@ export default function SalesFunnelCard() {
       whileHover={{ y: -4 }}
       transition={{ duration: .45 }}
     >
-      <Card className="h-full rounded-2xl border border-[#293041] bg-[#191c24] transition-all duration-300 hover:border-violet-500/40 hover:shadow-[0_0_45px_rgba(124,58,237,.15)]">
+      <Card className="h-full rounded-2xl border border-primary/25 bg-[color-mix(in_oklab,var(--primary)_6%,var(--background))] transition-all duration-300 hover:border-primary/50 hover:shadow-[0_0_45px_rgba(124,58,237,.15)] dark:border-[#3a3399]/70 dark:bg-[#15123a]">
 
         <CardHeader className="flex-row flex-wrap items-center justify-between gap-2 space-y-0">
 
           <div>
 
-            <CardTitle className="text-lg text-white">
+            <CardTitle className="text-lg text-foreground">
               Sales Funnel
             </CardTitle>
 
@@ -79,11 +79,11 @@ export default function SalesFunnelCard() {
 
           <div className="text-right">
 
-            <p className="text-3xl font-bold text-white">
+            <p className="text-3xl font-bold text-foreground">
               22%
             </p>
 
-            <p className="text-xs text-emerald-400">
+            <p className="text-xs font-medium text-primary">
               +4.1% this month
             </p>
 
@@ -95,37 +95,37 @@ export default function SalesFunnelCard() {
 
           <div className="mb-6 grid grid-cols-3 gap-2 sm:mb-8 sm:gap-4">
 
-            <div className="min-w-0 rounded-xl bg-[#202430] p-3 sm:p-4">
+            <div className="min-w-0 rounded-xl bg-primary/10 dark:bg-white/5 p-3 sm:p-4">
 
-              <p className="text-xs text-zinc-400">
+              <p className="text-xs text-muted-foreground">
                 Total Leads
               </p>
 
-              <h3 className="mt-1 text-xl font-bold text-white sm:mt-2 sm:text-2xl">
+              <h3 className="mt-1 text-xl font-bold text-foreground sm:mt-2 sm:text-2xl">
                 420
               </h3>
 
             </div>
 
-            <div className="min-w-0 rounded-xl bg-[#202430] p-3 sm:p-4">
+            <div className="min-w-0 rounded-xl bg-primary/10 dark:bg-white/5 p-3 sm:p-4">
 
-              <p className="text-xs text-zinc-400">
+              <p className="text-xs text-muted-foreground">
                 Qualified
               </p>
 
-              <h3 className="mt-1 text-xl font-bold text-white sm:mt-2 sm:text-2xl">
+              <h3 className="mt-1 text-xl font-bold text-foreground sm:mt-2 sm:text-2xl">
                 320
               </h3>
 
             </div>
 
-            <div className="min-w-0 rounded-xl bg-[#202430] p-3 sm:p-4">
+            <div className="min-w-0 rounded-xl bg-primary/10 dark:bg-white/5 p-3 sm:p-4">
 
-              <p className="text-xs text-zinc-400">
+              <p className="text-xs text-muted-foreground">
                 Closed
               </p>
 
-              <h3 className="mt-1 text-xl font-bold text-white sm:mt-2 sm:text-2xl">
+              <h3 className="mt-1 text-xl font-bold text-foreground sm:mt-2 sm:text-2xl">
                 92
               </h3>
 
@@ -148,7 +148,7 @@ export default function SalesFunnelCard() {
               >
 
                 <CartesianGrid
-                  stroke="#2d3342"
+                  stroke="var(--border)"
                   strokeDasharray="3 3"
                   vertical={false}
                 />
@@ -156,7 +156,7 @@ export default function SalesFunnelCard() {
                 <XAxis
                   tickLine={false}
                   axisLine={false}
-                  tick={{ fill: "#8f96a3", fontSize: 11 }}
+                  tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
                   dataKey="stage"
                   interval={0}
                 />
@@ -164,11 +164,11 @@ export default function SalesFunnelCard() {
                 <YAxis
                   tickLine={false}
                   axisLine={false}
-                  tick={{ fill: "#8f96a3", fontSize: 12 }}
+                  tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
                 />
 
                 <Tooltip
-                  cursor={{ fill: "rgba(255,255,255,.02)" }}
+                  cursor={{ fill: "var(--primary)", opacity: 0.06 }}
                   content={<CustomTooltip />}
                 />
 

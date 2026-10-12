@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { Et, Hide } from "@/components/cms/editable";
 import { useFadeUp } from "@/components/ui/use-scroll-animation";
+import { useScrollFadeWords } from "@/components/ui/use-scroll-fade";
 import BeforeDashboard from "./before-dashboard";
 import Dashboard from "./dashboar-view/dashboar-view";
 
@@ -15,7 +16,7 @@ function Tag({ tone, children }: { tone: "before" | "after"; children: React.Rea
   return (
     <span
       className={`tf-tag absolute -top-4 left-5 z-40 inline-flex items-center gap-2 rounded-full px-5 py-2 text-[13px] font-bold uppercase tracking-widest sm:text-sm text-white shadow-lg sm:left-8 ${
-        tone === "before" ? "bg-red-500" : "bg-emerald-500"
+        tone === "before" ? "bg-rose-500" : "bg-primary"
       }`}
     >
       <span className="h-2 w-2 rounded-full bg-white/90" />
@@ -32,6 +33,7 @@ export default function Transformation() {
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const fadeRef = useFadeUp();
+  const subRef = useScrollFadeWords<HTMLParagraphElement>();
 
   /**
    * One pinned "stage" for desktop AND mobile. Everything is driven by the page scroll, so there is
@@ -160,9 +162,9 @@ export default function Transformation() {
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <Et as="div" id="home.transformation.badge" def="The Transformation" className="mx-auto w-fit rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-primary lrbc-anim mb-5" />
+          <div className="lrbc-eyebrow-row lrbc-anim mb-5"><Et as="div" id="home.transformation.badge" def="The Transformation" className="lrbc-eyebrow" /></div>
           <Et as="h2" id="home.transformation.heading" def="See the Difference ERP Makes" className="lrbc-anim lrbc-anim-d1 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl" />
-          <Et as="p" id="home.transformation.subtitle" def="From scattered information to connected, streamlined operations." className="lrbc-anim lrbc-anim-d2 mx-auto mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg" />
+          <Et as="p" ref={subRef} reload id="home.transformation.subtitle" def="From scattered information to connected, streamlined operations." className="mx-auto mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg" />
         </div>
 
         {/* Pinned stage — both cards share one grid cell; the second slides over the first */}

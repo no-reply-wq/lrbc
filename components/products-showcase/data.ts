@@ -102,7 +102,7 @@ export const PRODUCTS: Product[] = [
     href: "/lekhasetu",
     cta: "View Pricing · LekhaSetu",
     ctaHint: "Opens the LekhaSetu page",
-    gradient: "linear-gradient(135deg, #6d3df0 0%, #4f46e5 100%)",
+    gradient: "linear-gradient(135deg, #5227ff 0%, #a855f7 100%)",
     cards: [
       {
         id: "dashboard",
@@ -213,7 +213,7 @@ export const PRODUCTS: Product[] = [
     cta: "View Pricing · WorkPilot",
     ctaHref: "/workpilot#pricing",
     ctaHint: "Opens the WorkPilot page at its pricing plans",
-    gradient: "linear-gradient(135deg, #4f46e5 0%, #0ea5e9 100%)",
+    gradient: "linear-gradient(135deg, #5227ff 0%, #a855f7 100%)",
     cards: [
       {
         id: "attendance",
@@ -328,7 +328,7 @@ export const PRODUCTS: Product[] = [
     href: "/mini-erp",
     cta: "Explore Plans · Mini ERP",
     ctaHint: "Opens the Mini ERP page",
-    gradient: "linear-gradient(135deg, #a855f7 0%, #6d3df0 100%)",
+    gradient: "linear-gradient(135deg, #5227ff 0%, #a855f7 100%)",
     cards: [
       {
         id: "fit",
@@ -437,7 +437,7 @@ export const PRODUCTS: Product[] = [
     href: "/custom-erp",
     cta: "Plan Your Build · Custom ERP",
     ctaHint: "Opens the Custom ERP page",
-    gradient: "linear-gradient(135deg, #312e81 0%, #7c3aed 100%)",
+    gradient: "linear-gradient(135deg, #5227ff 0%, #a855f7 100%)",
     cards: [
       {
         id: "fit",

@@ -13,6 +13,7 @@ import MagneticButton from "@/components/MagneticButton";
 import ContactFormModal from "@/components/ContactFormModal";
 import { CheckCircle2 } from "lucide-react";
 import { Et, Hide, Lnk, useVal } from "@/components/cms/editable";
+import { padMasks, REVEAL_Y } from "@/lib/split-safe";
 
 gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
 
@@ -32,13 +33,13 @@ export default function WorkPilotHero() {
 
   useGSAP(() => {
     if (!headingRef.current || !subtitleRef.current) return;
-    const heading  = SplitText.create(headingRef.current,  { type: "lines", mask: "lines" });
-    const subtitle = SplitText.create(subtitleRef.current, { type: "lines", mask: "lines" });
+    const heading  = SplitText.create(headingRef.current,  { type: "lines", mask: "lines", onSplit: padMasks });
+    const subtitle = SplitText.create(subtitleRef.current, { type: "lines", mask: "lines", onSplit: padMasks });
     gsap.set(badgeRef.current, { opacity: 0, y: 10 });
     const tl = gsap.timeline({ scrollTrigger: { trigger: sectionRef.current, start: "top 60%" } });
     tl.to(badgeRef.current, { opacity: 1, y: 0, duration: 0.5 })
-      .from(heading.lines,  { yPercent: 110, stagger: 0.08, duration: 0.9, ease: "power3.out" }, "-=0.2")
-      .from(subtitle.lines, { yPercent: 100, stagger: 0.08, duration: 0.7, ease: "power3.out" }, "-=0.5");
+      .from(heading.lines,  { yPercent: REVEAL_Y, stagger: 0.08, duration: 0.9, ease: "power3.out" }, "-=0.2")
+      .from(subtitle.lines, { yPercent: REVEAL_Y, stagger: 0.08, duration: 0.7, ease: "power3.out" }, "-=0.5");
   }, { scope: sectionRef });
 
   return (
@@ -59,13 +60,9 @@ export default function WorkPilotHero() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center sm:mx-auto lg:mr-auto lg:mt-0">
 
-            {/* WorkPilot pill badge */}
-            <div
-              ref={badgeRef}
-              className="hover:bg-background overflow-hidden dark:hover:border-t-border bg-muted group mx-auto flex w-fit items-center gap-4 rounded-full border p-1 pl-4 shadow-md shadow-zinc-950/5 transition-colors duration-300 dark:border-t-white/5 dark:shadow-zinc-950"
-            >
-              <Et id="workpilot.hero.badge" def="WorkPilot" className="text-foreground text-sm" />
-              <span className="dark:border-background block h-4 w-0.5 border-l bg-white dark:bg-zinc-700" />
+            {/* Eyebrow pill badge */}
+            <div ref={badgeRef} className="lrbc-eyebrow-row">
+              <Et as="span" id="workpilot.hero.badge" def="WorkPilot" className="lrbc-eyebrow" />
             </div>
 
             {/* Heading */}
@@ -73,8 +70,8 @@ export default function WorkPilotHero() {
               ref={headingRef}
               className="mx-auto mt-6 max-w-5xl text-center text-3xl font-bold sm:text-5xl lg:mt-12 xl:text-[5.25rem] xl:leading-[1.05]"
             >
-              <Et id="workpilot.hero.title1" def="Your Team." reload className="block overflow-hidden" />
-              <Et id="workpilot.hero.title2" def="Always Visible." reload className="block overflow-hidden" />
+              <Et id="workpilot.hero.title1" def="Your Team." reload className="block overflow-hidden lrbc-clip-safe" />
+              <Et id="workpilot.hero.title2" def="Always Visible." reload className="block overflow-hidden lrbc-clip-safe" />
             </h1>
 
             {/* Subtitle */}
@@ -84,11 +81,11 @@ export default function WorkPilotHero() {
               def="WorkPilot brings attendance, task allocation, and performance tracking into one centralized platform — so you spend less time chasing updates and more time building your business."
               reload
               ref={subtitleRef}
-              className="mx-auto mt-5 max-w-2xl text-center text-base sm:text-lg text-muted-foreground px-2"
+              className="mx-auto mt-5 max-w-2xl text-center text-base sm:text-lg text-muted-foreground px-2 lrbc-clip-safe"
             />
 
             {/* Book Demo button */}
-            <div className="mt-8 sm:mt-10">
+            <div className="mt-8 sm:mt-10 flex justify-center">
               <MagneticButton strength={0.3} radius={80}>
                 <ContactFormModal
                   buttonText={demoLabel}

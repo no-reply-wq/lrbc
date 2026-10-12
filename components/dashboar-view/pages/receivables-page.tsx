@@ -29,8 +29,8 @@ export default function ReceivablesPage() {
           value="₹45.5L"
           description="Target ₹40L (+13%)"
           icon={Wallet}
-          iconColor="text-blue-500"
-          iconBg="bg-blue-500/10"
+          iconColor="text-primary"
+          iconBg="bg-primary/10"
         />
 
         <StatCard
@@ -38,8 +38,8 @@ export default function ReceivablesPage() {
           value="₹25.0L"
           description="55% of Total Receivables"
           icon={ShieldCheck}
-          iconColor="text-emerald-500"
-          iconBg="bg-emerald-500/10"
+          iconColor="text-primary"
+          iconBg="bg-primary/10"
         />
 
         <StatCard

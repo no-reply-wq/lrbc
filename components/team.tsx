@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
+import { useScrollFadeWords } from "@/components/ui/use-scroll-fade";
 import Image from 'next/image'
 import { Et, Hide, Lnk, useAttrs, useVal } from "@/components/cms/editable";
 
@@ -60,6 +61,7 @@ const members = [
 export default function TeamSection() {
     const sectionRef = useRef<HTMLElement>(null);
     const headerRef = useRef<HTMLDivElement>(null);
+    const quoteRef = useScrollFadeWords<HTMLParagraphElement>();
     const gridRef = useRef<HTMLDivElement>(null);
 
     useGSAP(
@@ -80,9 +82,7 @@ export default function TeamSection() {
                 },
             });
 
-            tl.from(".text-caption", { y: 25, opacity: 0, duration: 0.5 })
-              .from("h2", { x: -60, opacity: 0, duration: 0.8 }, "-=0.2")
-              .from("p",  { x: 60,  opacity: 0, duration: 0.8 }, "-=0.6")
+            tl.from("h2", { y: 30, opacity: 0, duration: 0.8 })
               .to(cards, {
                   opacity: 1, y: 0,
                   stagger: { each: 0.15, from: "start" },
@@ -108,20 +108,22 @@ export default function TeamSection() {
         <Hide id="team.sec">
         <section ref={sectionRef} className="bg-gray-50 py-8 dark:bg-transparent md:py-12">
             <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-15">
-                <span className="block w-max sm:-ml-6 sm:-mt-4">
-                    <Et
-                        as="div"
-                        id="team.badge"
-                        def="Team"
-                        className="mx-auto w-fit rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-primary "
-                    />
-                </span>
-                <div ref={headerRef} className="mt-8 gap-4 sm:grid sm:grid-cols-2 md:mt-12">
+                <div className="lrbc-eyebrow-row sm:!justify-start">
+                    <Et as="div" id="team.badge" def="Team" className="lrbc-eyebrow" />
+                </div>
+                <div ref={headerRef} className="mt-8 gap-4 sm:grid sm:grid-cols-2 sm:items-start md:mt-10">
                     <div className="sm:w-2/5">
-                        <Et as="h2" id="team.heading" def="Meet the team" className="text-3xl font-bold sm:text-4xl" />
+                        <Et as="h2" id="team.heading" def="Meet the team" className="text-3xl font-bold sm:text-4xl lrbc-clip-safe" />
                     </div>
                     <div className="mt-6 sm:mt-0">
-                        <Et as="p" id="team.intro" def="During the work process, we perform regular fittings with the client because only the client can know whether a new suit fits or not." />
+                        <Et
+                            as="p"
+                            ref={quoteRef}
+                            reload
+                            id="team.intro"
+                            def="We involve our clients at every stage of the tailoring process, conducting regular fittings to ensure the suit fits perfectly and reflects their personal preferences."
+                            className="text-balance text-base leading-relaxed text-foreground sm:text-lg"
+                        />
                     </div>
                 </div>
 

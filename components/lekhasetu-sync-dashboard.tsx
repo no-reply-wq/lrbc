@@ -27,8 +27,8 @@ export default function LekhaSetuSyncDashboard() {
           <span className="text-xs font-semibold">Live Sync — LekhaSetu</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className={`h-2 w-2 rounded-full bg-green-500 ${pulse ? "opacity-100" : "opacity-40"} transition-opacity duration-700`} />
-          <span className="text-[10px] text-green-500 font-medium">Connected</span>
+          <span className={`h-2 w-2 rounded-full bg-primary ${pulse ? "opacity-100" : "opacity-40"} transition-opacity duration-700`} />
+          <span className="text-[10px] text-primary font-medium">Connected</span>
         </div>
       </div>
 
@@ -51,8 +51,8 @@ export default function LekhaSetuSyncDashboard() {
         {ENTRIES.map((e, i) => (
           <div key={i} className="flex items-center gap-2 rounded-lg bg-muted/30 px-3 py-2">
             {e.status === "syncing"
-              ? <RefreshCw className="h-3 w-3 text-blue-400 animate-spin shrink-0" />
-              : <CheckCircle2 className="h-3 w-3 text-green-500 shrink-0" />
+              ? <RefreshCw className="h-3 w-3 text-fuchsia-500 animate-spin shrink-0" />
+              : <CheckCircle2 className="h-3 w-3 text-primary shrink-0" />
             }
             <div className="flex-1 min-w-0">
               <p className="text-[10px] font-medium truncate">{e.label}</p>

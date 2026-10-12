@@ -79,12 +79,12 @@ function LekhaSync() {
     <div className="flex h-full items-center gap-3">
       <div className="relative grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary">
         <RefreshCw className="ps-spin h-6 w-6" />
-        <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full bg-emerald-500 ring-2 ring-background ps-pulse" />
+        <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full bg-primary ring-2 ring-background ps-pulse" />
       </div>
       <div className="min-w-0 flex-1 space-y-1">
         {rows.map((r, i) => (
           <div key={r} className="ps-fade-up flex items-center gap-2 text-[11px]" style={{ animationDelay: `${i * 120}ms` }}>
-            <span className="grid h-4 w-4 place-items-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+            <span className="grid h-4 w-4 place-items-center rounded-full bg-primary/15 text-primary">
               <Check className="h-2.5 w-2.5" strokeWidth={3} />
             </span>
             <span className="font-medium">{r}</span>
@@ -123,7 +123,7 @@ function LekhaStock() {
       {bars.map((h, i) => (
         <span
           key={i}
-          className="ps-grow flex-1 rounded-t-md bg-gradient-to-t from-indigo-500/80 to-violet-400/40"
+          className="ps-grow flex-1 rounded-t-md bg-gradient-to-t from-violet-500/80 to-fuchsia-400/40"
           style={{ height: `${h}%`, animationDelay: `${i * 80}ms` }}
         />
       ))}
@@ -142,13 +142,13 @@ function Attendance() {
     { s: "Absent", w: "58%" },
   ];
   const tone = {
-    Present: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
-    Late: "bg-amber-500/15 text-amber-700 dark:text-amber-400",
+    Present: "bg-primary/15 text-primary",
+    Late: "bg-fuchsia-500/15 text-fuchsia-600 dark:text-fuchsia-400",
     Absent: "bg-rose-500/15 text-rose-700 dark:text-rose-400",
   } as const;
   const counts = [
-    { l: "Present", v: "42", c: "text-emerald-600 dark:text-emerald-400" },
-    { l: "Late", v: "5", c: "text-amber-600 dark:text-amber-400" },
+    { l: "Present", v: "42", c: "text-primary" },
+    { l: "Late", v: "5", c: "text-fuchsia-600 dark:text-fuchsia-400" },
     { l: "Absent", v: "3", c: "text-rose-600 dark:text-rose-400" },
   ];
   return (
@@ -164,7 +164,7 @@ function Attendance() {
       <div className="min-h-0 flex-1 space-y-1.5 overflow-hidden">
         {rows.map((r, i) => (
           <div key={i} className="ps-fade-up flex items-center gap-2 rounded-xl border border-border/70 bg-background/70 px-2 py-1.5" style={{ animationDelay: `${i * 90}ms` }}>
-            <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-gradient-to-br from-indigo-500 to-sky-400 text-[9px] font-bold text-white">
+            <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-400 text-[9px] font-bold text-white">
               {String.fromCharCode(65 + i)}
             </span>
             <span className="h-1.5 rounded-full bg-foreground/15" style={{ width: r.w }} />
@@ -179,8 +179,8 @@ function Attendance() {
 function Kanban() {
   const cols = [
     { t: "To do", n: 2, c: "bg-slate-400" },
-    { t: "In progress", n: 2, c: "bg-indigo-500" },
-    { t: "Done", n: 3, c: "bg-emerald-500" },
+    { t: "In progress", n: 2, c: "bg-violet-500" },
+    { t: "Done", n: 3, c: "bg-primary" },
   ];
   return (
     <div className="grid h-full grid-cols-3 gap-2">
@@ -216,7 +216,7 @@ function Performance() {
       <div className="flex-1 space-y-1.5">
         {[78, 92, 66].map((w, i) => (
           <div key={i} className="h-1.5 overflow-hidden rounded-full bg-foreground/10">
-            <span className="ps-bar block h-full rounded-full bg-gradient-to-r from-indigo-500 to-sky-400" style={{ width: `${w}%`, animationDelay: `${i * 110}ms` }} />
+            <span className="ps-bar block h-full rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-400" style={{ width: `${w}%`, animationDelay: `${i * 110}ms` }} />
           </div>
         ))}
       </div>
@@ -267,7 +267,7 @@ function Fit({ card, product }: VProps) {
       {/* turnover scale */}
       <div className="rounded-xl border border-border/70 bg-background/70 px-2.5 py-2">
         <div className="relative h-2 rounded-full bg-foreground/10">
-          <span className="ps-bar absolute inset-y-0 rounded-full bg-gradient-to-r from-violet-500 to-indigo-500" style={{ left: card.id === "fit" && m?.value.includes("+") ? "60%" : "12%", right: m?.value.includes("+") ? "0%" : "48%" }} />
+          <span className="ps-bar absolute inset-y-0 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500" style={{ left: card.id === "fit" && m?.value.includes("+") ? "60%" : "12%", right: m?.value.includes("+") ? "0%" : "48%" }} />
         </div>
         <div className="mt-1 flex justify-between font-mono text-[8.5px] text-muted-foreground">
           <span>₹10 Cr</span><span>₹50 Cr</span><span>₹100 Cr+</span>
@@ -302,7 +302,7 @@ function Net({ card, product }: VProps) {
         <div key={c} className="ps-fade-up flex items-center gap-2 rounded-lg border border-border/70 bg-background/70 px-2 py-1 text-[11px] font-medium" style={{ animationDelay: `${i * 100}ms` }}>
           {c.toLowerCase().includes("factory") ? <Factory className="h-3 w-3 text-primary" /> : <MapPin className="h-3 w-3 text-primary" />}
           <Et id={cid(product, card, `chip.${i}`)} def={c} />
-          <span className="ml-auto h-1.5 w-1.5 rounded-full bg-emerald-500 ps-pulse" />
+          <span className="ml-auto h-1.5 w-1.5 rounded-full bg-primary ps-pulse" />
         </div>
       ))}
     </div>
@@ -311,7 +311,7 @@ function Net({ card, product }: VProps) {
 
 function Cost() {
   const rows = [
-    { l: "Mini ERP", w: 32, c: "bg-gradient-to-r from-violet-500 to-indigo-500" },
+    { l: "Mini ERP", w: 32, c: "bg-gradient-to-r from-violet-500 to-fuchsia-500" },
     { l: "Full-scale ERP", w: 88, c: "bg-foreground/20" },
   ];
   return (
@@ -334,12 +334,12 @@ function CloudRows({ card, product }: VProps) {
     <div className="flex h-full items-center gap-3">
       <div className="relative grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary">
         <Cloud className="h-6 w-6" />
-        <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full bg-emerald-500 ring-2 ring-background ps-pulse" />
+        <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full bg-primary ring-2 ring-background ps-pulse" />
       </div>
       <div className="min-w-0 flex-1 space-y-1">
         {(card.chips ?? []).map((r, i) => (
           <div key={r} className="ps-fade-up flex items-center gap-2 text-[11px]" style={{ animationDelay: `${i * 120}ms` }}>
-            <span className="grid h-4 w-4 place-items-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+            <span className="grid h-4 w-4 place-items-center rounded-full bg-primary/15 text-primary">
               <Check className="h-2.5 w-2.5" strokeWidth={3} />
             </span>
             <Et id={cid(product, card, `chip.${i}`)} def={r} className="font-medium" />

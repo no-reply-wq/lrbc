@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Et, Hide, Lnk } from "@/components/cms/editable";
 import { ArrowUpRight, BatteryFull, Check, ChevronDown, ChevronLeft, ChevronRight, Info, Signal, Wifi } from "lucide-react";
 import { useFadeUp } from "@/components/ui/use-scroll-animation";
 import { PRODUCTS, cid, pid, type Product, type ShowcaseCard } from "./data";
-import { ProductLink, VISUALS } from "./visuals";
+import { VISUALS } from "./visuals";
 
 /* ───────────────────────── helpers ───────────────────────── */
 
@@ -72,7 +72,31 @@ function DetailBody({ card, product, interactive = false }: { card: ShowcaseCard
 function BentoCard({ card, product }: { card: ShowcaseCard; product: Product }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
+  const popRef = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState<{ x: number; y: number; ny: number } | null>(null);
+  // wide screens: the pop-up opens OUTSIDE the tablet, on the side where the card sits
+  const side: "l" | "r" = card.align === "left" ? "l" : "r";
   const Icon = card.icon;
+
+  useLayoutEffect(() => {
+    if (!open) return;
+    const compute = () => {
+      if (!window.matchMedia("(min-width: 1280px)").matches) { setPos(null); return; }
+      const root = rootRef.current, pop = popRef.current;
+      const frame = root?.closest("[data-tablet-frame]") as HTMLElement | null;
+      if (!root || !pop || !frame) return;
+      const f = frame.getBoundingClientRect(), c = root.getBoundingClientRect();
+      const pw = pop.offsetWidth, ph = pop.offsetHeight, gap = 20;
+      const x = side === "l" ? f.left - c.left - pw - gap : f.right - c.left + gap;
+      const minTop = f.top + 8, maxTop = Math.max(minTop, f.bottom - ph - 8);
+      const absTop = Math.min(Math.max(c.top, minTop), maxTop);
+      const y = absTop - c.top;
+      setPos({ x, y, ny: Math.min(ph - 22, Math.max(22, c.height / 2 - y)) });
+    };
+    compute();
+    window.addEventListener("resize", compute);
+    return () => window.removeEventListener("resize", compute);
+  }, [open, side]);
   const Visual = VISUALS[card.visual];
 
   // Tap / click outside closes the pop-up (touch devices)
@@ -99,7 +123,7 @@ function BentoCard({ card, product }: { card: ShowcaseCard; product: Product }) 
           if ((e.nativeEvent as PointerEvent).pointerType !== "mouse") setOpen((o) => !o);
         }}
         className={`flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card/85 p-3 shadow-sm backdrop-blur-sm transition-all duration-300 ${
-          open ? "border-primary/40 shadow-lg md:opacity-30" : "hover:border-primary/30"
+          open ? "border-primary/40 shadow-lg md:opacity-30 xl:opacity-100 xl:ring-2 xl:ring-primary/30" : "hover:border-primary/30"
         }`}
       >
         <div className="mb-2 flex items-center gap-2">
@@ -127,9 +151,29 @@ function BentoCard({ card, product }: { card: ShowcaseCard; product: Product }) 
         </div>
       </div>
 
-      {/* Desktop / tablet: pop-up card */}
+      {/* Wide screens (xl+): pop-up opens outside the tablet, on the card's own side */}
       <div
-        className={`pointer-events-none absolute inset-0 hidden md:flex ${ALIGN_X[card.align]} ${ALIGN_Y[card.valign]}`}
+        ref={popRef}
+        aria-hidden={!open}
+        data-open={open && !!pos}
+        style={{ left: pos?.x ?? 0, top: pos?.y ?? 0 }}
+        className={`pointer-events-none absolute z-50 hidden w-[284px] rounded-2xl border border-primary/25 bg-popover/95 p-4 opacity-0 shadow-[0_30px_60px_-20px_rgba(80,40,240,0.45)] backdrop-blur-xl transition-[opacity,transform] duration-300 ease-out xl:block data-[open=true]:opacity-100 data-[open=true]:translate-x-0 ${
+          side === "l" ? "-translate-x-2" : "translate-x-2"
+        }`}
+      >
+        {open && pos && (
+          <span
+            aria-hidden
+            className={`absolute h-3 w-3 rotate-45 border-primary/25 bg-popover ${side === "l" ? "-right-[7px] border-r border-t" : "-left-[7px] border-b border-l"}`}
+            style={{ top: pos.ny - 6 }}
+          />
+        )}
+        {open && <DetailBody card={card} product={product} />}
+      </div>
+
+      {/* Tablet-size screens: pop-up card inside the tablet */}
+      <div
+        className={`pointer-events-none absolute inset-0 hidden md:flex xl:hidden ${ALIGN_X[card.align]} ${ALIGN_Y[card.valign]}`}
         aria-hidden={!open}
       >
         <div
@@ -200,10 +244,6 @@ function CardsArea({ product }: { product: Product }) {
           />
         ))}
       </div>
-      {/* product-page button — phones (on larger screens it sits in the tablet header) */}
-      <div className="mt-2.5 flex justify-center sm:hidden">
-        <ProductLink product={product} />
-      </div>
     </>
   );
 }
@@ -222,7 +262,7 @@ function AppPanel({ product, front, leaving, entering }: { product: Product; fro
       : undefined;
   return (
     <div
-      className={`col-start-1 row-start-1 min-w-0 overflow-x-clip ${front ? "ps-front" : "pointer-events-none"}`}
+      className={`col-start-1 row-start-1 min-w-0 ${isLeaving || (front && entering) ? "overflow-x-clip" : ""} ${front ? "ps-front" : "pointer-events-none"}`}
       style={{
         opacity: front || isLeaving ? 1 : 0,
         visibility: front || isLeaving ? "visible" : "hidden",
@@ -250,7 +290,6 @@ function AppPanel({ product, front, leaving, entering }: { product: Product; fro
           />
           <Et as="p" id={pid(product, "tagline")} def={product.tagline} className="truncate text-[11px] font-medium text-muted-foreground sm:text-xs" />
         </div>
-        <ProductLink product={product} className="ml-auto max-sm:hidden" />
       </div>
 
       <div className="px-3 pb-3 sm:px-5 sm:pb-4">
@@ -282,7 +321,7 @@ function Tablet({ active, leaving, entering, tabAnim }: { active: number; leavin
         <span className="absolute -left-[3px] top-32 hidden h-9 w-[4px] rounded-l bg-gradient-to-b from-zinc-300 to-zinc-500 sm:block" aria-hidden />
 
         {/* aluminium frame */}
-        <div className="rounded-[30px] bg-gradient-to-br from-zinc-200 via-zinc-50 to-zinc-400 p-[3px] shadow-[0_50px_90px_-35px_rgba(40,20,120,0.6),0_18px_30px_-18px_rgba(0,0,0,0.35)] sm:rounded-[40px]">
+        <div data-tablet-frame className="rounded-[30px] bg-gradient-to-br from-zinc-200 via-zinc-50 to-zinc-400 p-[3px] shadow-[0_50px_90px_-35px_rgba(40,20,120,0.6),0_18px_30px_-18px_rgba(0,0,0,0.35)] sm:rounded-[40px]">
           {/* black bezel */}
           <div className="relative rounded-[27px] bg-[#0a0a14] p-2.5 sm:rounded-[37px] sm:p-4">
             {/* front camera */}
@@ -402,14 +441,14 @@ export default function ProductsShowcase() {
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         {/* heading */}
         <div className="mx-auto max-w-3xl text-center">
-          <Et as="div" id="home.products.badge" def="What we build" className="mx-auto w-fit rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-primary lrbc-anim mb-5" />
+          <div className="lrbc-eyebrow-row lrbc-anim mb-5"><Et as="div" id="home.products.badge" def="What we build" className="lrbc-eyebrow" /></div>
           <Et as="h2" id="home.products.heading" def="Products & Services" className="lrbc-anim lrbc-anim-d1 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl" />
           <Et as="p" id="home.products.subtitle" def="Software built around how your business actually operates." className="lrbc-anim lrbc-anim-d2 mx-auto mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg" />
         </div>
 
         {/* stage */}
         <div
-          className="lrbc-anim lrbc-anim-d2 relative mx-auto mt-10 max-w-[980px] touch-pan-y select-none md:mt-12"
+          className="lrbc-anim lrbc-anim-d2 relative mx-auto mt-10 max-w-[980px] touch-pan-y select-none md:mt-12 xl:max-w-[clamp(680px,calc(100vw-600px),980px)]"
           style={
             {
               "--n": N,
@@ -423,10 +462,10 @@ export default function ProductsShowcase() {
           {/* side arrows */}
           {N > 1 && (
             <>
-              <button type="button" onClick={prev} aria-label="Previous product" className={`${arrowCls} left-1 xl:-left-14`}>
+              <button type="button" onClick={prev} aria-label="Previous product" className={`${arrowCls} left-1 xl:hidden`}>
                 <ChevronLeft className="h-5 w-5" />
               </button>
-              <button type="button" onClick={next} aria-label="Next product" className={`${arrowCls} right-1 xl:-right-14`}>
+              <button type="button" onClick={next} aria-label="Next product" className={`${arrowCls} right-1 xl:hidden`}>
                 <ChevronRight className="h-5 w-5" />
               </button>
             </>
@@ -438,6 +477,12 @@ export default function ProductsShowcase() {
 
         {/* dots — under the section */}
         <div className="mt-8 flex flex-col items-center gap-2">
+          <div className="flex items-center gap-4">
+          {N > 1 && (
+            <button type="button" onClick={prev} aria-label="Previous product" className="hidden h-9 w-9 place-items-center rounded-full bg-background/90 text-primary shadow-md ring-1 ring-border transition-colors hover:bg-primary hover:text-primary-foreground xl:grid">
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+          )}
           <div className="flex items-center gap-2.5" role="tablist" aria-label="Products">
             {PRODUCTS.map((p, i) => (
               <button
@@ -453,9 +498,23 @@ export default function ProductsShowcase() {
               />
             ))}
           </div>
-          <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
-            <Et id={pid(PRODUCTS[active], "name")} def={PRODUCTS[active].name} /> · {String(active + 1).padStart(2, "0")}/{String(N).padStart(2, "0")}
-          </p>
+          {N > 1 && (
+            <button type="button" onClick={next} aria-label="Next product" className="hidden h-9 w-9 place-items-center rounded-full bg-background/90 text-primary shadow-md ring-1 ring-border transition-colors hover:bg-primary hover:text-primary-foreground xl:grid">
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          )}
+          </div>
+          <div key={PRODUCTS[active].id} className="ps-fade-up mt-3 flex w-full justify-center">
+            <Lnk
+              id={pid(PRODUCTS[active], "cta.href")}
+              href={PRODUCTS[active].ctaHref ?? PRODUCTS[active].href}
+              labelId={pid(PRODUCTS[active], "explore")}
+              label={`Explore ${PRODUCTS[active].name}`}
+              className="lrbc-btn lrbc-btn-primary sm:!w-auto"
+            >
+              <ArrowUpRight className="h-4 w-4" />
+            </Lnk>
+          </div>
         </div>
       </div>
     </section>

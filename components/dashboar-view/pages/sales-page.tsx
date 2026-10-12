@@ -32,8 +32,8 @@ export default function SalesPage() {
           value={142}
           description="-8 vs Target (150)"
           icon={Target}
-          iconColor="text-blue-500"
-          iconBg="bg-blue-500/10"
+          iconColor="text-primary"
+          iconBg="bg-primary/10"
         />
 
         <StatCard
@@ -51,8 +51,8 @@ export default function SalesPage() {
           value="₹2.12L"
           description="+12% LHF Strategy"
           icon={IndianRupee}
-          iconColor="text-amber-500"
-          iconBg="bg-amber-500/10"
+          iconColor="text-primary"
+          iconBg="bg-primary/10"
         />
 
         <StatCard
@@ -60,8 +60,8 @@ export default function SalesPage() {
           value="₹30.2L"
           description="Calculated: Me × C × A"
           icon={Wallet}
-          iconColor="text-emerald-500"
-          iconBg="bg-emerald-500/10"
+          iconColor="text-primary"
+          iconBg="bg-primary/10"
         />
 
       </div>

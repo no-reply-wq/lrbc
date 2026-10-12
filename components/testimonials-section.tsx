@@ -5,6 +5,7 @@ import type React from "react"
 import { useRef } from "react";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
+import { padMasks } from "@/lib/split-safe";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import TestimonialsGrid from "./testimonials-grid";
@@ -97,12 +98,12 @@ export default function TestimonialsSection() {
 
       const heading = SplitText.create(headingRef.current, {
         type: "lines",
-        mask: "lines",
+        mask: "lines", onSplit: padMasks,
       });
 
       const subtitle = SplitText.create(subtitleRef.current, {
         type: "lines",
-        mask: "lines",
+        mask: "lines", onSplit: padMasks,
       });
 
      
@@ -207,7 +208,7 @@ export default function TestimonialsSection() {
       
       {/* Header Section */}
       <div className="mx-auto max-w-2xl space-y-3 text-center mt-0">
-         <Et as="div" id="home.testimonials.badge" def="Testimonials" className="mx-auto w-fit rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-primary mb-5" />
+         <div className="lrbc-eyebrow-row mb-5"><Et as="div" id="home.testimonials.badge" def="Testimonials" className="lrbc-eyebrow" /></div>
         <div className="overflow-hidden">
           <h1
             ref={headingRef}

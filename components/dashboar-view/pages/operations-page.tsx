@@ -40,8 +40,8 @@ export default function OperationsPage() {
           value="45%"
           description="Target GP: 50%"
           icon={BadgePercent}
-          iconColor="text-emerald-500"
-          iconBg="bg-emerald-500/10"
+          iconColor="text-primary"
+          iconBg="bg-primary/10"
         />
 
         <StatCard
@@ -50,8 +50,8 @@ export default function OperationsPage() {
           suffix=" days"
           description="+5 days vs Last Week"
           icon={TriangleAlert}
-          iconColor="text-amber-500"
-          iconBg="bg-amber-500/10"
+          iconColor="text-primary"
+          iconBg="bg-primary/10"
         />
 
         <StatCard
@@ -59,8 +59,8 @@ export default function OperationsPage() {
           value={4.2}
           description="Healthy Velocity"
           icon={Package}
-          iconColor="text-blue-500"
-          iconBg="bg-blue-500/10"
+          iconColor="text-primary"
+          iconBg="bg-primary/10"
         />
 
       </div>

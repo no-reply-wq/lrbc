@@ -5,6 +5,7 @@ import ContactFormModal from "@/components/ContactFormModal";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplitText from "gsap/SplitText";
+import { padMasks } from "@/lib/split-safe";
 import { useGSAP } from "@gsap/react";
 import { Et, Hide, useVal } from "@/components/cms/editable";
 
@@ -18,7 +19,7 @@ export default function CallToAction({ cmsId = "cta" }: { cmsId?: string } = {})
     () => {
       const heading = SplitText.create(".cta-title", {
         type: "lines",
-        mask: "lines",
+        mask: "lines", onSplit: padMasks,
       });
 
       const tl = gsap.timeline({
@@ -53,11 +54,11 @@ export default function CallToAction({ cmsId = "cta" }: { cmsId?: string } = {})
 
           <Et as="p" id={`${cmsId}.text`} def="Give your team instant access to accurate business data, reduce time spent managing information, and focus on growing your business." className="cta-description mt-3 text-sm sm:text-base overflow-hidden text-muted-foreground" />
 
-          <div className="cta-form mx-auto mt-8 flex justify-center lg:mt-10">
+          <div className="cta-form lrbc-cta-row">
             <ContactFormModal
               buttonText={buttonText}
               source="Product page — Free walkthrough"
-              className="cta-button inline-flex h-12 w-full max-w-xs items-center justify-center rounded-xl bg-primary px-8 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-colors hover:bg-primary/90 sm:w-auto"
+              className="cta-button lrbc-btn lrbc-btn-primary sm:w-auto"
             />
           </div>
         </div>

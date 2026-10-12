@@ -97,9 +97,9 @@ const rows: Row[] = [
 ];
 
 const iconColor = {
-  healthy: "text-emerald-500",
-  watch: "text-amber-500",
-  risk: "text-red-500",
+  healthy: "text-primary",
+  watch: "text-violet-400",
+  risk: "text-fuchsia-500",
   critical: "text-destructive",
   disputed: "text-muted-foreground",
 };

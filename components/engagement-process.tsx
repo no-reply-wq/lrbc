@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Et, Hide } from "@/components/cms/editable";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
+import { padMasks } from "@/lib/split-safe";
 import { useGSAP } from "@gsap/react";
 import { Search, Cpu, Rocket } from "lucide-react";
 
@@ -27,10 +28,10 @@ const STEPS = [
     icon: Cpu,
     title: "Custom Architecture & Build",
     body: "We design and build your system around your real operational process — not a pre-packaged module. Every workflow, dashboard, and approval chain is engineered to match how your business actually runs.",
-    accent: "from-blue-500/20 to-cyan-500/10",
-    border: "border-blue-500/20",
-    iconBg: "bg-blue-500/10",
-    iconColor: "text-blue-500",
+    accent: "from-primary/15 to-fuchsia-500/10",
+    border: "border-primary/25",
+    iconBg: "bg-primary/10",
+    iconColor: "text-primary",
     tag: "Weeks 3-10",
   },
   {
@@ -38,10 +39,10 @@ const STEPS = [
     icon: Rocket,
     title: "On-the-Ground Implementation & Autopilot Support",
     body: "Software fails when people don't adopt it. We deploy on-site, train your workforce hands-on, and stay engaged until the system runs on autopilot — fully embedded into daily operations, independent of any single person.",
-    accent: "from-emerald-500/20 to-teal-500/10",
-    border: "border-emerald-500/20",
-    iconBg: "bg-emerald-500/10",
-    iconColor: "text-emerald-500",
+    accent: "from-fuchsia-500/20 to-purple-500/10",
+    border: "border-fuchsia-500/20",
+    iconBg: "bg-fuchsia-500/10",
+    iconColor: "text-fuchsia-500",
     tag: "Ongoing",
   },
 ];
@@ -51,11 +52,20 @@ export default function EngagementProcess() {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const subRef     = useRef<HTMLParagraphElement>(null);
   const cardsRef   = useRef<HTMLDivElement>(null);
-  const lineRef    = useRef<HTMLDivElement>(null);
+  const [on, setOn] = useState(false);
+
+  useEffect(() => {
+    const el = cardsRef.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") { setOn(true); return; }
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setOn(true); io.disconnect(); } }, { threshold: 0.3 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   useGSAP(() => {
-    const heading = SplitText.create(headingRef.current, { type: "lines", mask: "lines" });
-    const sub     = SplitText.create(subRef.current,     { type: "lines", mask: "lines" });
+    const heading = SplitText.create(headingRef.current, { type: "lines", mask: "lines", onSplit: padMasks });
+    const sub     = SplitText.create(subRef.current,     { type: "lines", mask: "lines", onSplit: padMasks });
 
     const headTl = gsap.timeline({
       scrollTrigger: {
@@ -69,44 +79,15 @@ export default function EngagementProcess() {
       .from(heading.lines, { yPercent: 100, duration: 0.8, ease: "power3.out", stagger: 0.1 })
       .from(sub.lines,     { yPercent: 100, opacity: 0, duration: 0.6, ease: "power3.out", stagger: 0.08 }, "-=0.3");
 
-    if (lineRef.current) {
-      gsap.fromTo(lineRef.current,
-        { scaleX: 0, transformOrigin: "left center" },
-        {
-          scaleX: 1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: cardsRef.current,
-            start: "top 70%",
-            end: "top 30%",
-            scrub: 1,
-          },
-        }
-      );
-    }
-
-    const cards = gsap.utils.toArray<HTMLElement>(".ep-card");
-    gsap.set(cards, { y: 80, opacity: 0, scale: 0.95 });
-
-    ScrollTrigger.create({
-      trigger: cardsRef.current,
-      start: "top 75%",
-      onEnter: () => {
-        gsap.to(cards, { y: 0, opacity: 1, scale: 1, duration: 0.7, ease: "power3.out", stagger: 0.18 });
-      },
-      onLeaveBack: () => {
-        gsap.to(cards, { y: 80, opacity: 0, scale: 0.95, duration: 0.4, stagger: 0.1 });
-      },
-    });
 
   }, { scope: sectionRef });
 
   return (
-    <section ref={sectionRef} className="py-8 md:py-12 overflow-hidden">
+    <section ref={sectionRef} className="py-8 md:py-12 overflow-x-clip">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
 
         <div className="text-center mb-8 md:mb-16">
-          <Et as="p" id="why.process.eyebrow" def="The Engagement Process" className="text-xs font-semibold uppercase tracking-widest text-primary mb-3" />
+          <div className="lrbc-eyebrow-row mb-5"><Et as="div" id="why.process.eyebrow" def="The Engagement Process" className="lrbc-eyebrow" /></div>
           <div className="overflow-hidden">
             <Et
               as="h2"
@@ -129,44 +110,34 @@ export default function EngagementProcess() {
           </div>
         </div>
 
-        <div ref={cardsRef} className="relative">
-          <div className="hidden lg:block absolute top-[3.75rem] left-[calc(16.66%+2rem)] right-[calc(16.66%+2rem)] h-px bg-border/60 z-0">
-            <div ref={lineRef} className="absolute inset-0 bg-gradient-to-r from-violet-500 via-blue-500 to-emerald-500 origin-left" />
-          </div>
-
-          <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
+        {/* Same connected-steps design as the Mini / Custom ERP "How it works" */}
+        <div ref={cardsRef}>
+          <ol className={`sf relative grid gap-4 pt-7 md:grid-cols-3 ${on ? "sf-on" : ""}`}>
+            <span aria-hidden className="sf-line pointer-events-none absolute z-0 hidden h-0.5 rounded-full bg-gradient-to-r from-[#5227FF] via-[#a855f7] to-[#d946ef] md:block md:left-[calc((100%-2rem)/6)] md:right-[calc((100%-2rem)/6)] md:top-7 md:-translate-y-1/2">
+              <i className="sf-dot" />
+            </span>
+            <span aria-hidden className="sf-line-v pointer-events-none absolute bottom-8 left-7 top-14 z-0 w-0.5 rounded-full bg-gradient-to-b from-[#5227FF] via-[#a855f7] to-[#d946ef] md:hidden" />
             {STEPS.map((step, i) => {
               const Icon = step.icon;
               return (
                 <Hide key={i} id={`why.process.step.${i}`}>
-                <div
-                  className={
-                    "ep-card relative rounded-3xl border bg-gradient-to-br p-7 sm:p-8 " +
-                    step.border + " " + step.accent
-                  }
+                <li
+                  style={{ ["--i" as string]: i }}
+                  className="sf-card relative z-10 rounded-2xl border border-border/70 bg-card p-6 pt-10 transition-colors hover:border-primary/40 max-md:pl-20 max-md:pt-6 md:text-center"
                 >
-                  <div className="flex items-center justify-between mb-7">
-                    <Et id={`why.process.step.${i}.number`} def={step.number} className="font-mono text-5xl font-bold text-foreground/10 select-none" />
-                    <div className={"flex h-12 w-12 items-center justify-center rounded-2xl " + step.iconBg + " " + step.iconColor}>
-                      <Icon className="h-5 w-5" />
-                    </div>
-                  </div>
-
-                  <Et id={`why.process.step.${i}.tag`} def={step.tag} className="inline-block rounded-full border border-border bg-background/60 px-3 py-0.5 text-xs font-medium text-muted-foreground mb-4" />
-
-                  <Et as="h3" id={`why.process.step.${i}.title`} def={step.title} className="text-lg font-semibold leading-snug mb-3" />
-                  <Et as="p" id={`why.process.step.${i}.body`} def={step.body} className="text-sm text-muted-foreground leading-6" />
-
-                  {i < STEPS.length - 1 && (
-                    <div className="lg:hidden mt-8 flex justify-center">
-                      <div className="w-px h-10 bg-gradient-to-b from-border to-transparent" />
-                    </div>
-                  )}
-                </div>
+                  <span className="sf-badge absolute grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-[#5227FF] to-[#a855f7] text-white shadow-lg shadow-primary/30 ring-4 ring-background max-md:left-0 max-md:top-3 md:-top-7 md:left-1/2 md:-translate-x-1/2">
+                    <Icon className="h-6 w-6" />
+                    <span aria-hidden className="sf-ring absolute inset-0 rounded-2xl" />
+                  </span>
+                  <Et id={`why.process.step.${i}.number`} def={step.number} className="block text-xs font-semibold uppercase tracking-widest text-primary/70" />
+                  <Et id={`why.process.step.${i}.tag`} def={step.tag} className="mt-2 inline-block rounded-full border border-border bg-background/60 px-3 py-0.5 text-xs font-medium text-muted-foreground" />
+                  <Et as="h3" id={`why.process.step.${i}.title`} def={step.title} className="mt-2 block text-lg font-semibold leading-snug" />
+                  <Et as="p" id={`why.process.step.${i}.body`} def={step.body} className="mt-2 text-sm leading-relaxed text-muted-foreground" />
+                </li>
                 </Hide>
               );
             })}
-          </div>
+          </ol>
         </div>
       </div>
     </section>

@@ -21,7 +21,7 @@ export default function LekhaSetu() {
       <LekhaSetuHero />
       <LekhaSetuLoss />
       <SolutionSection />
-      <div className="hidden md:block"><IntegrationsSection/></div>
+      <IntegrationsSection />
       <FeaturesSethu />
       <CallToAction cmsId="lekha.cta" />
       <FooterSection />

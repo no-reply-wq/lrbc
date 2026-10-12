@@ -1,7 +1,9 @@
-import { Check, X, ArrowRight, type LucideIcon } from "lucide-react";
+import { Check, ArrowRight, type LucideIcon } from "lucide-react";
 import { HeroHeader } from "@/components/header";
 import FooterSection from "@/components/footer-section";
 import ContactFormModal from "@/components/ContactFormModal";
+import FitLists from "@/components/product-pages/FitLists";
+import FadeText from "@/components/product-pages/FadeText";
 import StepsFlow from "@/components/product-pages/StepsFlow";
 import { Et, Lnk, Hide } from "@/components/cms/editable";
 import { getContent } from "@/lib/content";
@@ -83,9 +85,9 @@ export async function ProductPage({ d }: { d: ProductPageData }) {
             <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(109,61,240,.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(109,61,240,.06)_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
           </div>
           <div className="mx-auto max-w-4xl text-center">
-            <span className="inline-flex items-center rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-              <Et id={k("badge")} def={d.badge} />
-            </span>
+            <div className="lrbc-eyebrow-row">
+              <span className="lrbc-eyebrow"><Et id={k("badge")} def={d.badge} /></span>
+            </div>
             <h1 className="mt-6 text-balance text-4xl font-semibold tracking-tight text-foreground sm:text-5xl md:text-6xl">
               <Et id={k("h1a")} def={d.h1[0]} />{" "}
               <Et id={k("h1b")} def={d.h1[1]} className="bg-gradient-to-r from-[#5227FF] via-[#8b5cf6] to-[#d946ef] bg-clip-text text-transparent" />
@@ -116,10 +118,10 @@ export async function ProductPage({ d }: { d: ProductPageData }) {
             <h2 id="features-h" className="mx-auto max-w-2xl text-balance text-center text-3xl font-semibold tracking-tight sm:text-4xl">
               <Et id={k("featuresTitle")} def={`What ${d.name} gives your business`} />
             </h2>
-            <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-10 flex flex-wrap justify-center gap-4">
               {d.features.map((f, i) => (
                 <Hide key={f.title} id={k(`feat.${i}`)}>
-                <article className="group relative overflow-hidden rounded-2xl border border-border/70 bg-card p-6 transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10">
+                <article className="group relative w-full overflow-hidden rounded-2xl border border-border/70 bg-card p-6 transition sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.7rem)] hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10">
                   <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-[#5227FF] to-[#a855f7] text-white shadow-md shadow-primary/30">
                     <f.icon className="h-5 w-5" />
                   </span>
@@ -144,40 +146,31 @@ export async function ProductPage({ d }: { d: ProductPageData }) {
         <Hide id={k("sec.fit")}><section className="px-4 py-8 sm:px-6 sm:py-12" aria-labelledby="fit-h">
           <div className="mx-auto max-w-5xl">
             <h2 id="fit-h" className="text-center text-3xl font-semibold tracking-tight sm:text-4xl"><Et id={k("fitTitle")} def={`Is ${d.name} right for you?`} /></h2>
-            <div className="mt-10 grid gap-4 md:grid-cols-2">
-              <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-6">
-                <Et as="h3" id={k("fitGoodTitle")} def="A good fit if…" className="font-semibold text-foreground" />
-                <ul className="mt-4 space-y-3">
-                  {d.fits.map((t, i) => (
-                    <Hide key={t} id={k(`fit.${i}`)}><li className="flex gap-3 text-sm text-muted-foreground"><Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" /><Et id={k(`fit.${i}`)} def={t} /></li></Hide>
-                  ))}
-                </ul>
-              </div>
-              <div className="rounded-2xl border border-border/70 bg-card p-6">
-                <Et as="h3" id={k("fitBadTitle")} def="Probably not the right fit if…" className="font-semibold text-foreground" />
-                <ul className="mt-4 space-y-3">
-                  {d.notFits.map((t, i) => (
-                    <Hide key={t} id={k(`notfit.${i}`)}><li className="flex gap-3 text-sm text-muted-foreground"><X className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground/70" /><Et id={k(`notfit.${i}`)} def={t} /></li></Hide>
-                  ))}
-                </ul>
-                <Lnk id={k("other.href")} href={d.other.href} labelId={k("other.text")} label={d.other.text} className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline" />
-              </div>
-            </div>
+            <FitLists
+              slug={d.slug}
+              fits={d.fits}
+              notFits={d.notFits}
+              action={<Lnk id={k("other.href")} href={d.other.href} labelId={k("other.text")} label={d.other.text} className="lrbc-btn lrbc-btn-secondary sm:w-auto" />}
+            />
           </div>
         </section></Hide>
 
         {/* Pricing guidance */}
         <Hide id={k("sec.pricing")}><section className="px-4 py-8 sm:px-6 md:py-12" aria-labelledby="price-h">
-          <div className="mx-auto max-w-4xl rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-fuchsia-500/10 p-6 sm:p-10">
-            <h2 id="price-h" className="text-2xl font-semibold tracking-tight sm:text-3xl"><Et id={k("pricing.title")} def={d.pricing.title} /></h2>
-            <Et as="p" id={k("pricing.text")} def={d.pricing.text} className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base" />
-            <ul className="mt-5 grid gap-2 sm:grid-cols-2">
-              {d.pricing.points.map((p, i) => (
-                <Hide key={p} id={k(`pricing.pt.${i}`)}><li className="flex gap-3 text-sm text-foreground"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" /><Et id={k(`pricing.pt.${i}`)} def={p} /></li></Hide>
-              ))}
-            </ul>
-            <div className="mt-7">
-              <ContactFormModal buttonText="Know your Quote" source={`${d.name} page — pricing`} className={cta} />
+          <div className="mx-auto grid max-w-5xl items-center gap-8 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-fuchsia-500/10 p-6 sm:p-10 md:grid-cols-2 md:gap-12">
+            <div>
+              <h2 id="price-h" className="text-2xl font-semibold tracking-tight sm:text-3xl"><Et id={k("pricing.title")} def={d.pricing.title} /></h2>
+              <FadeText id={k("pricing.text")} def={d.pricing.text} className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base" />
+            </div>
+            <div className="flex flex-col items-center">
+              <ul className="grid w-full gap-3">
+                {d.pricing.points.map((p, i) => (
+                  <Hide key={p} id={k(`pricing.pt.${i}`)}><li className="flex gap-3 rounded-xl border border-primary/15 bg-background/60 px-4 py-3 text-sm text-foreground"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" /><Et id={k(`pricing.pt.${i}`)} def={p} /></li></Hide>
+                ))}
+              </ul>
+              <div className="lrbc-cta-row">
+                <ContactFormModal buttonText="Know your Quote" source={`${d.name} page — pricing`} className={cta} />
+              </div>
             </div>
           </div>
         </section></Hide>

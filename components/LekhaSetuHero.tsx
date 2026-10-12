@@ -17,6 +17,7 @@ import Image from 'next/image'
 import { AnimatedGroup } from '@/components/ui/animated-group'
 import { Button } from "./ui/button";
 import { Et, Hide } from "@/components/cms/editable";
+import { padMasks, REVEAL_Y } from "@/lib/split-safe";
 
 
 
@@ -36,11 +37,13 @@ export default function LekhaSetuHero() {
       const heading = SplitText.create(headingRef.current, {
         type: "lines",
         mask: "lines",
+        onSplit: padMasks,
       });
 
       const subtitle = SplitText.create(subtitleRef.current, {
         type: "lines",
         mask: "lines",
+        onSplit: padMasks,
       });
 
       gsap.set(
@@ -66,7 +69,7 @@ export default function LekhaSetuHero() {
       tl.from(
         heading.lines,
         {
-          yPercent: 100,
+          yPercent: REVEAL_Y,
           duration: 0.8,
           ease: "power3.out",
           stagger: 0.1,
@@ -76,7 +79,7 @@ export default function LekhaSetuHero() {
         .from(
           subtitle.lines,
           {
-            yPercent: 100,
+            yPercent: REVEAL_Y,
             opacity: 0,
             duration: 0.8,
             ease: "power3.out",
@@ -173,25 +176,20 @@ export default function LekhaSetuHero() {
                         <div className="mx-auto max-w-7xl px-6">
                             <div className="text-center sm:mx-auto lg:mr-auto lg:mt-0">
 
-                                <div
-                                    
-                                    className="hover:bg-background overflow-hidden dark:hover:border-t-border bg-muted group mx-auto flex w-fit items-center gap-4 rounded-full border p-1 pl-4 shadow-md shadow-zinc-950/5 transition-colors duration-300 dark:border-t-white/5 dark:shadow-zinc-950">
-                                    <Et as="span" id="lekha.hero.badge" def="LekhaSetu" ref={quoteRef} className="text-foreground text-sm" />
-                                    <span className="dark:border-background block h-4 w-0.5 border-l bg-white dark:bg-zinc-700"></span>
-
-                                   
+                                <div className="lrbc-eyebrow-row">
+                                    <Et as="span" id="lekha.hero.badge" def="LekhaSetu" ref={quoteRef} className="lrbc-eyebrow" />
                                 </div>
 
-                                <div className="overflow-hidden">
-                                    <h1 ref={headingRef} className="overflow-hidden mx-auto mt-5 max-w-5xl flex flex-col text-center text-2xl font-bold sm:text-4xl md:text-5xl lg:mt-12 xl:text-[5.25rem]">
-                                        <Et id="lekha.hero.title1" def="Your Accounts." reload className="overflow-hidden" />
-                                        <Et id="lekha.hero.title2" def=" Always in Sync." reload className="overflow-hidden" />
+                                <div className="overflow-hidden lrbc-clip-safe">
+                                    <h1 ref={headingRef} className="overflow-hidden lrbc-clip-safe mx-auto mt-5 max-w-5xl flex flex-col text-center text-2xl font-bold sm:text-4xl md:text-5xl lg:mt-12 xl:text-[5.25rem]">
+                                        <Et id="lekha.hero.title1" def="Your Accounts." reload className="overflow-hidden lrbc-clip-safe" />
+                                        <Et id="lekha.hero.title2" def=" Always in Sync." reload className="overflow-hidden lrbc-clip-safe" />
                                         
                                         
                                     </h1>
                                 </div>
-                                <div className="overflow-hidden">
-                                    <Et as="p" id="lekha.hero.subtitle" def="Automatically sync your accounting software data to the cloud every few minutes. Access accurate, real-time business insights without changing the way you work." reload className="mx-auto mt-5 max-w-2xl text-center text-base sm:text-lg overflow-hidden px-2" ref={subtitleRef} />
+                                <div className="overflow-hidden lrbc-clip-safe">
+                                    <Et as="p" id="lekha.hero.subtitle" def="Automatically sync your accounting software data to the cloud every few minutes. Access accurate, real-time business insights without changing the way you work." reload className="mx-auto mt-5 max-w-2xl text-center text-base sm:text-lg overflow-hidden lrbc-clip-safe px-2" ref={subtitleRef} />
                                 </div>
                             <Button
             asChild

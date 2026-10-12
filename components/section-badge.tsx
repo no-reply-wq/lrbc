@@ -12,15 +12,8 @@ interface SectionBadgeProps {
 // The icon prop is accepted but intentionally ignored so callers don't break.
 export default function SectionBadge({ text, className = "" }: SectionBadgeProps) {
   return (
-    <div
-      className={[
-        "mx-auto w-fit rounded-full border border-primary/20",
-        "bg-primary/5 px-4 py-1.5 text-xs font-semibold",
-        "uppercase tracking-widest text-primary",
-        className,
-      ].join(" ")}
-    >
-      {text}
+    <div className="lrbc-eyebrow-row">
+      <div className={["lrbc-eyebrow", className].join(" ").trim()}>{text}</div>
     </div>
   );
 }
