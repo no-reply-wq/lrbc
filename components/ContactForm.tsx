@@ -405,9 +405,6 @@ export function ContactForm({ source = "Website contact form" }: { source?: stri
               <><Loader2 className="h-4 w-4 animate-spin" /> Sending…</>
             ) : "Let's Explore Solution"}
           </button>
-          <p className="text-center text-[11px] leading-snug text-muted-foreground">
-            By sending this you agree that LRBC may contact you about your enquiry.
-          </p>
         </form>
       )}
     </Card>
