@@ -39,3 +39,27 @@ export function useScrollFadeWords<T extends HTMLElement = HTMLElement>(wordsCla
   );
   return ref;
 }
+
+
+/** Same idea as useScrollFadeWords, but each LINE of the statement fills in, one after another. */
+export function useScrollFadeLines<T extends HTMLElement = HTMLElement>() {
+  const ref = useRef<T>(null);
+  useGSAP(
+    () => {
+      const el = ref.current;
+      if (!el) return;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const split = SplitText.create(el, { type: "lines", autoSplit: true });
+      gsap.set(split.lines, { opacity: 0.3 });
+      gsap.to(split.lines, {
+        opacity: 1,
+        ease: "none",
+        stagger: 0.5,
+        scrollTrigger: { trigger: el, start: "top 85%", end: "+=320", scrub: true },
+      });
+      return () => split.revert();
+    },
+    { scope: ref }
+  );
+  return ref;
+}

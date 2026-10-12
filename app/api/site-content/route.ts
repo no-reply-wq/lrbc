@@ -58,7 +58,7 @@ const SEED_CONTENT = [
   { key: 'about_team', page: 'about', section: 'Team Section', data: {
     badge: 'Team',
     heading: 'Meet the team',
-    subheading: 'We involve our clients at every stage of the tailoring process, conducting regular fittings to ensure the suit fits perfectly and reflects their personal preferences.',
+    subheading: 'During the work process, we perform regular fittings with the client because only the client can know whether a new suite fits or not.',
   }},
 
   // ── LEKHASETU ─────────────────────────────────────────────────────────────

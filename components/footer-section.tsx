@@ -107,10 +107,9 @@ export default function FooterSection() {
             border
             border-primary/15
             bg-background/70
-            px-4
-            py-7
-            sm:px-6
-            sm:py-9
+            max-sm:rounded-none max-sm:border-0 max-sm:bg-transparent max-sm:shadow-none max-sm:backdrop-blur-none
+            px-0 sm:px-6
+            py-4 sm:py-9
             shadow-xl
             shadow-primary/10
             backdrop-blur-md
@@ -122,6 +121,7 @@ export default function FooterSection() {
             className="
               grid
               grid-cols-1
+              max-sm:grid-cols-3 max-sm:gap-x-4 max-sm:gap-y-8
               gap-8
               md:gap-10
               md:grid-cols-[1fr_3fr]
@@ -137,8 +137,11 @@ export default function FooterSection() {
               className="
                 flex
                 flex-col
-                items-center
-                text-center
+                items-start
+                text-left
+                max-sm:col-span-2
+                sm:items-center
+                sm:text-center
                 md:items-start
                 md:text-left
               "
@@ -168,20 +171,21 @@ export default function FooterSection() {
 
             <div
               className="
-                grid
-                grid-cols-2
-                gap-3 sm:gap-x-8
-                sm:gap-y-9
+                max-sm:contents
+                sm:grid
                 sm:grid-cols-4
+                sm:gap-x-8
+                sm:gap-y-9
+                sm:border-t sm:border-border/50 sm:pt-8 md:border-0 md:pt-0
               "
             >
               {links.map((link, gi) => (
                 <Hide key={link.group} id={`footer.col.${gi}`}>
                 <div
-                  className="h-full space-y-3 text-sm max-sm:rounded-2xl max-sm:border max-sm:border-primary/10 max-sm:bg-primary/[0.04] max-sm:p-4 sm:space-y-5"
+                  className="min-w-0 space-y-3 text-[13px] sm:space-y-5 sm:text-sm"
                 >
                   {/* Section Title */}
-                  <span className="block font-mono text-xs font-semibold uppercase tracking-[0.16em] text-foreground">
+                  <span className="block font-mono text-[11px] font-semibold uppercase tracking-[0.1em] sm:text-xs sm:tracking-[0.16em] text-foreground">
                     <Et id={`footer.col.${gi}.title`} def={link.group} />
                     <span aria-hidden className="mt-2 block h-0.5 w-6 rounded-full bg-gradient-to-r from-[#5227FF] to-[#d946ef]" />
                   </span>
