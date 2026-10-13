@@ -67,19 +67,18 @@ const REVIEWS = [
 
 const CS_PAGE = 2;
 
-// ── Email gate: a one-line preview for visitors; verifying the email with an OTP unlocks every case study ──
+// ── Email gate: the page shows a one-line preview only; verifying the email with an OTP unlocks the PDF download (full text + screenshots) ──
 const VERIFIED_KEY = "lrbc-cs-verified";
 const WEB3FORMS_KEY = "d7597fd4-4c3b-40d2-ad55-710160cd9abd";
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 type Verified = { email: string; token: string };
 const UnlockCtx = createContext<{ verified: Verified | null; ask: (client: string) => void; reset: () => void }>({ verified: { email: "", token: "" }, ask: () => {}, reset: () => {} });
 
-/** Full text when verified (or in the editor); otherwise just the first sentence on a single line. */
+/** The website only ever shows a one-line preview; the full case study is in the PDF (the editor still shows everything). */
 function CsText({ id, def }: { id: string; def: string }) {
-  const { verified } = useContext(UnlockCtx);
   const { editing } = useCms();
   const v = useVal(id, def);
-  if (verified || editing) return <Et as="p" id={id} def={def} className="text-sm text-foreground/80 leading-6" />;
+  if (editing) return <Et as="p" id={id} def={def} className="text-sm text-foreground/80 leading-6" />;
   const first = v.split(/(?<=[.!?])\s+/)[0];
   return <p className="line-clamp-1 text-sm text-foreground/80 leading-6">{first}</p>;
 }
@@ -164,7 +163,7 @@ function CaseGateModal({ client, onClose, onVerified }: { client: string; onClos
         {step === "email" ? (
           <>
             <h3 className="mt-4 text-xl font-semibold">See the full case study</h3>
-            <p className="mt-1 text-sm text-muted-foreground">Verify your email to unlock every case study and get the full PDF with screenshots.</p>
+            <p className="mt-1 text-sm text-muted-foreground">Verify your email to download the full case study as a PDF, with all details and screenshots.</p>
             <label htmlFor="cs-name" className="mt-5 block text-sm font-medium">Name <span className="font-normal text-muted-foreground">(optional)</span></label>
             <input id="cs-name" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" className={`${inputCls} border-input`} />
             <label htmlFor="cs-email" className="mt-4 block text-sm font-medium">Email *</label>
@@ -407,7 +406,7 @@ function CaseStudyCard({ cs }: { cs: typeof CASE_STUDIES[0] }) {
   const [dl, setDl] = useState<"idle" | "busy" | "sent" | "err">("idle");
   const { verified, ask, reset } = useContext(UnlockCtx);
   const { editing } = useCms();
-  const isOpen = !!verified || editing;
+  const isOpen = editing; // full details + screenshots live in the PDF, not on the page
 
   const sendPdf = async () => {
     if (!verified) { ask(cs.client); return; }
@@ -584,7 +583,7 @@ export default function CaseStudiesPage() {
       <section className="mx-auto max-w-4xl px-4 sm:px-6 py-8 md:py-12">
         <div className="rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/5 via-background to-purple-500/5 p-6 sm:p-10 text-center shadow-sm">
           <TrendingUp className="mx-auto mb-4 h-10 w-10 text-primary" />
-          <Et as="h3" id="cases.cta.title" def="Ready to become the next case study?" className="text-2xl sm:text-3xl font-semibold mb-3" />
+          <Et as="h3" id="cases.cta.title" def="Let’s write your success story together" className="text-2xl sm:text-3xl font-semibold mb-3" />
           <Et as="p" id="cases.cta.text" def="Book a discovery call and let us map out what a Business Operating System looks like for your operations." className="text-muted-foreground mb-7 max-w-md mx-auto text-sm sm:text-base" />
           <Button asChild size="lg" className="rounded-full px-8">
             <Lnk id="cases.cta.link" href="/contact?openForm=true" labelId="cases.cta.button" label="Get Started ">

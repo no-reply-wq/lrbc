@@ -113,7 +113,7 @@ const SEED_CONTENT = [
     subheading: 'Each case study shows the specific problem, the system we built, and the measurable outcome.',
   }},
   { key: 'testimonials_cta', page: 'testimonials', section: 'CTA Banner', data: {
-    heading: 'Ready to become the next case study?',
+    heading: 'Let’s write your success story together',
     subheading: 'Book a discovery call and let us map out what a Business Operating System looks like for your operations.',
     button_text: 'Get Started',
     button_href: '/contact?openForm=true',

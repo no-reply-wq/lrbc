@@ -83,7 +83,7 @@ function PlanCard({ plan, index }: { plan: typeof PLANS[0]; index: number }) {
     const body = encodeURIComponent(
       `Hi LRBC Team,\n\nI'd like to start a 15-day free trial of WorkPilot.\n\nPlan: ${plan.name} (${plan.users} @ ₹${plan.price}/user/month)\nMinimum monthly: ₹${(plan.price * plan.minUsers).toLocaleString()}\n\nCompany Name: \nContact Person: \nPhone: \nEmail: \n`
     );
-    window.open(`mailto:no-reply@lalitraj.com?subject=${subject}&body=${body}`, "_self");
+    window.open(`mailto:contact@lrbc.ai?subject=${subject}&body=${body}`, "_self");
     setTimeout(() => setSent(true), 400);
   };
 
@@ -212,7 +212,7 @@ export default function WorkPilotPricing() {
     const body = encodeURIComponent(
       `Hi LRBC Team,\n\nWe are interested in WorkPilot for a team of more than 20 users.\n\nCompany Name: \nContact Person: \nNumber of Users: \nPhone: \nEmail: \n`
     );
-    window.open(`mailto:no-reply@lalitraj.com?subject=${subject}&body=${body}`, "_self");
+    window.open(`mailto:contact@lrbc.ai?subject=${subject}&body=${body}`, "_self");
     setTimeout(() => setEnterpriseSent(true), 400);
   };
 
@@ -267,7 +267,7 @@ export default function WorkPilotPricing() {
 
         <p className="lrbc-anim lrbc-anim-d3 text-center text-sm text-muted-foreground mt-10">
           <Et id="workpilot.pricing.footnote" def="All plans include setup assistance · Pricing in INR + applicable GST · " />
-          <a href="mailto:no-reply@lalitraj.com" className="text-primary hover:underline font-medium">no-reply@lalitraj.com</a>
+          <a href="mailto:contact@lrbc.ai" className="text-primary hover:underline font-medium">contact@lrbc.ai</a>
         </p>
 
       </div>

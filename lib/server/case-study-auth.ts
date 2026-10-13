@@ -1,7 +1,7 @@
 import crypto from "crypto";
 
 /** Stateless e-mail OTP + access tokens (works on serverless — nothing is stored on the server). */
-const secret = () => process.env.OTP_SECRET || process.env.AUTH_SECRET || process.env.RESEND_API_KEY || (process.env.NODE_ENV !== "production" ? "dev-only-secret" : "");
+const secret = () => process.env.OTP_SECRET || process.env.AUTH_SECRET || process.env.GMAIL_APP_PASSWORD || process.env.RESEND_API_KEY || (process.env.NODE_ENV !== "production" ? "dev-only-secret" : "");
 const b64u = (b: Buffer | string) => Buffer.from(b).toString("base64url");
 const mac = (s: string) => crypto.createHmac("sha256", secret()).update(s).digest("base64url");
 const same = (a: string, b: string) => {
