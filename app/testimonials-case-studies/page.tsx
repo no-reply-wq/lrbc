@@ -74,11 +74,12 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 type Verified = { email: string; token: string };
 const UnlockCtx = createContext<{ verified: Verified | null; ask: (client: string) => void; reset: () => void }>({ verified: { email: "", token: "" }, ask: () => {}, reset: () => {} });
 
-/** The website only ever shows a one-line preview; the full case study is in the PDF (the editor still shows everything). */
+/** Visitors see a one-line preview; after verifying their email they read the full case study (the editor always shows everything). */
 function CsText({ id, def }: { id: string; def: string }) {
   const { editing } = useCms();
+  const { verified } = useContext(UnlockCtx);
   const v = useVal(id, def);
-  if (editing) return <Et as="p" id={id} def={def} className="text-sm text-foreground/80 leading-6" />;
+  if (editing || verified) return <Et as="p" id={id} def={def} className="text-sm text-foreground/80 leading-6 sm:leading-7" />;
   const first = v.split(/(?<=[.!?])\s+/)[0];
   return <p className="line-clamp-1 text-sm text-foreground/80 leading-6">{first}</p>;
 }
@@ -163,7 +164,7 @@ function CaseGateModal({ client, onClose, onVerified }: { client: string; onClos
         {step === "email" ? (
           <>
             <h3 className="mt-4 text-xl font-semibold">See the full case study</h3>
-            <p className="mt-1 text-sm text-muted-foreground">Verify your email to download the full case study as a PDF, with all details and screenshots.</p>
+            <p className="mt-1 text-sm text-muted-foreground">Verify your email to read the full case study here, with all details and screenshots, and download it as a PDF.</p>
             <label htmlFor="cs-name" className="mt-5 block text-sm font-medium">Name <span className="font-normal text-muted-foreground">(optional)</span></label>
             <input id="cs-name" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" className={`${inputCls} border-input`} />
             <label htmlFor="cs-email" className="mt-4 block text-sm font-medium">Email *</label>
@@ -275,7 +276,7 @@ function ImageCarousel({ images, idx, setIdx, onOpen }: { images: string[]; idx:
       {/* the picture — natural size; on touch it can be pinched / double-tapped and dragged */}
       <div
         ref={box}
-        className="overflow-hidden"
+        className="h-[220px] overflow-hidden sm:h-[300px] lg:h-[340px]"
         style={{ touchAction: canHover ? "auto" : zoomed ? "none" : "pan-y" }}
         onPointerDown={onDown}
         onPointerMove={onMove}
@@ -285,7 +286,7 @@ function ImageCarousel({ images, idx, setIdx, onOpen }: { images: string[]; idx:
         <img
           src={images[idx]}
           alt="Project screenshot"
-          className="block h-auto w-full"
+          className="block !h-full !w-full object-contain"
           style={{ transform: `translate(${z.x}px, ${z.y}px) scale(${z.s})`, transition: pts.current.size ? "none" : "transform .25s ease-out", transformOrigin: "center" }}
           draggable={false}
           onContextMenu={e => e.preventDefault()}
@@ -335,7 +336,7 @@ function ImageCarousel({ images, idx, setIdx, onOpen }: { images: string[]; idx:
   );
 }
 
-/** Covers the whole case-study card with the image at full size */
+/** Fills only the screenshot block, blurred, with the image at full size */
 function ImageStage({ cs, idx, setIdx, onClose }: { cs: { client: string; images: string[] }; idx: number; setIdx: (n: number) => void; onClose: () => void }) {
   const n = cs.images.length;
   const prev = () => setIdx((idx - 1 + n) % n);
@@ -351,20 +352,20 @@ function ImageStage({ cs, idx, setIdx, onClose }: { cs: { client: string; images
   });
   return (
     <div
-      className="cs-stage absolute inset-0 z-30 bg-background/95 backdrop-blur-md"
+      className="cs-stage absolute inset-0 z-30 overflow-hidden rounded-2xl border border-border bg-background/90 shadow-2xl backdrop-blur-xl"
       onPointerLeave={e => { if (e.pointerType === "mouse") onClose(); }}
       role="dialog"
       aria-label={`${cs.client} screenshots`}
     >
       {/* sticky, so the viewer stays in view even when the card is taller than the screen */}
-      <div className="sticky top-20 flex flex-col" style={{ height: "min(calc(100svh - 6rem), 100%)" }}>
-      <div className="flex items-center justify-between gap-3 px-4 py-3 sm:px-6">
+      <div className="flex h-full flex-col">
+      <div className="flex items-center justify-between gap-3 px-3 py-2 sm:px-5">
         <p className="truncate text-sm font-semibold">{cs.client}{n > 1 && <span className="ml-2 font-normal text-muted-foreground">{idx + 1} / {n}</span>}</p>
         <button onClick={onClose} aria-label="Close" className="inline-flex h-9 items-center gap-1.5 rounded-full border border-border bg-card px-3 text-xs font-medium hover:bg-muted">
           <X className="h-3.5 w-3.5" /> Close
         </button>
       </div>
-      <div className="relative flex min-h-0 flex-1 items-center justify-center px-4 pb-4 sm:px-14 sm:pb-6">
+      <div className="relative flex min-h-0 flex-1 items-center justify-center px-3 pb-2 sm:px-14">
         <img
           key={idx}
           src={cs.images[idx]}
@@ -385,7 +386,7 @@ function ImageStage({ cs, idx, setIdx, onClose }: { cs: { client: string; images
         )}
       </div>
       {n > 1 && (
-        <div className="flex justify-center gap-1.5 pb-4">
+        <div className="flex justify-center gap-1.5 pb-2">
           {cs.images.map((_, i) => (
             <button key={i} onClick={() => setIdx(i)} aria-label={`Image ${i + 1}`} className={`h-1.5 rounded-full transition-all ${i === idx ? "w-5 bg-primary" : "w-1.5 bg-primary/30"}`} />
           ))}
@@ -397,16 +398,16 @@ function ImageStage({ cs, idx, setIdx, onClose }: { cs: { client: string; images
 }
 
 
-const Box = ({ children }: { children: React.ReactNode }) => <div className="rounded-2xl bg-muted/40 p-4 sm:p-5">{children}</div>;
+const Box = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => <div className={`rounded-2xl bg-muted/40 p-4 sm:p-5 ${className}`}>{children}</div>;
 
 function CaseStudyCard({ cs }: { cs: typeof CASE_STUDIES[0] }) {
   const k = CASE_STUDIES.indexOf(cs); // stable id index (position in the data array, not the shuffled order)
   const [idx, setIdx] = useState(0);
   const [open, setOpen] = useState(false);
-  const [dl, setDl] = useState<"idle" | "busy" | "sent" | "err">("idle");
+  const [dl, setDl] = useState<"idle" | "busy" | "sent" | "pending" | "saved" | "err">("idle");
   const { verified, ask, reset } = useContext(UnlockCtx);
   const { editing } = useCms();
-  const isOpen = editing; // full details + screenshots live in the PDF, not on the page
+  const isOpen = editing || !!verified; // full details + screenshots appear once the email is verified
 
   const sendPdf = async () => {
     if (!verified) { ask(cs.client); return; }
@@ -417,7 +418,14 @@ function CaseStudyCard({ cs }: { cs: typeof CASE_STUDIES[0] }) {
         body: JSON.stringify({ token: verified.token, id: cs.id }),
       });
       if (res.status === 401) { reset(); ask(cs.client); setDl("idle"); return; }
-      setDl(res.ok ? "sent" : "err");
+      if (!res.ok) { setDl("err"); return; }
+      const name = res.headers.get("X-Filename") || `LRBC-${cs.id}.pdf`;
+      const mailState = res.headers.get("X-Mail-Sent");
+      const url = URL.createObjectURL(await res.blob());
+      const a = document.createElement("a");
+      a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+      setDl(mailState === "1" ? "sent" : mailState === "pending" ? "pending" : "saved");
     } catch { setDl("err"); }
   };
 
@@ -454,7 +462,7 @@ function CaseStudyCard({ cs }: { cs: typeof CASE_STUDIES[0] }) {
         </div>
 
         {/* Problem | Solution  /  Result | Unlock (or Download) — same order on every screen */}
-        <div className="grid gap-3 md:grid-cols-2 md:gap-4">
+        <div className="relative grid gap-3 md:grid-cols-2 md:gap-4">
           <Box>
             <Et as="p" id="cases.cs.label.problem" def="Problem" className="text-xs font-semibold uppercase tracking-wider mb-2 text-red-500" />
             <CsText id={`cases.cs.${k}.problem`} def={cs.problem} />
@@ -467,30 +475,35 @@ function CaseStudyCard({ cs }: { cs: typeof CASE_STUDIES[0] }) {
             <Et as="p" id="cases.cs.label.result" def="Result" className="text-xs font-semibold uppercase tracking-wider mb-2 text-green-500" />
             <CsText id={`cases.cs.${k}.result`} def={cs.result} />
           </Box>
-          <div className="flex flex-col items-center justify-center gap-2 py-2 text-center md:items-end md:justify-end md:text-right">
-            {!verified ? (
+          {verified && (
+            <div className="flex flex-col items-center justify-center gap-2 py-2 text-center md:items-end md:justify-end md:text-right">
+                <button type="button" onClick={sendPdf} disabled={dl === "busy"} className="lrbc-btn lrbc-btn-primary w-full disabled:opacity-60 sm:w-auto">
+                  {dl === "busy" ? <><Loader2 className="h-4 w-4 animate-spin" /> Preparing PDF…</> : <><Download className="h-4 w-4" /> {dl === "sent" || dl === "saved" || dl === "pending" ? "Download again" : "Download case study PDF"}</>}
+                </button>
+                {dl === "sent" && <p role="status" className="flex items-center gap-1.5 text-xs text-green-600"><CheckCircle2 className="h-3.5 w-3.5 shrink-0" /> Downloaded, and a copy was sent to {verified.email}</p>}
+                {dl === "pending" && <p role="status" className="flex items-center gap-1.5 text-xs text-green-600"><CheckCircle2 className="h-3.5 w-3.5 shrink-0" /> Downloaded. A copy is on its way to {verified.email}</p>}
+                {dl === "saved" && <p role="status" className="flex items-center gap-1.5 text-xs text-green-600"><CheckCircle2 className="h-3.5 w-3.5 shrink-0" /> Downloaded. We couldn&apos;t email a copy right now.</p>}
+                {dl === "err" && <p role="alert" className="text-xs text-red-500">We couldn&apos;t prepare the PDF. Please try again.</p>}
+                {dl === "idle" && <p className="text-xs text-muted-foreground">A copy of this case study will also be sent to your email address.</p>}
+            </div>
+          )}
+          {!verified && (
+            <div className="flex flex-col items-center justify-center gap-2 py-2 text-center md:items-end md:justify-end md:text-right">
               <button type="button" onClick={() => ask(cs.client)} className="lrbc-btn lrbc-btn-primary w-full sm:w-auto">
                 <Lock className="h-4 w-4" /> Unlock full case study
               </button>
-            ) : (
-              <>
-                <button type="button" onClick={sendPdf} disabled={dl === "busy"} className="lrbc-btn lrbc-btn-primary w-full disabled:opacity-60 sm:w-auto">
-                  {dl === "busy" ? <><Loader2 className="h-4 w-4 animate-spin" /> Sending PDF…</> : <><Download className="h-4 w-4" /> {dl === "sent" ? "Send again" : "Download case study PDF"}</>}
-                </button>
-                {dl === "sent" && <p role="status" className="flex items-center gap-1.5 text-xs text-green-600"><CheckCircle2 className="h-3.5 w-3.5 shrink-0" /> Sent to {verified.email}</p>}
-                {dl === "err" && <p role="alert" className="text-xs text-red-500">We couldn&apos;t send the PDF. Please try again.</p>}
-                {dl === "idle" && verified.email && <p className="text-xs text-muted-foreground">The full PDF will be emailed to {verified.email}</p>}
-              </>
-            )}
-          </div>
+            </div>
+          )}
           {isOpen && cs.images.length > 0 && (
-            <div className="rounded-2xl overflow-hidden md:col-span-2">
+            <div className="overflow-hidden rounded-2xl md:col-span-2">
               <ImageCarousel images={cs.images} idx={idx} setIdx={setIdx} onOpen={() => setOpen(true)} />
             </div>
           )}
+          {open && cs.images.length > 0 && <ImageStage cs={cs} idx={idx} setIdx={setIdx} onClose={() => setOpen(false)} />}
         </div>
       </div>
-      {open && cs.images.length > 0 && <ImageStage cs={cs} idx={idx} setIdx={setIdx} onClose={() => setOpen(false)} />}
+      {/* dimmed + blurred backdrop: the text stays readable, like behind a shadow */}
+      {open && cs.images.length > 0 && <div aria-hidden className="pointer-events-none absolute inset-0 z-20 bg-black/35 backdrop-blur-[3px]" />}
     </div>
   );
 }

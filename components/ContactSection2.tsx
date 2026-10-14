@@ -58,7 +58,7 @@ export default function ContactSection2() {
                   </div>
                   <div className="min-w-0">
                     <Et as="p" id="contactsec.corp.label" def="Corporate Office" className="text-muted-foreground text-sm" />
-                    <Et as="p" id="contactsec.corp.addr" def="Plot no, 24, Shanti Nagar, Kompally, Hyderabad, Telangana 500100" className="mt-1 text-[13px] leading-6 sm:text-xs sm:leading-7" />
+                    <Et as="p" id="contactsec.corp.addr" def="Flat No.502, Mirra Residency, H.No.1-62/AB/24, Aurobindo Colony, Miyapur, Hyderabad, Telangana-500049" className="mt-1 text-[13px] leading-6 sm:text-xs sm:leading-7" />
                   </div>
                 </div>
               </div>

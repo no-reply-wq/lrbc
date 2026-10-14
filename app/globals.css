@@ -953,7 +953,15 @@ html.lrbc-cursor iframe, html.lrbc-cursor select, html.lrbc-cursor option { curs
 .lrbc-tint        { background: color-mix(in oklab, var(--primary) 5%, var(--background)); border: 1px solid color-mix(in oklab, var(--primary) 20%, var(--border)); }
 .lrbc-tint-strong { background: color-mix(in oklab, var(--primary) 10%, var(--background)); border: 1px solid color-mix(in oklab, var(--primary) 32%, var(--border)); }
 /* Descender-safe: lets "g", "y", "p" breathe inside masked / overflow-hidden headings */
-.lrbc-clip-safe { padding-bottom: .16em; margin-bottom: -.16em; }
+/* Never let an overflow-hidden text wrapper slice off the tails of g, j, p, q, y.
+   The extra room is padding cancelled by an equal negative margin, so layout does not move. */
+.lrbc-clip-safe,
+.overflow-hidden:not(img):not(svg):not(video):not([class*="rounded"]):not([class*="bg-"]):not([class*="border"]):not([class*="absolute"]):not([class*="fixed"]):not([class*="aspect"]):not([class*="h-"]):not([class*="max-h"]):not([class*="ring"]):not([class*="shadow"]):is(h1, h2, h3, h4, h5, h6, p, span, a, label, li, :has(h1, h2, h3, h4, h5, h6, p, span)) {
+  padding-bottom: max(.35em, 1.6rem);
+  margin-bottom: calc(-1 * max(.35em, 1.6rem));
+}
+/* tight headings: give descenders a line box that actually contains them */
+h1, h2, h3, h4, h5, h6 { padding-bottom: .04em; }
 
 /* Gradient text for scroll-faded statements (each word carries the brand gradient) */
 .lrbc-grad-word { background-image: linear-gradient(120deg, #3b1fd1 0%, #5227ff 45%, #a855f7 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }

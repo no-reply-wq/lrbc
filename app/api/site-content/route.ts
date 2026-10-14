@@ -92,7 +92,7 @@ const SEED_CONTENT = [
     office1_label: 'Head Office',
     office1_address: '7th Floor, Pranava Business Park, Gachibowli - Miyapur Rd, Hyderabad, Telangana 500084',
     office2_label: 'Corporate Office',
-    office2_address: 'Plot no, 24, Shanti Nagar, Kompally, Hyderabad, Telangana 500100',
+    office2_address: 'Flat No.502, Mirra Residency, H.No.1-62/AB/24, Aurobindo Colony, Miyapur, Hyderabad, Telangana-500049',
   }},
 
   // ── TESTIMONIALS ──────────────────────────────────────────────────────────

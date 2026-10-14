@@ -2,6 +2,7 @@
 
 import ProductsShowcase from "@/components/products-showcase/ProductsShowcase";
 import TestimonialsSection from "@/components/testimonials-section";
+import VideoTestimonials from "@/components/VideoTestimonials";
 import FAQs from "@/components/faq";
 import TeamSection from "@/components/team";
 import FooterSection from "@/components/footer-section";
@@ -42,6 +43,8 @@ export default function LandingPage() {
       <ProductsShowcase />
 
       <TestimonialsSection />
+
+      <VideoTestimonials />
 
       <Transformation />
 
