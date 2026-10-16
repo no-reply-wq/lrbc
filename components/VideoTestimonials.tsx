@@ -35,6 +35,8 @@ function Card({ v, playing, onPlay, onStop }: { v: VideoTestimonial; playing: bo
     if (el.paused) { el.play().catch(() => {}); } else { el.pause(); }
   };
   const isFile = src?.kind === "file";
+  // a finished cover (name, role, quote already on the artwork) is shown clean — only the buttons sit on top
+  const clean = !!v.coverHasText && !!poster && !editing;
 
   // magnetic buttons: they lean toward the pointer, but never closer than MIN_GAP to each other
   const row = useRef<HTMLDivElement>(null);
@@ -67,7 +69,7 @@ function Card({ v, playing, onPlay, onStop }: { v: VideoTestimonial; playing: bo
       >
         {poster ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={poster} alt="" decoding="async" className="absolute inset-0 !h-full !w-full object-cover" />
+          <img src={poster} alt={clean ? `${v.client}, ${v.position} at ${v.company} — video testimonial` : ""} decoding="async" className="absolute inset-0 !h-full !w-full object-cover" />
         ) : isFile && !isPlaying ? (
           <video src={`${src!.src}#t=0.5`} preload="metadata" muted playsInline className="absolute inset-0 !h-full !w-full object-cover" />
         ) : null}
@@ -91,17 +93,17 @@ function Card({ v, playing, onPlay, onStop }: { v: VideoTestimonial; playing: bo
         ))}
 
         {/* readability gradient */}
-        <div className={`pointer-events-none absolute inset-0 bg-gradient-to-t ${isPlaying ? "from-black/60 via-transparent to-black/30" : "from-black/90 via-black/30 to-black/40"}`} />
+        {!clean && <div className={`pointer-events-none absolute inset-0 bg-gradient-to-t ${isPlaying ? "from-black/60 via-transparent to-black/30" : "from-black/90 via-black/30 to-black/40"}`} />}
 
         {/* top: topic tag, company underneath (stacked so they can never collide) */}
-        <div className="pointer-events-none absolute inset-x-3 top-3 flex flex-col items-start gap-1.5 sm:inset-x-4 sm:top-4">
+        {!clean && <div className="pointer-events-none absolute inset-x-3 top-3 flex flex-col items-start gap-1.5 sm:inset-x-4 sm:top-4">
           <Et as="span" id={`home.video.${v.id}.tag`} def={v.category} className="max-w-full rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-bold uppercase leading-tight tracking-wider text-[#3b1fd1]" />
           <Et as="span" id={`home.video.${v.id}.company`} def={v.company} className="font-heading text-sm font-bold leading-tight text-white drop-shadow" />
-        </div>
+        </div>}
 
         {/* bottom: quote + person (hidden while playing so the video's own captions stay clear), then actions */}
-        <div className="absolute inset-x-3 bottom-3 flex flex-col gap-2 text-left text-white sm:inset-x-4 sm:bottom-4">
-          {!isPlaying && (
+        <div className={`absolute inset-x-3 flex flex-col gap-2 text-left text-white sm:inset-x-4 ${clean && !isPlaying ? "top-[66%] -translate-y-1/2" : "bottom-3 sm:bottom-4"}`}>
+          {!isPlaying && !clean && (
             <>
               <Et as="p" id={`home.video.${v.id}.quote`} def={v.quote} className="line-clamp-4 text-[14px] font-semibold leading-snug drop-shadow sm:text-[15px]" />
               <p className="text-[11px] leading-snug text-white/80">

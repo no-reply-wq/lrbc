@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { AnimatedGroup } from "@/components/ui/animated-group";
 import WorkPilotMini from "@/components/workpilot-mini";
 import MagneticButton from "@/components/MagneticButton";
-import ContactFormModal from "@/components/ContactFormModal";
+import { ERPRequestModal } from "@/components/ERPRequestModal";
 import { Check, CheckCircle2 } from "lucide-react";
 import { Et, Hide, Lnk, useVal } from "@/components/cms/editable";
 import { padMasks, REVEAL_Y } from "@/lib/split-safe";
@@ -87,7 +87,7 @@ export default function WorkPilotHero() {
             {/* Book Demo button */}
             <div className="mt-8 sm:mt-10 flex justify-center">
               <MagneticButton strength={0.3} radius={80}>
-                <ContactFormModal
+                <ERPRequestModal
                   buttonText={demoLabel}
                   showArrow
                   className="inline-flex items-center justify-center gap-2 h-11 px-8 rounded-full bg-primary text-primary-foreground text-base font-semibold transition-all duration-300 hover:bg-primary/90 hover:scale-[1.02]"

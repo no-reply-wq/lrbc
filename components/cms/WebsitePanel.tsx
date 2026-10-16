@@ -11,8 +11,8 @@ const PAGES: { name: string; href: string; note: string }[] = [
   { name: 'About', href: '/about', note: 'All text, buttons, links and photos' },
   { name: 'Contact', href: '/contact', note: 'All text, buttons, links and photos' },
   { name: 'Why LRBC', href: '/why-lrbc', note: 'All text, buttons, links and photos' },
-  { name: 'LekhaSetu', href: '/lekhasetu', note: 'All text, buttons, links and photos' },
   { name: 'WorkPilot', href: '/workpilot', note: 'All text, buttons, links and photos' },
+  { name: 'LekhaSetu', href: '/lekhasetu', note: 'All text, buttons, links and photos' },
   { name: 'Case Studies', href: '/testimonials-case-studies', note: 'All text, buttons, links and photos' },
 ];
 

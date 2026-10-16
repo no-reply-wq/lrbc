@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Check, X, RotateCcw } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { Et, Hide } from "@/components/cms/editable";
 
 const AVOID = [
@@ -23,7 +23,7 @@ const ACHIEVE = [
 ];
 
 export default function HeroChecklist() {
-  const [run, setRun] = useState(0);
+  const [run] = useState(0);
   const [play, setPlay] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -85,13 +85,6 @@ export default function HeroChecklist() {
           ))}
         </ul>
 
-        <button
-          type="button"
-          onClick={() => setRun((n) => n + 1)}
-          className="mt-5 inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition hover:text-primary"
-        >
-          <RotateCcw className="h-3.5 w-3.5" /> Replay
-        </button>
       </div>
     </div>
   );

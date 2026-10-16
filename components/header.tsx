@@ -12,9 +12,9 @@ import { ERPRequestModal } from "@/components/ERPRequestModal"
 const menuItems = [
     { name: 'Home',         href: '/',                          children: null },
     { name: 'About',        href: '/about',                     children: null },
-    { name: 'Products',     href: '/lekhasetu',                 children: [
-        { name: 'LekhaSetu', href: '/lekhasetu' },
+    { name: 'Products',     href: '/workpilot',                 children: [
         { name: 'WorkPilot', href: '/workpilot' },
+        { name: 'LekhaSetu', href: '/lekhasetu' },
         { name: 'Mini ERP', href: '/mini-erp' },
         { name: 'Custom ERP', href: '/custom-erp' },
     ]},

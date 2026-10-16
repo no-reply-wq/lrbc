@@ -13,8 +13,8 @@ const links = [
   {
     group: "Product",
     items: [
-      { title: "LekhaSetu", href: "/lekhasetu" },
       { title: "WorkPilot", href: "/workpilot" },
+      { title: "LekhaSetu", href: "/lekhasetu" },
       { title: "Mini ERP", href: "/mini-erp" },
       { title: "Custom ERP", href: "/custom-erp" },
     ],

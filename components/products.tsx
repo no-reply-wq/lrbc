@@ -12,15 +12,6 @@ gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
 
 const products = [
     {
-        id: "lekhasetu",
-        title: "LekhaSetu",
-        href: "/lekhasetu",
-        description:
-            "Forget manual exports and outdated reports. LekhaSetu continuously syncs your Account data with the cloud so every dashboard, report and insight is always current.",
-        image: "/images/payments.png",
-        features: ["Real-time cloud sync", "Multi-company management", "Inventory insights"],
-    },
-    {
         id: "workpilot",
         title: "WorkPilot",
         href: "/workpilot",
@@ -28,6 +19,15 @@ const products = [
             "WorkPilot simplifies workforce management by bringing attendance, task allocation, and work tracking into one centralized platform. With a quick overview of your team's progress and day-to-day activities, you can spend less time following up and more time helping your business move forward.",
         image: "/images/workpilot.png",
         features: ["Attendance", "Task assignment", "Activity history", "Performance tracking"],
+    },
+    {
+        id: "lekhasetu",
+        title: "LekhaSetu",
+        href: "/lekhasetu",
+        description:
+            "Forget manual exports and outdated reports. LekhaSetu continuously syncs your Account data with the cloud so every dashboard, report and insight is always current.",
+        image: "/images/payments.png",
+        features: ["Real-time cloud sync", "Multi-company management", "Inventory insights"],
     },
 ];
 

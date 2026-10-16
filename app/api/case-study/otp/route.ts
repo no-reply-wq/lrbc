@@ -15,10 +15,11 @@ export async function POST(req: Request) {
     if (limited(`otp:${email}`, 1, 30_000) || limited(`otp-ip:${ip}`, 12, 3600_000))
       return NextResponse.json({ error: "slow_down" }, { status: 429 });
 
+    const what = body.purpose === "brochure" ? "download the LRBC brochure" : "unlock the LRBC case studies";
     const code = newCode();
     const challenge = makeChallenge(email, code);
     const html = mailShell(`<h2 style="margin:0 0 12px;font-size:22px">Your verification code</h2>
-<p style="line-height:1.6;margin:0 0 16px">Use this code to verify your email and unlock the LRBC case studies:</p>
+<p style="line-height:1.6;margin:0 0 16px">Use this code to verify your email and ${what}:</p>
 <p style="margin:0 0 16px;font-size:34px;font-weight:700;letter-spacing:8px;color:#5227ff">${code}</p>
 <p style="line-height:1.6;margin:0;color:#6b6b80;font-size:13px">The code is valid for 10 minutes. If you didn't request it, you can ignore this email.</p>`);
     const r = await sendMail({ to: email, subject: `${code} is your LRBC verification code`, html });

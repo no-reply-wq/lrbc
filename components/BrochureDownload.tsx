@@ -2,21 +2,39 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Download, Mail, X, CheckCircle2, Loader2 } from "lucide-react";
+import { Download, Mail, X, CheckCircle2, Loader2, Lock } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 const WEB3FORMS_KEY = "d7597fd4-4c3b-40d2-ad55-710160cd9abd";
 const FILE_URL = "/downloads/LRBC-Brochure.pdf";
 const FILE_NAME = "LRBC-Brochure.pdf";
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+/** Same key the case-study page uses, so one verification unlocks both. */
+const VERIFIED_KEY = "lrbc-cs-verified";
 
-/** "Download Brochure" button → asks for an email → only then starts the download. */
+type Verified = { email: string; token: string };
+
+function readVerified(): Verified | null {
+  try {
+    const v = JSON.parse(localStorage.getItem(VERIFIED_KEY) || "null");
+    if (!v?.email || !v?.token) return null;
+    const payload = JSON.parse(atob(String(v.token).split(".")[0].replace(/-/g, "+").replace(/_/g, "/")));
+    return payload?.x && Date.now() < payload.x ? { email: v.email, token: v.token } : null;
+  } catch { return null; }
+}
+
+/** "Download Brochure" → verify your email with a 6-digit code (OTP) → download starts. */
 export default function BrochureDownload({ source = "Home hero" }: { source?: string }) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [step, setStep] = useState<"email" | "otp" | "done">("email");
   const [email, setEmail] = useState("");
+  const [code, setCode] = useState("");
+  const [challenge, setChallenge] = useState("");
   const [error, setError] = useState("");
-  const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
+  const [info, setInfo] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [wait, setWait] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => { setMounted(true); }, []);
@@ -26,9 +44,16 @@ export default function BrochureDownload({ source = "Home hero" }: { source?: st
     window.addEventListener("keydown", onKey);
     const t = setTimeout(() => inputRef.current?.focus(), 60);
     return () => { window.removeEventListener("keydown", onKey); clearTimeout(t); };
-  }, [open]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, step]);
+  useEffect(() => {
+    if (wait <= 0) return;
+    const t = setTimeout(() => setWait((w) => w - 1), 1000);
+    return () => clearTimeout(t);
+  }, [wait]);
 
-  const close = () => { setOpen(false); setTimeout(() => { setStatus("idle"); setError(""); setEmail(""); }, 200); };
+  const reset = () => { setStep("email"); setError(""); setInfo(""); setEmail(""); setCode(""); setChallenge(""); setBusy(false); setWait(0); };
+  const close = () => { setOpen(false); setTimeout(reset, 200); };
 
   const startDownload = () => {
     const a = document.createElement("a");
@@ -36,38 +61,73 @@ export default function BrochureDownload({ source = "Home hero" }: { source?: st
     document.body.appendChild(a); a.click(); a.remove();
   };
 
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  /** Already verified on this device (within 30 days) → no code needed again. */
+  const onButton = () => {
+    const v = readVerified();
+    if (v) { setEmail(v.email); setStep("done"); setOpen(true); startDownload(); return; }
+    setOpen(true);
+  };
+
+  const sendCode = async () => {
     const value = email.trim();
     if (!value) { setError("Please enter your email to download the brochure."); inputRef.current?.focus(); return; }
     if (!EMAIL_RE.test(value)) { setError("Please enter a valid email address."); inputRef.current?.focus(); return; }
-    setError(""); setStatus("sending");
-
-    // send the lead to the team (never blocks the download if the network is slow)
-    const fd = new FormData();
-    fd.append("access_key", WEB3FORMS_KEY);
-    fd.append("subject", `Brochure download — ${source}`);
-    fd.append("source", source);
-    fd.append("email", value);
+    setError(""); setInfo(""); setBusy(true);
     try {
-      const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), 6000);
-      await fetch("https://api.web3forms.com/submit", { method: "POST", body: fd, signal: ctrl.signal }).catch(() => {});
-      clearTimeout(t);
-    } catch { /* ignore */ }
+      const res = await fetch("/api/case-study/otp", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: value, purpose: "brochure" }),
+      });
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(d.error === "slow_down" ? "Please wait a few seconds before requesting another code."
+          : d.error === "invalid_email" ? "Please enter a valid email address."
+          : "We couldn't send the code right now. Please try again in a moment.");
+        setBusy(false); return;
+      }
+      setChallenge(d.challenge); setCode(""); setStep("otp"); setWait(30);
+      setInfo(d.devCode ? `Dev mode — your code is ${d.devCode}` : `We've sent a 6-digit code to ${value}.`);
+    } catch { setError("Something went wrong. Please try again."); }
+    setBusy(false);
+  };
 
-    setStatus("done");
-    startDownload();
+  const verify = async () => {
+    if (code.length !== 6) { setError("Enter the 6-digit code."); return; }
+    setError(""); setBusy(true);
+    try {
+      const res = await fetch("/api/case-study/verify", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim(), code, challenge }),
+      });
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(d.error === "expired" ? "This code has expired. Please request a new one."
+          : d.error === "too_many" ? "Too many attempts. Please request a new code."
+          : "That code isn't right. Please check and try again.");
+        setBusy(false); return;
+      }
+      try { localStorage.setItem(VERIFIED_KEY, JSON.stringify({ email: d.email, token: d.token })); } catch { /* ignore */ }
+      // lead for the team — only verified emails reach us (never blocks the download)
+      const fd = new FormData();
+      fd.append("access_key", WEB3FORMS_KEY);
+      fd.append("subject", `Brochure download (verified) — ${source}`);
+      fd.append("source", `${source} — email verified with OTP`);
+      fd.append("email", d.email);
+      fetch("https://api.web3forms.com/submit", { method: "POST", body: fd }).catch(() => {});
+      setStep("done"); setBusy(false);
+      startDownload();
+    } catch { setError("Something went wrong. Please try again."); setBusy(false); }
   };
 
   const modal = open ? (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Download brochure">
       <div className="absolute inset-0 -z-10" onClick={close} />
-      <div className="relative w-full max-w-md animate-in fade-in zoom-in-95 duration-200 rounded-3xl border border-border/60 bg-background p-6 shadow-2xl sm:p-8">
+      <div className="relative max-h-[92dvh] w-full max-w-md animate-in fade-in zoom-in-95 overflow-y-auto rounded-3xl border border-border/60 bg-background p-6 shadow-2xl duration-200 sm:p-8">
         <button onClick={close} aria-label="Close" className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-muted/60 transition-colors hover:bg-muted">
           <X className="h-4 w-4" />
         </button>
 
-        {status === "done" ? (
+        {step === "done" ? (
           <div className="text-center">
             <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary"><CheckCircle2 className="h-7 w-7" /></span>
             <h3 className="mt-5 text-xl font-semibold text-foreground">Thank you!</h3>
@@ -77,11 +137,11 @@ export default function BrochureDownload({ source = "Home hero" }: { source?: st
               <button onClick={close} className="lrbc-btn lrbc-btn-secondary">Close</button>
             </div>
           </div>
-        ) : (
-          <form onSubmit={submit} noValidate>
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#5227FF] to-[#a855f7] text-white shadow-lg shadow-primary/30"><Download className="h-6 w-6" /></span>
+        ) : step === "email" ? (
+          <form onSubmit={(e) => { e.preventDefault(); sendCode(); }} noValidate>
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#5227FF] to-[#a855f7] text-white shadow-lg shadow-primary/30"><Lock className="h-5 w-5" /></span>
             <h3 className="mt-5 text-xl font-semibold text-foreground">Download our brochure</h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Enter your email and your download will start right away.</p>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Verify your email with a 6-digit code and your download will start right away.</p>
 
             <label htmlFor="brochure-email" className="mt-6 block text-sm font-medium text-foreground">Email address</label>
             <div className="relative mt-2">
@@ -95,9 +155,31 @@ export default function BrochureDownload({ source = "Home hero" }: { source?: st
             </div>
             {error && <p role="alert" className="mt-1.5 text-xs text-red-500">{error}</p>}
 
-            <button type="submit" disabled={status === "sending"} className="lrbc-btn lrbc-btn-primary mt-6 w-full disabled:opacity-70">
-              {status === "sending" ? <><Loader2 className="h-4 w-4 animate-spin" /> Please wait…</> : <><Download className="h-4 w-4" /> Download Brochure</>}
+            <button type="submit" disabled={busy} className="lrbc-btn lrbc-btn-primary mt-6 w-full disabled:opacity-70">
+              {busy ? <><Loader2 className="h-4 w-4 animate-spin" /> Sending code…</> : "Send verification code"}
             </button>
+          </form>
+        ) : (
+          <form onSubmit={(e) => { e.preventDefault(); verify(); }} noValidate>
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#5227FF] to-[#a855f7] text-white shadow-lg shadow-primary/30"><Lock className="h-5 w-5" /></span>
+            <h3 className="mt-5 text-xl font-semibold text-foreground">Enter your code</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{info}</p>
+            <label htmlFor="brochure-otp" className="mt-6 block text-sm font-medium text-foreground">Verification code</label>
+            <input
+              id="brochure-otp" ref={inputRef} inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={code}
+              onChange={(e) => { setCode(e.target.value.replace(/\D/g, "").slice(0, 6)); setError(""); }}
+              className={`mt-2 h-12 w-full rounded-xl border bg-background px-3 text-center font-mono text-2xl tracking-[0.5em] outline-none focus-visible:ring-2 focus-visible:ring-ring ${error ? "border-red-500" : "border-input"}`}
+            />
+            {error && <p role="alert" className="mt-1.5 text-xs text-red-500">{error}</p>}
+            <button type="submit" disabled={busy || code.length !== 6} className="lrbc-btn lrbc-btn-primary mt-6 w-full disabled:opacity-60">
+              {busy ? <><Loader2 className="h-4 w-4 animate-spin" /> Verifying…</> : <><Download className="h-4 w-4" /> Verify & download</>}
+            </button>
+            <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
+              <button type="button" onClick={() => { setStep("email"); setError(""); }} className="underline-offset-2 hover:text-primary hover:underline">Change email</button>
+              <button type="button" disabled={wait > 0 || busy} onClick={sendCode} className="underline-offset-2 hover:text-primary hover:underline disabled:no-underline disabled:opacity-60">
+                {wait > 0 ? `Resend code in ${wait}s` : "Resend code"}
+              </button>
+            </div>
           </form>
         )}
       </div>
@@ -106,7 +188,7 @@ export default function BrochureDownload({ source = "Home hero" }: { source?: st
 
   return (
     <>
-      <button type="button" className="lrbc-btn lrbc-btn-secondary" onClick={() => setOpen(true)}>
+      <button type="button" className="lrbc-btn lrbc-btn-secondary" onClick={onButton}>
         Download Brochure
       </button>
       {mounted && createPortal(modal, document.body)}

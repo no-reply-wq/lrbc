@@ -1,6 +1,6 @@
 "use client";
 
-import ContactFormModal from "@/components/ContactFormModal";
+import Link from "next/link";
 
 interface ERPRequestModalProps {
   buttonText?: string;
@@ -8,11 +8,16 @@ interface ERPRequestModalProps {
   showArrow?: boolean;
 }
 
-/**
- * "Book a Demo" button. It opens the same enquiry form used everywhere else on the site
- * (Company Name, Contact Name, Email, Contact No., City, Industry — all mandatory),
- * so every entry point collects the same lead details.
- */
+/** "Book a Demo" button — takes the visitor to the Book a Demo page (/demo). */
 export function ERPRequestModal({ buttonText = "Book a Demo", className, showArrow = false }: ERPRequestModalProps) {
-  return <ContactFormModal buttonText={buttonText} className={className} showArrow={showArrow} source="Book a Demo" />;
+  return (
+    <Link href="/demo" className={className || "lrbc-btn lrbc-btn-primary"}>
+      {buttonText}
+      {showArrow && (
+        <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+          <path d="M7 17L17 7M17 7H7M17 7v10" />
+        </svg>
+      )}
+    </Link>
+  );
 }

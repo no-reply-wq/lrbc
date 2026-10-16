@@ -197,7 +197,7 @@ export default function LekhaSetuHero() {
             className="group mt-8 sm:mt-12 w-full sm:w-fit overflow-hidden rounded-full px-8"
           >
             <Link
-              href="#"
+              href="/demo"
               className="flex items-center gap-2"
             >
               <span className="relative h-6 overflow-hidden">

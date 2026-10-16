@@ -12,7 +12,8 @@
  *   position  client's position           e.g. "Managing Director"
  *   quote     one short line from the video
  *   youtube   link of the same video on our YouTube channel (shows the YouTube icon on the card)
- *   poster    (optional) cover image, saved as public/images/testimonials/NN-company-client.jpg
+ *   poster    (optional) cover image, 9:16 (900×1600), saved as public/images/testimonials/NN-company-client.jpg
+ *   coverHasText  true when the cover already shows the name, title and quote (the card then shows only the play + YouTube buttons)
  *
  * Leave videoFile empty and the card plays the YouTube link instead.
  * Leave both empty and the card shows "Video coming soon".
@@ -29,6 +30,8 @@ export type VideoTestimonial = {
   quote: string;
   youtube: string;
   poster?: string;
+  /** The cover artwork already carries the client's name, role and quote. */
+  coverHasText?: boolean;
 };
 
 export const VIDEO_TESTIMONIALS: VideoTestimonial[] = [
@@ -42,6 +45,7 @@ export const VIDEO_TESTIMONIALS: VideoTestimonial[] = [
     quote: "“We now benefit from real-time oversight of production and accounts on a single dashboard.”",
     youtube: "https://youtube.com/shorts/i2QO9ldMH38",
     poster: "/images/testimonials/01-colorplas-kamalesh-gupta.jpg",
+    coverHasText: true,
   },
   {
     id: "v2", no: 2,
@@ -53,6 +57,7 @@ export const VIDEO_TESTIMONIALS: VideoTestimonial[] = [
     quote: "“Seamlessly converts all your ideas into practical solutions.”",
     youtube: "https://youtube.com/shorts/eaNjMgvh7f8",
     poster: "/images/testimonials/02-wedding-alliances-ekkta-vohra.jpg",
+    coverHasText: true,
   },
 ];
 
