@@ -6,6 +6,9 @@ const SITE = "https://lrbc.ai";
 const PAGES: { path: string; priority: number; freq: "weekly" | "monthly" | "yearly" }[] = [
   { path: "", priority: 1, freq: "weekly" },
   { path: "/workpilot", priority: 0.9, freq: "monthly" },
+  { path: "/workpilot/vs/microsoft-365", priority: 0.6, freq: "monthly" },
+  { path: "/workpilot/vs/jira", priority: 0.6, freq: "monthly" },
+  { path: "/workpilot/vs/zoho", priority: 0.6, freq: "monthly" },
   { path: "/lekhasetu", priority: 0.9, freq: "monthly" },
   { path: "/mini-erp", priority: 0.8, freq: "monthly" },
   { path: "/custom-erp", priority: 0.8, freq: "monthly" },

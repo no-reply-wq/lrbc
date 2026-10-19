@@ -1,30 +1,28 @@
 "use client";
 
-import { useState } from "react";
 import { Check, Zap, Briefcase, Building2, Crown, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useFadeUp } from "@/components/ui/use-scroll-animation";
 import React from "react";
-import { useScrollFadeWords } from "@/components/ui/use-scroll-fade";
 import { Et, Hide } from "@/components/cms/editable";
+import ContactFormModal from "@/components/ContactFormModal";
 
 const PLANS = [
   {
     id: "starter",
     name: "Starter",
-    tagline: "Perfect for small teams getting started",
+    tagline: "For small teams getting organised",
     icon: Zap,
-    users: "5 users minimum",
+    users: "From 5 users",
     minUsers: 5,
     price: 399,
     accent: "#6366f1",
     highlight: false,
     features: [
-      "Live attendance tracking",
-      "Task assignment & tracking",
+      "Checklists, delegation and FMS",
+      "Live attendance and mobile check-in",
       "Basic performance scores",
-      "Activity history — 30 days",
-      "Mobile check-in",
+      "30 days of activity history",
       "Email reminders",
       "Export to Excel",
       "Email support",
@@ -33,30 +31,30 @@ const PLANS = [
   {
     id: "professional",
     name: "Professional",
-    tagline: "Most teams choose this plan",
+    tagline: "For teams that want reminders on WhatsApp and reports for review meetings",
     icon: Briefcase,
-    users: "10 users",
+    users: "From 10 users",
     minUsers: 10,
     price: 299,
     accent: "#7c3aed",
     highlight: true,
     features: [
       "Everything in Starter",
-      "Advanced performance dashboards",
-      "Activity history — 90 days",
-      "Role-based access control",
       "Automated WhatsApp reminders",
-      "MIS reports & analytics",
-      "Multi-department management",
+      "Advanced performance dashboards",
+      "90 days of activity history",
+      "Role-based access for managers and staff",
+      "MIS reports and analytics",
+      "Multiple departments",
       "Priority email support",
     ],
   },
   {
     id: "business",
     name: "Business",
-    tagline: "For growing organizations",
+    tagline: "For growing businesses with shifts and layers of managers",
     icon: Building2,
-    users: "20 users",
+    users: "From 20 users",
     minUsers: 20,
     price: 199,
     accent: "#a855f7",
@@ -64,29 +62,17 @@ const PLANS = [
     features: [
       "Everything in Professional",
       "Unlimited activity history",
-      "Custom roles & permissions",
-      "Shift & schedule management",
+      "Custom roles and permissions",
+      "Shift and schedule management",
       "API access",
-      "Dedicated account manager",
+      "A dedicated account manager",
       "Custom onboarding",
-      "Phone + email support",
+      "Phone and email support",
     ],
   },
 ];
 
 function PlanCard({ plan, index }: { plan: typeof PLANS[0]; index: number }) {
-  const [sent, setSent] = useState(false);
-
-  const handleTrial = () => {
-    if (sent) return;
-    const subject = encodeURIComponent(`WorkPilot Free Trial — ${plan.name} Plan`);
-    const body = encodeURIComponent(
-      `Hi LRBC Team,\n\nI'd like to start a 15-day free trial of WorkPilot.\n\nPlan: ${plan.name} (${plan.users} @ ₹${plan.price}/user/month)\nMinimum monthly: ₹${(plan.price * plan.minUsers).toLocaleString()}\n\nCompany Name: \nContact Person: \nPhone: \nEmail: \n`
-    );
-    window.open(`mailto:contact@lrbc.ai?subject=${subject}&body=${body}`, "_self");
-    setTimeout(() => setSent(true), 400);
-  };
-
   const delay = index === 0 ? "" : index === 1 ? "lrbc-anim-d1" : "lrbc-anim-d2";
 
   return (
@@ -112,7 +98,7 @@ function PlanCard({ plan, index }: { plan: typeof PLANS[0]; index: number }) {
             className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-bold tracking-wide text-white whitespace-nowrap shadow-lg"
             style={{ background: "linear-gradient(90deg, #7c3aed, #a855f7)" }}
           >
-            <Et id={`workpilot.pricing.plan.${index}.badge`} def="★ Most Popular" />
+            <Et id={`wp2.pricing.plan.${index}.badge`} def="★ Most popular" />
           </span>
         </div>
       )}
@@ -135,25 +121,25 @@ function PlanCard({ plan, index }: { plan: typeof PLANS[0]; index: number }) {
 
       {/* Name + tagline */}
       <div className="relative z-10">
-        <Et as="h3" id={`workpilot.pricing.plan.${index}.name`} def={plan.name} className="text-xl font-bold tracking-tight" />
-        <Et as="p" id={`workpilot.pricing.plan.${index}.tagline`} def={plan.tagline} className="text-sm text-muted-foreground mt-1" />
+        <Et as="h3" id={`wp2.pricing.plan.${index}.name`} def={plan.name} className="text-xl font-bold tracking-tight" />
+        <Et as="p" id={`wp2.pricing.plan.${index}.tagline`} def={plan.tagline} className="text-sm text-muted-foreground mt-1" />
       </div>
 
       {/* Price */}
       <div className="relative z-10 mt-6 mb-1">
         <div className="flex items-end gap-2">
           <Et
-            id={`workpilot.pricing.plan.${index}.price`}
+            id={`wp2.pricing.plan.${index}.price`}
             def={`₹${plan.price}`}
             className="text-5xl font-black tracking-tighter transition-colors duration-300 group-hover:text-[var(--accent-color)]"
             style={{ "--accent-color": plan.accent } as React.CSSProperties}
           />
           <div className="pb-2 text-muted-foreground text-xs leading-tight">
-            <Et as="div" id={`workpilot.pricing.plan.${index}.unit1`} def="per user" />
-            <Et as="div" id={`workpilot.pricing.plan.${index}.unit2`} def="per month" />
+            <Et as="div" id={`wp2.pricing.plan.${index}.unit1`} def="per user" />
+            <Et as="div" id={`wp2.pricing.plan.${index}.unit2`} def="per month" />
           </div>
         </div>
-        <Et as="p" id={`workpilot.pricing.plan.${index}.min`} def={`${plan.users} · Min ₹${(plan.price * plan.minUsers).toLocaleString()}/month`} className="text-xs text-muted-foreground mt-2" />
+        <Et as="p" id={`wp2.pricing.plan.${index}.min`} def={`${plan.users} (₹${(plan.price * plan.minUsers).toLocaleString("en-IN")}/month)`} className="text-xs text-muted-foreground mt-2" />
       </div>
 
       {/* Divider */}
@@ -165,7 +151,7 @@ function PlanCard({ plan, index }: { plan: typeof PLANS[0]; index: number }) {
       {/* Features */}
       <ul className="relative z-10 space-y-3 flex-1 mb-8">
         {plan.features.map((f, fi) => (
-          <Hide key={f} id={`workpilot.pricing.plan.${index}.feature.${fi}`}>
+          <Hide key={f} id={`wp2.pricing.plan.${index}.feature.${fi}`}>
           <li className="flex items-start gap-3 text-sm">
             <div
               className="mt-0.5 h-4 w-4 shrink-0 rounded-full flex items-center justify-center"
@@ -173,7 +159,7 @@ function PlanCard({ plan, index }: { plan: typeof PLANS[0]; index: number }) {
             >
               <Check className="h-2.5 w-2.5" style={{ color: plan.accent }} />
             </div>
-            <Et id={`workpilot.pricing.plan.${index}.feature.${fi}.text`} def={f} className="text-foreground/75 leading-snug" />
+            <Et id={`wp2.pricing.plan.${index}.feature.${fi}.text`} def={f} className="text-foreground/75 leading-snug" />
           </li>
           </Hide>
         ))}
@@ -181,21 +167,12 @@ function PlanCard({ plan, index }: { plan: typeof PLANS[0]; index: number }) {
 
       {/* CTA button */}
       <div className="relative z-10 flex justify-center">
-        <button
-          type="button"
-          onClick={handleTrial}
-          disabled={sent}
-          className={cn(
-            "lrbc-btn group/btn sm:w-auto",
-            plan.highlight ? "lrbc-btn-primary" : "lrbc-btn-secondary",
-            sent && "cursor-default opacity-70"
-          )}
-        >
-          {sent ? "✓ Check your email!" : <Et id="workpilot.pricing.trialCta" def="Start 15-Day Free Trial" />}
-          {!sent && (
-            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
-          )}
-        </button>
+        <ContactFormModal
+          buttonText="Start free trial"
+          source={`WorkPilot free trial — ${plan.name}`}
+          showArrow
+          className={cn("lrbc-btn sm:w-auto", plan.highlight ? "lrbc-btn-primary" : "lrbc-btn-secondary")}
+        />
       </div>
     </div>
   );
@@ -203,21 +180,9 @@ function PlanCard({ plan, index }: { plan: typeof PLANS[0]; index: number }) {
 
 export default function WorkPilotPricing() {
   const ref = useFadeUp() as React.RefObject<HTMLElement>;
-  const [enterpriseSent, setEnterpriseSent] = useState(false);
-  const fade = useScrollFadeWords<HTMLParagraphElement>();
-
-  const handleEnterprise = () => {
-    if (enterpriseSent) return;
-    const subject = encodeURIComponent("WorkPilot Enterprise Plan — Custom Quote Request");
-    const body = encodeURIComponent(
-      `Hi LRBC Team,\n\nWe are interested in WorkPilot for a team of more than 20 users.\n\nCompany Name: \nContact Person: \nNumber of Users: \nPhone: \nEmail: \n`
-    );
-    window.open(`mailto:contact@lrbc.ai?subject=${subject}&body=${body}`, "_self");
-    setTimeout(() => setEnterpriseSent(true), 400);
-  };
 
   return (
-    <Hide id="workpilot.pricing.sec">
+    <Hide id="wp2.pricing.sec">
     <section ref={ref} id="pricing" className="py-8 md:py-12 relative overflow-hidden">
 
       {/* bg glow */}
@@ -230,43 +195,33 @@ export default function WorkPilotPricing() {
         {/* Heading */}
         <div className="mx-auto max-w-3xl text-center mb-10 sm:mb-16">
           <div className="lrbc-anim lrbc-eyebrow-row mb-4">
-            <span className="lrbc-eyebrow"><Et id="workpilot.pricing.eyebrow" def="Pricing" /></span>
+            <span className="lrbc-eyebrow"><Et id="wp2.pricing.eyebrow" def="Pricing" /></span>
           </div>
-          <Et as="h2" id="workpilot.pricing.title" def="Simple, transparent pricing" className="lrbc-anim lrbc-anim-d1 text-3xl font-black sm:text-4xl tracking-tight" />
-          <p ref={fade} className="mt-4 text-muted-foreground text-lg max-w-xl mx-auto">
-            <Et id="workpilot.pricing.text1" def="Every plan starts with a " /><Et id="workpilot.pricing.text2" def="15-day free trial" className="text-primary font-semibold" /><Et id="workpilot.pricing.text3" def=". No credit card. No commitment." />
-          </p>
+          <Et as="h2" id="wp2.pricing.title" def="Simple pricing. Bigger teams pay less per person." className="lrbc-anim lrbc-anim-d1 text-3xl font-black sm:text-4xl tracking-tight" />
+          <Et as="p" id="wp2.pricing.sub" def="Every plan starts with a 15-day free trial and includes setup help. No credit card, no commitment. Prices in INR, plus GST." className="mx-auto mt-4 max-w-xl text-lg text-muted-foreground" />
         </div>
 
         {/* Cards — pt-6 to give space for the Popular badge */}
         <div className="mx-auto grid max-w-md gap-8 pt-6 lg:max-w-none lg:grid-cols-3 lg:gap-5">
-          {PLANS.map((plan, i) => <Hide key={plan.id} id={`workpilot.pricing.plan.${i}`}><PlanCard plan={plan} index={i} /></Hide>)}
+          {PLANS.map((plan, i) => <Hide key={plan.id} id={`wp2.pricing.plan.${i}`}><PlanCard plan={plan} index={i} /></Hide>)}
         </div>
 
         {/* Enterprise */}
-        <div
-          className="lrbc-anim lrbc-anim-d2 lrbc-tint group mt-8 flex flex-col items-center gap-6 rounded-2xl p-7 text-center transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10 md:flex-row md:justify-between md:gap-10 md:px-10 md:text-left"
-        >
+        <div className="lrbc-anim lrbc-anim-d2 lrbc-tint group mt-8 flex flex-col items-center gap-6 rounded-2xl p-7 text-center transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10 md:flex-row md:justify-between md:gap-10 md:px-10 md:text-left">
           <div className="flex flex-col items-center gap-5 md:flex-row md:gap-6">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10 transition-transform duration-300 group-hover:rotate-[-5deg] group-hover:scale-110">
-              <Crown className="h-7 w-7 text-primary" />
-            </div>
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10"><Crown className="h-7 w-7 text-primary" /></div>
             <div>
-              <Et as="h3" id="workpilot.pricing.ent.title" def="Enterprise Plan" className="text-xl font-bold" />
-              <Et as="p" id="workpilot.pricing.ent.text" def="For teams of 20+ · Custom pricing · Dedicated support · White-glove onboarding" className="mt-1 max-w-md text-sm text-muted-foreground" />
+              <Et as="h3" id="wp2.pricing.ent.title" def="Enterprise — custom pricing" className="text-xl font-bold" />
+              <Et as="p" id="wp2.pricing.ent.text" def="For larger teams or several locations that need workflows built around them." className="mt-1 max-w-md text-sm text-muted-foreground" />
             </div>
           </div>
-          <button
-            type="button"
-            className="lrbc-btn lrbc-btn-primary shrink-0 sm:w-auto"
-            onClick={() => !enterpriseSent && handleEnterprise()}
-          >
-            {enterpriseSent ? "✓ Check your email!" : <Et id="workpilot.pricing.ent.cta" def="Request Custom Quote →" />}
-          </button>
+          <ContactFormModal buttonText="Talk to us" source="WorkPilot Enterprise" className="lrbc-btn lrbc-btn-primary shrink-0 sm:w-auto" />
         </div>
 
+        <Et as="p" id="wp2.pricing.help" def="Not sure which plan fits? Count the people who'll use WorkPilot: under 10, start with Starter; 10 to 19, Professional; 20 or more, Business. Or message us on WhatsApp and we'll tell you honestly." className="lrbc-anim lrbc-anim-d3 mx-auto mt-8 max-w-2xl text-center text-sm text-muted-foreground" />
+
         <p className="lrbc-anim lrbc-anim-d3 text-center text-sm text-muted-foreground mt-10">
-          <Et id="workpilot.pricing.footnote" def="All plans include setup assistance · Pricing in INR + applicable GST · " />
+          <Et id="wp2.pricing.footnote" def="Questions? " />
           <a href="mailto:contact@lrbc.ai" className="text-primary hover:underline font-medium">contact@lrbc.ai</a>
         </p>
 
