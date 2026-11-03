@@ -59,6 +59,18 @@ export const VIDEO_TESTIMONIALS: VideoTestimonial[] = [
     poster: "/images/testimonials/02-wedding-alliances-ekkta-vohra.jpg",
     coverHasText: true,
   },
+  {
+    id: "v3", no: 3,
+    videoFile: "Work Digitally.mp4",
+    category: "Digital Marketing Agency",
+    company: "Work Digitally",
+    client: "Nisha Agarwal",
+    position: "Founder",
+    quote: "“It has been smooth.”",
+    youtube: "https://youtube.com/shorts/i_RC_nHxv24",
+    poster: "/images/testimonials/03-work-digitally-nisha-agarwal.jpg",
+    coverHasText: true,
+  },
 ];
 
 /** Folder where the video files live (served from /videos/testimonials/…). */
