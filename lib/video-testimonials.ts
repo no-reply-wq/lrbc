@@ -61,7 +61,7 @@ export const VIDEO_TESTIMONIALS: VideoTestimonial[] = [
   },
   {
     id: "v3", no: 3,
-    videoFile: "Work Digitally.mp4",
+    videoFile: "03-work-digitally-nisha-agarwal.mp4",
     category: "Digital Marketing Agency",
     company: "Work Digitally",
     client: "Nisha Agarwal",
