@@ -39,8 +39,11 @@ export function Lnk({ id, href, labelId, label, children, ...rest }: { id: strin
   const attrs = editing
     ? ({ 'data-cms': 'link', 'data-id': id, 'data-def': href, ...(labelId ? { 'data-label-id': labelId, 'data-label-def': label ?? '' } : {}) } as object)
     : {};
+  // Links to other websites (not lrbc.ai) open in a new browser tab, like the social-media icons
+  const isExternal = /^https?:\/\//i.test(h) && !/^https?:\/\/(www\.)?lrbc\.ai(\/|$)/i.test(h);
+  const ext = isExternal && !editing && !('target' in rest) ? { target: '_blank', rel: 'noopener noreferrer' } : {};
   return (
-    <Link {...rest} href={h} {...attrs}>
+    <Link {...rest} href={h} {...ext} {...attrs}>
       {text !== null ? <>{text}{children}</> : children}
     </Link>
   );

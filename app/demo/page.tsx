@@ -14,7 +14,7 @@ const STEPS = [
 ];
 
 const PRODUCTS = [
-  { name: "WorkPilot", href: "/workpilot", body: "Attendance, tasks and performance in one clear view." },
+  { name: "WorkPilot", href: "https://lrbcloud.ai/", body: "Attendance, tasks and performance in one clear view." },
   { name: "LekhaSetu", href: "/lekhasetu", body: "Your accounting data, always in sync in the cloud." },
   { name: "Mini ERP", href: "/mini-erp", body: "A compact ERP for growing businesses." },
   { name: "Custom ERP", href: "/custom-erp", body: "A system built around your own process." },
@@ -63,7 +63,7 @@ export default function DemoPage() {
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
                   {PRODUCTS.map((p, i) => (
                     <Hide key={p.name} id={`demo.product.${i}`}>
-                      <Link href={p.href} className="group flex items-start justify-between gap-3 rounded-2xl border border-border/70 bg-card/60 p-4 transition hover:border-primary/40 hover:shadow-md">
+                      <Link href={p.href} {...(p.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})} className="group flex items-start justify-between gap-3 rounded-2xl border border-border/70 bg-card/60 p-4 transition hover:border-primary/40 hover:shadow-md">
                         <span className="min-w-0">
                           <span className="block text-sm font-semibold text-foreground">{p.name}</span>
                           <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{p.body}</span>

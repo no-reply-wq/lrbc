@@ -13,7 +13,7 @@ const links = [
   {
     group: "Product",
     items: [
-      { title: "WorkPilot", href: "/workpilot" },
+      { title: "WorkPilot", href: "https://lrbcloud.ai/" },
       { title: "LekhaSetu", href: "/lekhasetu" },
       { title: "Mini ERP", href: "/mini-erp" },
       { title: "Custom ERP", href: "/custom-erp" },

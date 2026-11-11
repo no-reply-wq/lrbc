@@ -10,6 +10,14 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // WorkPilot now lives on its own website. Anything that still points at the old /workpilot pages
+  // (old links, Google results, saved CMS links) is sent there. The page code stays in app/workpilot, unused.
+  async redirects() {
+    return [
+      { source: "/workpilot", destination: "https://lrbcloud.ai/", permanent: false },
+      { source: "/workpilot/:path*", destination: "https://lrbcloud.ai/", permanent: false },
+    ];
+  },
   images: {
     unoptimized: true,
     remotePatterns: [

@@ -99,10 +99,10 @@ export const PRODUCTS: Product[] = [
     tagline: "Your team, one clear view",
     description:
       "WorkPilot simplifies workforce management by bringing attendance, task allocation, and work tracking into one centralized platform. With a quick overview of your team's progress and day-to-day activities, you can spend less time following up and more time helping your business move forward.",
-    href: "/workpilot",
+    href: "https://lrbcloud.ai/",
     cta: "View Pricing · WorkPilot",
-    ctaHref: "/workpilot#pricing",
-    ctaHint: "Opens the WorkPilot page at its pricing plans",
+    ctaHref: "https://lrbcloud.ai/",
+    ctaHint: "Opens the WorkPilot website",
     gradient: "linear-gradient(135deg, #5227ff 0%, #a855f7 100%)",
     cards: [
       {
